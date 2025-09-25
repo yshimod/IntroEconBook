@@ -178,7 +178,6 @@ class Introduction(Page):
 class First_mover(Page):
     form_model = "group"
     form_fields = ["p1_decision", "p1_individual_choice_comment"]
-    print("testtest")
 
     @staticmethod
     def is_displayed(player: Player):
