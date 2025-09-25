@@ -1,8 +1,6 @@
 from otree.api import *
 import time
 
-c = Currency  # old name for currency; you can delete this.
-
 
 class Constants(BaseConstants):
     name_in_url = "ch1_1_risk"
@@ -21,7 +19,7 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer):
-    # 1：Decision_1
+    # Decision
     risk_List = models.StringField(initial="")
     individual_choice_r_comment = models.StringField(initial="", label="")
     List_A = models.LongStringField(initial="")
@@ -73,6 +71,21 @@ class Player(BasePlayer):
     individual_choice_e_comment = models.StringField(initial="", label="")
 
 
+# FUNCTIONS
+def keiosan_ratio(num_A, num_B, num_participants):
+    # 割合に計算
+    if num_A > 0:
+        prop_num_A = round((num_A / num_participants) * 100, 2)
+    else:
+        prop_num_A = 0
+    if num_B > 0:
+        prop_num_B = round((num_B / num_participants) * 100, 2)
+    else:
+        prop_num_B = 0
+    # print(prop_num_A, prop_num_B)
+    return prop_num_A, prop_num_B
+
+
 # PAGES-----
 class Decision(Page):
     form_model = "player"
@@ -104,10 +117,6 @@ class Decision(Page):
             player.num_A = player.risk_List.count("A")
             player.multiple_switch = "B" in player.risk_List[: player.num_A]
 
-    # @staticmethod
-    # def before_next_page(self, timeout_happened):
-    #    self.participant.vars['MPL_result'] = self.MPL_List
-
 
 class Decision_2(Page):
     form_model = "player"
@@ -127,6 +136,14 @@ class Decision_4(Page):
 class Decision_5(Page):
     form_model = "player"
     form_fields = ["e_individual_choice", "individual_choice_e_comment"]
+
+
+class ResultsWaitPage(WaitPage):
+    pass
+
+
+class PreResults(Page):
+    pass
 
 
 class Results(Page):
@@ -289,28 +306,6 @@ class Results(Page):
             e_numA=e_prop_num_A,
             e_numB=e_prop_num_B,
         )
-
-
-def keiosan_ratio(num_A, num_B, num_participants):
-    # 割合に計算
-    if num_A > 0:
-        prop_num_A = round((num_A / num_participants) * 100, 2)
-    else:
-        prop_num_A = 0
-    if num_B > 0:
-        prop_num_B = round((num_B / num_participants) * 100, 2)
-    else:
-        prop_num_B = 0
-    # print(prop_num_A, prop_num_B)
-    return prop_num_A, prop_num_B
-
-
-class ResultsWaitPage(WaitPage):
-    pass
-
-
-class PreResults(Page):
-    pass
 
 
 page_sequence = [
