@@ -29,16 +29,6 @@ class MyPage(Page):
     form_fields = ["input_id"]
 
 
-class ResultsWaitPage(WaitPage):
-    pass
-
-
-class Results(Page):
-    pass
-
-
 page_sequence = [
     MyPage,
-    # ResultsWaitPage,
-    # Results
 ]
