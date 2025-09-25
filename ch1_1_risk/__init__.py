@@ -1,13 +1,13 @@
 from otree.api import *
-import time
 
 
-class Constants(BaseConstants):
-    name_in_url = "ch1_1_risk"
-    players_per_group = None
-    num_rounds = 1
-    Q_num = 5
-    categories = (["Aが1つ", "Aが2つ", "Aが3つ", "Aが4つ", "Aが5つ"],)
+class C(BaseConstants):
+    NAME_IN_URL = "ch1_1_risk"
+    PLAYERS_PER_GROUP = None
+    NUM_ROUNDS = 1
+
+    PROBLEMS = [150, 200, 250, 300, 350]
+    FORCE_SINGLE_SWITCH = 0  # 0:off, 1:on
 
 
 class Subsession(BaseSubsession):
@@ -20,20 +20,15 @@ class Group(BaseGroup):
 
 class Player(BasePlayer):
     # Decision
-    risk_List = models.StringField(initial="")
-    individual_choice_r_comment = models.StringField(initial="", label="")
-    List_A = models.LongStringField(initial="")
-    List_B = models.LongStringField(initial="")
-    num_A = models.IntegerField()
-    multiple_switch = models.BooleanField()
-
-    start = models.FloatField(initial=0.0)
-    read_time = models.LongStringField(initial="0")
-    time = models.LongStringField(initial="0")
-
-    # Decision_2
-    individual_choice = models.StringField(initial="", label="")
-    individual_choice_comment = models.StringField(initial="", label="")
+    q1 = models.StringField()
+    q2 = models.StringField()
+    q3 = models.StringField()
+    q4 = models.StringField()
+    q5 = models.StringField()
+    cnt_A = models.IntegerField()
+    individual_choice_r_comment = models.LongStringField(
+        label="どのように考えて意思決定をしましたか？"
+    )
 
     # Decision_3
     u_individual_choice = models.StringField(
@@ -44,8 +39,9 @@ class Player(BasePlayer):
             ["B", "Bをえらぶ"],
         ],
     )
-
-    individual_choice_u_comment = models.StringField(initial="", label="")
+    individual_choice_u_comment = models.LongStringField(
+        label="どのように考えて意思決定をしましたか？"
+    )
 
     # Decision_4
     s_individual_choice = models.StringField(
@@ -56,8 +52,9 @@ class Player(BasePlayer):
             ["B", "Bをえらぶ"],
         ],
     )
-
-    individual_choice_s_comment = models.StringField(initial="", label="")
+    individual_choice_s_comment = models.LongStringField(
+        label="どのように考えて意思決定をしましたか？"
+    )
 
     # Decision_5
     e_individual_choice = models.StringField(
@@ -68,7 +65,9 @@ class Player(BasePlayer):
             ["B", "Bをえらぶ"],
         ],
     )
-    individual_choice_e_comment = models.StringField(initial="", label="")
+    individual_choice_e_comment = models.LongStringField(
+        label="どのように考えて意思決定をしましたか？"
+    )
 
 
 # FUNCTIONS
@@ -82,157 +81,74 @@ def keiosan_ratio(num_A, num_B, num_participants):
         prop_num_B = round((num_B / num_participants) * 100, 2)
     else:
         prop_num_B = 0
-    # print(prop_num_A, prop_num_B)
     return prop_num_A, prop_num_B
 
 
-# PAGES-----
+# PAGES
 class Decision(Page):
-    form_model = "player"
-    form_fields = ["individual_choice_r_comment"]
+    """
+    実験 1.1 個人の意思決定 質問1～5
+    """
 
-    #  html to サーバー
+    form_model = "player"
+    form_fields = ["q1", "q2", "q3", "q4", "q5", "individual_choice_r_comment"]
+
     @staticmethod
-    def live_method(player: Player, data):
-        if data["first"] == 1:
-            player.time = str(time.time() - player.start)
-            player.risk_List = "A" * len(data["A"]) + "B" * len(data["B"])
-            player.multiple_switch = 0
-            player.num_A = player.risk_List.count("A")
-        else:
-            player.time = str(time.time() - player.start)
-            risklist = player.risk_List
-            if data["select_type"] == "A":
-                player.risk_List = (
-                    risklist[: int(data["position_num"]) - 1]
-                    + "A"
-                    + risklist[int(data["position_num"]) :]
-                )
-            else:
-                player.risk_List = (
-                    risklist[: int(data["position_num"]) - 1]
-                    + "B"
-                    + risklist[int(data["position_num"]) :]
-                )
-            player.num_A = player.risk_List.count("A")
-            player.multiple_switch = "B" in player.risk_List[: player.num_A]
-
-
-class Decision_2(Page):
-    form_model = "player"
-    form_fields = ["individual_choice", "individual_choice_comment"]
+    def before_next_page(player: Player, timeout_happened):
+        if player.q1 and player.q2 and player.q3 and player.q4 and player.q5:
+            player.cnt_A = [
+                player.q1,
+                player.q2,
+                player.q3,
+                player.q4,
+                player.q5,
+            ].count("A")
 
 
 class Decision_3(Page):
+    """
+    実験 1.1 個人の意思決定 質問6
+    """
+
     form_model = "player"
     form_fields = ["u_individual_choice", "individual_choice_u_comment"]
 
 
 class Decision_4(Page):
+    """
+    実験 1.1 個人の意思決定 質問7
+    """
+
     form_model = "player"
     form_fields = ["s_individual_choice", "individual_choice_s_comment"]
 
 
 class Decision_5(Page):
+    """
+    実験 1.1 個人の意思決定 質問8
+    """
+
     form_model = "player"
     form_fields = ["e_individual_choice", "individual_choice_e_comment"]
 
 
 class ResultsWaitPage(WaitPage):
-    pass
+    wait_for_all_groups = True
 
+    def after_all_players_arrive(subsession: Subsession):
+        players: list[Player] = subsession.get_players()
+        session = subsession.session
 
-class PreResults(Page):
-    pass
+        # Decision (q1--5)
+        list_num_A = [p.cnt_A for p in players if p.field_maybe_none("cnt_A")]
+        prop_num_A = []
+        if len(list_num_A) > 0:
+            prop_num_A = [
+                100 * list_num_A.count(i) / len(list_num_A) for i in range(6)
+            ][::-1]
+        session.vars["prop_num_A"] = prop_num_A
 
-
-class Results(Page):
-    # グラフ描画用
-    @staticmethod
-    def js_vars(player: Player):
-        print("js_vars")
-        group = player.group
-        players = group.get_players()
-        # 参加者-----
-        num_participants = 0
-        # リスクグラフ-----
-        r_count_A0 = 0
-        r_count_A1 = 0
-        r_count_A2 = 0
-        r_count_A3 = 0
-        r_count_A4 = 0
-        r_count_A5 = 0
-
-        for p in players:
-            r = p.risk_List
-            if r != "":
-                num_participants += 1
-                r_count_A = r.count("A")
-                if r_count_A == 0:
-                    r_count_A0 += 1
-                elif r_count_A == 1:
-                    r_count_A1 += 1
-                elif r_count_A == 2:
-                    r_count_A2 += 1
-                elif r_count_A == 3:
-                    r_count_A3 += 1
-                elif r_count_A == 4:
-                    r_count_A4 += 1
-                elif r_count_A == 5:
-                    r_count_A5 += 1
-
-        print(
-            num_participants,
-            r_count_A0,
-            r_count_A1,
-            r_count_A2,
-            r_count_A3,
-            r_count_A4,
-            r_count_A5,
-        )
-        print("追加：割合に計算")
-        if r_count_A0 > 0:
-            prop_num_A0 = round((r_count_A0 / num_participants) * 100, 2)
-        else:
-            prop_num_A0 = 0
-        if r_count_A1 > 0:
-            prop_num_A1 = round((r_count_A1 / num_participants) * 100, 2)
-        else:
-            prop_num_A1 = 0
-        if r_count_A2 > 0:
-            prop_num_A2 = round((r_count_A2 / num_participants) * 100, 2)
-        else:
-            prop_num_A2 = 0
-        if r_count_A3 > 0:
-            prop_num_A3 = round((r_count_A3 / num_participants) * 100, 2)
-        else:
-            prop_num_A3 = 0
-        if r_count_A4 > 0:
-            prop_num_A4 = round((r_count_A4 / num_participants) * 100, 2)
-        else:
-            prop_num_A4 = 0
-        if r_count_A5 > 0:
-            prop_num_A5 = round((r_count_A5 / num_participants) * 100, 2)
-        else:
-            prop_num_A5 = 0
-
-        # Decision_2:-----
-        num_participants_c = 0
-        sum_decision = 0
-        average_decision = 0
-        for p in players:
-            c = p.individual_choice
-            print("CCCCCCCCCCCCCCCCCCCC", c)
-            if c != "":
-                num_participants_c += 1
-                sum_decision = sum_decision + int(c)
-
-        if sum_decision > 0:
-            average_decision = round(sum_decision / num_participants_c, 2)
-        else:
-            average_decision = 0
-
-        # Decision_3:不確実性の質問グラフ-----
+        # Decision_3:不確実性の質問グラフ
         print("Decision_3:不確実性の質問グラフ")
         num_participants_u = 0
         u_count_A = 0
@@ -250,8 +166,11 @@ class Results(Page):
             u_count_A, u_count_B, num_participants_u
         )
         print("Decision_3:不確実性の質問グラフー", u_prop_num_A, u_prop_num_B)
+        session.vars["num_participants_u"] = num_participants_u
+        session.vars["u_prop_num_A"] = u_prop_num_A
+        session.vars["u_prop_num_B"] = u_prop_num_B
 
-        # Decision_4:10倍の質問グラフ-----
+        # Decision_4:10倍の質問グラフ
         num_participants_s = 0
         s_count_A = 0
         s_count_B = 0
@@ -267,8 +186,12 @@ class Results(Page):
         s_prop_num_A, s_prop_num_B = keiosan_ratio(
             s_count_A, s_count_B, num_participants_s
         )
+        print("Decision_4:10倍の質問グラフー", s_prop_num_A, s_prop_num_B)
+        session.vars["num_participants_s"] = num_participants_s
+        session.vars["s_prop_num_A"] = s_prop_num_A
+        session.vars["s_prop_num_B"] = s_prop_num_B
 
-        # 期待値が高い質問グラフ-----
+        # 期待値が高い質問グラフ
         num_participants_e = 0
         e_count_A = 0
         e_count_B = 0
@@ -284,33 +207,37 @@ class Results(Page):
         e_prop_num_A, e_prop_num_B = keiosan_ratio(
             e_count_A, e_count_B, num_participants_e
         )
+        print("期待値が高い質問グラフー", e_prop_num_A, e_prop_num_B)
+        session.vars["num_participants_e"] = num_participants_e
+        session.vars["e_prop_num_A"] = e_prop_num_A
+        session.vars["e_prop_num_B"] = e_prop_num_B
 
+
+class PreResults(Page):
+    pass
+
+
+class Results(Page):
+    # グラフ描画用
+    @staticmethod
+    def js_vars(player: Player):
         return dict(
-            name_of_categories=Constants.categories,
-            num_participants=num_participants,
-            num_A0=prop_num_A0,  # r_count_A0,
-            num_A1=prop_num_A1,  # r_count_A1,
-            num_A2=prop_num_A2,  # r_count_A2,
-            num_A3=prop_num_A3,  # r_count_A3,
-            num_A4=prop_num_A4,  # r_count_A4,
-            num_A5=prop_num_A5,  # r_count_A5,
-            num_participants_c=num_participants_c,
-            average_decision=average_decision,
-            num_participants_u=num_participants_u,
-            u_numA=u_prop_num_A,
-            u_numB=u_prop_num_B,
-            num_participants_s=num_participants_s,
-            s_numA=s_prop_num_A,
-            s_numB=s_prop_num_B,
-            num_participants_e=num_participants_e,
-            e_numA=e_prop_num_A,
-            e_numB=e_prop_num_B,
+            num_participants=player.session.num_participants,
+            prop_num_A=player.session.vars["prop_num_A"],
+            num_participants_u=player.session.vars["num_participants_u"],
+            u_numA=player.session.vars["u_prop_num_A"],
+            u_numB=player.session.vars["u_prop_num_B"],
+            num_participants_s=player.session.vars["num_participants_s"],
+            s_numA=player.session.vars["s_prop_num_A"],
+            s_numB=player.session.vars["s_prop_num_B"],
+            num_participants_e=player.session.vars["num_participants_e"],
+            e_numA=player.session.vars["e_prop_num_A"],
+            e_numB=player.session.vars["e_prop_num_B"],
         )
 
 
 page_sequence = [
     Decision,
-    # Decision_2,
     Decision_3,
     Decision_4,
     Decision_5,
