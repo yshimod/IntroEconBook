@@ -33,10 +33,10 @@ class Player(BasePlayer):
     # Decision_3
     u_individual_choice = models.StringField(
         widget=widgets.RadioSelectHorizontal,
-        verbose_name="",
+        label="この時あなたは、A、Bのどちらを選びますか？",
         choices=[
-            ["A", "Aをえらぶ"],
-            ["B", "Bをえらぶ"],
+            ["A", "Aを選ぶ"],
+            ["B", "Bを選ぶ"],
         ],
     )
     individual_choice_u_comment = models.LongStringField(
@@ -46,10 +46,10 @@ class Player(BasePlayer):
     # Decision_4
     s_individual_choice = models.StringField(
         widget=widgets.RadioSelectHorizontal,
-        verbose_name="",
+        label="この時あなたは、A、Bのどちらを選びますか？",
         choices=[
-            ["A", "Aをえらぶ"],
-            ["B", "Bをえらぶ"],
+            ["A", "Aを選ぶ"],
+            ["B", "Bを選ぶ"],
         ],
     )
     individual_choice_s_comment = models.LongStringField(
@@ -59,10 +59,10 @@ class Player(BasePlayer):
     # Decision_5
     e_individual_choice = models.StringField(
         widget=widgets.RadioSelectHorizontal,
-        verbose_name="",
+        label="この時あなたは、A、Bのどちらを選びますか？",
         choices=[
-            ["A", "Aをえらぶ"],
-            ["B", "Bをえらぶ"],
+            ["A", "Aを選ぶ"],
+            ["B", "Bを選ぶ"],
         ],
     )
     individual_choice_e_comment = models.LongStringField(

@@ -1,20 +1,19 @@
-{% extends "global/Page.html" %}
-{% load otree static %}
+{{ extends "global/Page.html" }}
+{{ block title }}
+質問7
+{{ endblock }}
 
-{% block title %}
-    質問7
-{% endblock %}
 
-{% block content %}
+{{ block content }}
 <div style="padding: 10px; margin-bottom: 10px; border: 1px solid #333333; border-radius: 10px; width:65%">
-<p>元手が2500あります。<br>
-A:投資する：50%確率で4000に、50%確率で1000になる<br>
-B:投資しない：2500をそのままもつ<br></p>
+    <p>元手が2500あります。<br>
+        A:投資する：50%確率で4000に、50%確率で1000になる<br>
+        B:投資しない：2500をそのままもつ
+    </p>
 </div>
-<br>
-<p> この時、あなたは、A,Bのどちらをえらびますか？{% formfield player.s_individual_choice %}</p>
-<p> その選択をした理由はなぜですか{% formfield player.individual_choice_s_comment %}</p>
 
-{% next_button %}
+{{ formfields }}
 
-{% endblock %}
+{{ next_button }}
+
+{{ endblock }}
