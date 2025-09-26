@@ -175,6 +175,15 @@ class ResultsWaitPage(WaitPage):
         session.vars["ch1_1__num_participants"] = len(list_choice_r_cntA)
         session.vars["ch1_1__list_prop_A"] = list_prop_A
 
+        list_choice_r3 = [
+            p.choice_r3 for p in players if p.field_maybe_none("choice_r3")
+        ]
+        prop_A_r3 = -1
+        if len(list_choice_r3) > 0:
+            prop_A_r3 = 100 * list_choice_r3.count("A") / len(list_choice_r3)
+        session.vars["ch1_1__num_participants_r3"] = len(list_choice_r3)
+        session.vars["ch1_1__prop_A_r3"] = prop_A_r3
+
         # Decision_3 (q6)
         list_choice_u = [p.choice_u for p in players if p.field_maybe_none("choice_u")]
         prop_A_u = -1
@@ -210,6 +219,8 @@ class Results(Page):
         return dict(
             num_participants=player.session.vars["ch1_1__num_participants"],
             list_prop_A=player.session.vars["ch1_1__list_prop_A"],
+            num_participants_r3=player.session.vars["ch1_1__num_participants_r3"],
+            prop_A_r3=player.session.vars["ch1_1__prop_A_r3"],
             num_participants_u=player.session.vars["ch1_1__num_participants_u"],
             prop_A_u=player.session.vars["ch1_1__prop_A_u"],
             num_participants_s=player.session.vars["ch1_1__num_participants_s"],
