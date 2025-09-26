@@ -5,7 +5,7 @@
 
 
 {{ block content }}
-<table class="table table-hover">
+<table class="table table-hover decision-table">
     <thead>
         <tr>
             <th rowspan="2" style="border-bottom: 1px double #000;"></th>
@@ -57,12 +57,21 @@
 
 {{ block styles }}
 <style>
+    .decision-table td>* {
+        vertical-align: middle;
+    }
+
     .tab-opt-a {
         background-color: #fdf5e6 !important;
     }
 
     .tab-opt-b {
         background-color: #f0fff0 !important;
+    }
+
+    .optbtn {
+        width: 1.5em;
+        height: 1.5em;
     }
 </style>
 {{ endblock }}
