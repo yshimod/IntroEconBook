@@ -1,17 +1,79 @@
+{{ extends "global/Page.html" }}
 {{ block title }}
-    結果
+結果
 {{ endblock }}
 
 {{ block content }}
+<div class="boxed-section">
+    <table class="table">
+        <tr>
+            <th>質問1～5</th>
+        </tr>
+        <tr>
+            <td>あなたの意思決定: <b>Aが{{ player.choice_r_cntA }}個</b></td>
+        </tr>
+    </table>
+    <div id="highchart"></div>
+</div>
 
-{{ include 'ch1_1_risk/chart.html' }}
-<script>
-drawChart();// グラフ描画
-inputValue();// 値代入
-drawChart_3();// グラフ3描画
-drawChart_4();// グラフ4描画
-drawChart_5();// グラフ5描画
-</script>
+<div class="boxed-section">
+    <table class="table">
+        <tr>
+            <th>質問3</th>
+        </tr>
+        <tr>
+            <td>あなたの意思決定：<b>{{ player.choice_r3 }}</b></td>
+        </tr>
+    </table>
+    <div id="highchart2"></div>
+</div>
+
+<div class="boxed-section">
+    <table class="table">
+        <tr>
+            <th>質問6</th>
+        </tr>
+        <tr>
+            <td>あなたの意思決定：<b>{{ player.choice_u }}</b></td>
+        </tr>
+    </table>
+    <div id="highchart3"></div>
+</div>
+
+<div class="boxed-section">
+    <table class="table">
+        <tr>
+            <th>質問7</th>
+        </tr>
+        <tr>
+            <td>あなたの意思決定：<b>{{ player.choice_s }}</b></td>
+        </tr>
+    </table>
+    <div id="highchart4"></div>
+</div>
+
+<div class="boxed-section">
+    <table class="table">
+        <tr>
+            <th>質問8</th>
+        </tr>
+        <td>あなたの意思決定：<b>{{ player.choice_e }}</b></td>
+    </table>
+    <div id="highchart5"></div>
+</div>
+
 {{ endblock }}
 
 
+{{ block script }}
+{{ include 'ch1_1_risk/chart.html' }}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        drawChart1(js_vars.num_participants, js_vars.list_prop_A);
+        drawChart2(js_vars.num_participants_r3, js_vars.prop_A_r3, 'highchart2', '質問3における選択割合');
+        drawChart2(js_vars.num_participants_u, js_vars.prop_A_u, 'highchart3', '質問6における選択割合');
+        drawChart2(js_vars.num_participants_s, js_vars.prop_A_s, 'highchart4', '質問7における選択割合');
+        drawChart2(js_vars.num_participants_e, js_vars.prop_A_e, 'highchart5', '質問8における選択割合');
+    });
+</script>
+{{ endblock }}

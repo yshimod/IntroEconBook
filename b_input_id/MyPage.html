@@ -6,11 +6,9 @@
 
 {{ block content }}
 
-<div>
-    <div>
-        学籍番号：
-        {{ formfield player.input_id }}
-    </div>
+{{ formfield "input_id" }}
+
+<div class="mt-5">
     <p>学生証の番号を入力してください。名前は絶対に入れないでください。</p>
     <p>間違いのないようにしてください。</p>
 </div>
