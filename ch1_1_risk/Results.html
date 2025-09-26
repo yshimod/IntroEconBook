@@ -10,7 +10,26 @@
             <th>質問1～5</th>
         </tr>
         <tr>
-            <td>あなたの意思決定: <b>Aが{{ player.choice_r_cntA }}個</b></td>
+            <td>
+                <ul>
+                    <li>A: 「{{ C.PROBLEM_A }}」</li>
+                    <li>
+                        B: 「X をそのまま持つ」
+                        （ X =
+                        {{for v in C.PROBLEMS}}
+                        {{ v }}{{ if forloop.counter < 5 }}, {{ endif }}
+                        {{ endfor }}
+                        ）
+                    </li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                あなたの意思決定:
+                <b>Aが{{ player.choice_r_cntA }}個</b>
+                （{{ player.choice_r1 }}{{ player.choice_r2 }}{{ player.choice_r3 }}{{ player.choice_r4 }}{{ player.choice_r5 }}）
+            </td>
         </tr>
     </table>
     <div id="highchart"></div>
@@ -20,6 +39,14 @@
     <table class="table">
         <tr>
             <th>質問3</th>
+        </tr>
+        <tr>
+            <td>
+                <ul>
+                    <li>A: 「{{ C.PROBLEM_A }}」</li>
+                    <li>B: 「{{ C.PROBLEMS.2 }}をそのまま持つ」</li>
+                </ul>
+            </td>
         </tr>
         <tr>
             <td>あなたの意思決定：<b>{{ player.choice_r3 }}</b></td>
@@ -34,6 +61,16 @@
             <th>質問6</th>
         </tr>
         <tr>
+            <td>
+                <ul>
+                    <li>A:
+                        「{{ C.PROBLEM_6.PROB }}の確率で{{ C.PROBLEM_6.AWIN }}に、{{ C.PROBLEM_6.NOT_PROB }}の確率で{{ C.PROBLEM_6.ALOSE }}になる」
+                    </li>
+                    <li>B: 「{{ C.PROBLEM_6.B }}をそのまま持つ」</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
             <td>あなたの意思決定：<b>{{ player.choice_u }}</b></td>
         </tr>
     </table>
@@ -46,6 +83,16 @@
             <th>質問7</th>
         </tr>
         <tr>
+            <td>
+                <ul>
+                    <li>A:
+                        「{{ C.PROBLEM_7.PROB }}の確率で{{ C.PROBLEM_7.AWIN }}に、{{ C.PROBLEM_7.NOT_PROB }}の確率で{{ C.PROBLEM_7.ALOSE }}になる」
+                    </li>
+                    <li>B: 「{{ C.PROBLEM_7.B }}をそのまま持つ」</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
             <td>あなたの意思決定：<b>{{ player.choice_s }}</b></td>
         </tr>
     </table>
@@ -56,6 +103,16 @@
     <table class="table">
         <tr>
             <th>質問8</th>
+        </tr>
+        <tr>
+            <td>
+                <ul>
+                    <li>A:
+                        「{{ C.PROBLEM_8.PROB }}の確率で{{ C.PROBLEM_8.AWIN }}に、{{ C.PROBLEM_8.NOT_PROB }}の確率で{{ C.PROBLEM_8.ALOSE }}になる」
+                    </li>
+                    <li>B: 「{{ C.PROBLEM_8.B }}をそのまま持つ」</li>
+                </ul>
+            </td>
         </tr>
         <td>あなたの意思決定：<b>{{ player.choice_e }}</b></td>
     </table>

@@ -1,9 +1,24 @@
 <div class="boxed-section">
     <div id="highchart"></div>
+    <ul>
+        <li>A: 「{{ C.PROBLEM_A }}」</li>
+        <li>
+            B: 「X をそのまま持つ」
+            （ X =
+            {{for v in C.PROBLEMS}}
+            {{ v }}{{ if forloop.counter < 5 }}, {{ endif }}
+            {{ endfor }}
+            ）
+        </li>
+    </ul>
 </div>
 
 <div class="boxed-section">
     <div id="highchart2"></div>
+    <ul>
+        <li>A: 「{{ C.PROBLEM_A }}」</li>
+        <li>B: 「{{ C.PROBLEMS.2 }}をそのまま持つ」</li>
+    </ul>
 </div>
 
 <div class="my-5 fs-5">
@@ -29,6 +44,12 @@
 
 <div class="boxed-section">
     <div id="highchart3"></div>
+    <ul>
+        <li>A:
+            「{{ C.PROBLEM_6.PROB }}の確率で{{ C.PROBLEM_6.AWIN }}に、{{ C.PROBLEM_6.NOT_PROB }}の確率で{{ C.PROBLEM_6.ALOSE }}になる」
+        </li>
+        <li>B: 「{{ C.PROBLEM_6.B }}をそのまま持つ」</li>
+    </ul>
 </div>
 
 <div class="my-5 fs-5">
@@ -52,6 +73,12 @@
 
 <div class="boxed-section">
     <div id="highchart4"></div>
+    <ul>
+        <li>A:
+            「{{ C.PROBLEM_7.PROB }}の確率で{{ C.PROBLEM_7.AWIN }}に、{{ C.PROBLEM_7.NOT_PROB }}の確率で{{ C.PROBLEM_7.ALOSE }}になる」
+        </li>
+        <li>B: 「{{ C.PROBLEM_7.B }}をそのまま持つ」</li>
+    </ul>
 </div>
 
 <div class="my-5 fs-5">
@@ -75,6 +102,12 @@
 
 <div class="boxed-section">
     <div id="highchart5"></div>
+    <ul>
+        <li>A:
+            「{{ C.PROBLEM_8.PROB }}の確率で{{ C.PROBLEM_8.AWIN }}に、{{ C.PROBLEM_8.NOT_PROB }}の確率で{{ C.PROBLEM_8.ALOSE }}になる」
+        </li>
+        <li>B: 「{{ C.PROBLEM_8.B }}をそのまま持つ」</li>
+    </ul>
 </div>
 
 <div class="my-5 fs-5">
