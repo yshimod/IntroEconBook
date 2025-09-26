@@ -4,7 +4,7 @@ from os import environ
 SESSION_CONFIGS = [
     dict(
         name="ch1_1_risk",
-        display_name="第1章：個人の意思決定(リスクあり)",
+        display_name="第1章：個人の意思決定（リスク）",
         app_sequence=["b_input_id", "ch1_1_risk"],
         num_demo_participants=3,
     ),
