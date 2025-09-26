@@ -115,6 +115,7 @@ class Decision_3(Page):
     実験 1.1 個人の意思決定 質問6（不確実性のある状況）
     """
 
+    template_name = __name__ + "/Decision2.html"
     form_model = "player"
     form_fields = ["choice_u", "comment_u"]
 
