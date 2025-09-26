@@ -7,10 +7,12 @@
 {{ block content }}
 <div class="card fs-4">
     <div class="card-body">
-        <p>元手が250あります。</p>
+        <p>元手が{{ Value_B }}あります。</p>
         <ul>
-            <li><span class="fw-bold">A: 投資する</span> ある未知の確率で400に、残りの確率で100になる</li>
-            <li><span class="fw-bold">B: 投資しない</span> 250をそのままもつ</li>
+            <li><span class="fw-bold">A: 投資する</span>
+                {{ PROB }}の確率で{{ Value_A_WIN }}に、{{ NOT_PROB }}の確率で{{ Value_A_LOSE }}になる
+            </li>
+            <li><span class="fw-bold">B: 投資しない</span> {{ Value_B }}をそのまま持つ</li>
         </ul>
     </div>
 </div>

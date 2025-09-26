@@ -10,7 +10,29 @@ class C(BaseConstants):
     PROBLEMS = [150, 200, 250, 300, 350]
     FORCE_SINGLE_SWITCH = 0  # 0:off, 1:on
 
-    WITH_BOT = False  # for testing
+    PROBLEMS_6 = {
+        "B": 250,
+        "AWIN": 400,
+        "ALOSE": 100,
+        "PROB": "ある未知",
+        "NOT_PROB": "残り",
+    }
+    PROBLEMS_7 = {
+        "B": 2500,
+        "AWIN": 4000,
+        "ALOSE": 1000,
+        "PROB": "50%",
+        "NOT_PROB": "50%",
+    }
+    PROBLEMS_8 = {
+        "B": 100,
+        "AWIN": 200,
+        "ALOSE": 150,
+        "PROB": "15%",
+        "NOT_PROB": "85%",
+    }
+
+    WITH_BOT = True  # for testing
 
 
 class Subsession(BaseSubsession):
@@ -34,7 +56,7 @@ class Player(BasePlayer):
     # Decision_3
     choice_u = models.StringField(
         widget=widgets.RadioSelectHorizontal,
-        label="この時あなたは、A、Bのどちらを選びますか？",
+        label="この時あなたは、AとBのどちらを選びますか？",
         choices=[
             ["A", "Aを選ぶ"],
             ["B", "Bを選ぶ"],
@@ -45,7 +67,7 @@ class Player(BasePlayer):
     # Decision_4
     choice_s = models.StringField(
         widget=widgets.RadioSelectHorizontal,
-        label="この時あなたは、A、Bのどちらを選びますか？",
+        label="この時あなたは、AとBのどちらを選びますか？",
         choices=[
             ["A", "Aを選ぶ"],
             ["B", "Bを選ぶ"],
@@ -56,7 +78,7 @@ class Player(BasePlayer):
     # Decision_5
     choice_e = models.StringField(
         widget=widgets.RadioSelectHorizontal,
-        label="この時あなたは、A、Bのどちらを選びますか？",
+        label="この時あなたは、AとBのどちらを選びますか？",
         choices=[
             ["A", "Aを選ぶ"],
             ["B", "Bを選ぶ"],
@@ -120,6 +142,16 @@ class Decision_3(Page):
     form_fields = ["choice_u", "comment_u"]
 
     @staticmethod
+    def vars_for_template(player: Player):
+        return dict(
+            Value_B=C.PROBLEMS_6["B"],
+            Value_A_WIN=C.PROBLEMS_6["AWIN"],
+            Value_A_LOSE=C.PROBLEMS_6["ALOSE"],
+            PROB=C.PROBLEMS_6["PROB"],
+            NOT_PROB=C.PROBLEMS_6["NOT_PROB"],
+        )
+
+    @staticmethod
     def before_next_page(player: Player, timeout_happened):
         if C.WITH_BOT and timeout_happened:
             player.choice_u = random.choice(["A", "B"])
@@ -131,8 +163,19 @@ class Decision_4(Page):
     実験 1.1 個人の意思決定 質問7（スケールが大きくなった状況）
     """
 
+    template_name = __name__ + "/Decision2.html"
     form_model = "player"
     form_fields = ["choice_s", "comment_s"]
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(
+            Value_B=C.PROBLEMS_7["B"],
+            Value_A_WIN=C.PROBLEMS_7["AWIN"],
+            Value_A_LOSE=C.PROBLEMS_7["ALOSE"],
+            PROB=C.PROBLEMS_7["PROB"],
+            NOT_PROB=C.PROBLEMS_7["NOT_PROB"],
+        )
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
@@ -146,8 +189,19 @@ class Decision_5(Page):
     実験 1.1 個人の意思決定 質問8（確実にAを選ぶことで得をすることができる状況）
     """
 
+    template_name = __name__ + "/Decision2.html"
     form_model = "player"
     form_fields = ["choice_e", "comment_e"]
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(
+            Value_B=C.PROBLEMS_8["B"],
+            Value_A_WIN=C.PROBLEMS_8["AWIN"],
+            Value_A_LOSE=C.PROBLEMS_8["ALOSE"],
+            PROB=C.PROBLEMS_8["PROB"],
+            NOT_PROB=C.PROBLEMS_8["NOT_PROB"],
+        )
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
