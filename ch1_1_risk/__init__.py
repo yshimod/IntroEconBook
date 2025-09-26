@@ -8,24 +8,24 @@ class C(BaseConstants):
     NUM_ROUNDS = 1
 
     PROBLEMS = [150, 200, 250, 300, 350]
-    PROBLEMS_A = "50%の確率で400に、50%の確率で100になる"
+    PROBLEM_A = "50%の確率で400に、50%の確率で100になる"
     FORCE_SINGLE_SWITCH = 0  # 0:off, 1:on
 
-    PROBLEMS_6 = {
+    PROBLEM_6 = {
         "B": 250,
         "AWIN": 400,
         "ALOSE": 100,
         "PROB": "ある未知",
         "NOT_PROB": "残り",
     }
-    PROBLEMS_7 = {
+    PROBLEM_7 = {
         "B": 2500,
         "AWIN": 4000,
         "ALOSE": 1000,
         "PROB": "50%",
         "NOT_PROB": "50%",
     }
-    PROBLEMS_8 = {
+    PROBLEM_8 = {
         "B": 100,
         "AWIN": 200,
         "ALOSE": 150,
@@ -145,11 +145,11 @@ class Decision_3(Page):
     @staticmethod
     def vars_for_template(player: Player):
         return dict(
-            Value_B=C.PROBLEMS_6["B"],
-            Value_A_WIN=C.PROBLEMS_6["AWIN"],
-            Value_A_LOSE=C.PROBLEMS_6["ALOSE"],
-            PROB=C.PROBLEMS_6["PROB"],
-            NOT_PROB=C.PROBLEMS_6["NOT_PROB"],
+            Value_B=C.PROBLEM_6["B"],
+            Value_A_WIN=C.PROBLEM_6["AWIN"],
+            Value_A_LOSE=C.PROBLEM_6["ALOSE"],
+            PROB=C.PROBLEM_6["PROB"],
+            NOT_PROB=C.PROBLEM_6["NOT_PROB"],
         )
 
     @staticmethod
@@ -171,11 +171,11 @@ class Decision_4(Page):
     @staticmethod
     def vars_for_template(player: Player):
         return dict(
-            Value_B=C.PROBLEMS_7["B"],
-            Value_A_WIN=C.PROBLEMS_7["AWIN"],
-            Value_A_LOSE=C.PROBLEMS_7["ALOSE"],
-            PROB=C.PROBLEMS_7["PROB"],
-            NOT_PROB=C.PROBLEMS_7["NOT_PROB"],
+            Value_B=C.PROBLEM_7["B"],
+            Value_A_WIN=C.PROBLEM_7["AWIN"],
+            Value_A_LOSE=C.PROBLEM_7["ALOSE"],
+            PROB=C.PROBLEM_7["PROB"],
+            NOT_PROB=C.PROBLEM_7["NOT_PROB"],
         )
 
     @staticmethod
@@ -197,11 +197,11 @@ class Decision_5(Page):
     @staticmethod
     def vars_for_template(player: Player):
         return dict(
-            Value_B=C.PROBLEMS_8["B"],
-            Value_A_WIN=C.PROBLEMS_8["AWIN"],
-            Value_A_LOSE=C.PROBLEMS_8["ALOSE"],
-            PROB=C.PROBLEMS_8["PROB"],
-            NOT_PROB=C.PROBLEMS_8["NOT_PROB"],
+            Value_B=C.PROBLEM_8["B"],
+            Value_A_WIN=C.PROBLEM_8["AWIN"],
+            Value_A_LOSE=C.PROBLEM_8["ALOSE"],
+            PROB=C.PROBLEM_8["PROB"],
+            NOT_PROB=C.PROBLEM_8["NOT_PROB"],
         )
 
     @staticmethod
