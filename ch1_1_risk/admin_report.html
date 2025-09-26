@@ -6,16 +6,94 @@
     <div id="highchart2"></div>
 </div>
 
+<div class="my-5 fs-5">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th width="15%">Aの個数</th>
+                <th width="15%">内訳</th>
+                <th width="70%">理由</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ for el in list_comment_r }}
+            <tr>
+                <td>{{ el.0 }}</td>
+                <td>{{ el.1 }}</td>
+                <td>{{ el.2 | escape }}</td>
+            </tr>
+            {{ endfor }}
+        </tbody>
+    </table>
+</div>
+
 <div class="boxed-section">
     <div id="highchart3"></div>
+</div>
+
+<div class="my-5 fs-5">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th width="30%">選択</th>
+                <th width="70%">理由</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ for el in list_comment_u }}
+            <tr>
+                <td>{{ el.0 }}</td>
+                <td>{{ el.1 | escape }}</td>
+            </tr>
+            {{ endfor }}
+        </tbody>
+    </table>
 </div>
 
 <div class="boxed-section">
     <div id="highchart4"></div>
 </div>
 
+<div class="my-5 fs-5">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th width="30%">選択</th>
+                <th width="70%">理由</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ for el in list_comment_s }}
+            <tr>
+                <td>{{ el.0 }}</td>
+                <td>{{ el.1 | escape }}</td>
+            </tr>
+            {{ endfor }}
+        </tbody>
+    </table>
+</div>
+
 <div class="boxed-section">
     <div id="highchart5"></div>
+</div>
+
+<div class="my-5 fs-5">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th width="30%">選択</th>
+                <th width="70%">理由</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ for el in list_comment_e }}
+            <tr>
+                <td>{{ el.0 }}</td>
+                <td>{{ el.1 | escape }}</td>
+            </tr>
+            {{ endfor }}
+        </tbody>
+    </table>
 </div>
 
 {{ include 'ch1_1_risk/chart.html' }}

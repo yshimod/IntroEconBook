@@ -309,4 +309,64 @@ def vars_for_admin_report(subsession: Subsession):
         num_participants_e=subsession.session.vars["ch1_1__num_participants_e"],
         prop_A_e=subsession.session.vars["ch1_1__prop_A_e"],
     )
-    return dict(js_vars=js_vars)
+
+    list_comment_r = sorted(
+        [
+            [
+                p.choice_r_cntA,
+                "".join(
+                    [
+                        p.choice_r1,
+                        p.choice_r2,
+                        p.choice_r3,
+                        p.choice_r4,
+                        p.choice_r5,
+                    ]
+                ),
+                p.comment_r,
+            ]
+            for p in subsession.get_players()
+            if p.field_maybe_none("comment_r")
+        ]
+    )
+
+    list_comment_u = sorted(
+        [
+            [
+                p.choice_u,
+                p.comment_u,
+            ]
+            for p in subsession.get_players()
+            if p.field_maybe_none("comment_u")
+        ]
+    )
+
+    list_comment_s = sorted(
+        [
+            [
+                p.choice_s,
+                p.comment_s,
+            ]
+            for p in subsession.get_players()
+            if p.field_maybe_none("comment_s")
+        ]
+    )
+
+    list_comment_e = sorted(
+        [
+            [
+                p.choice_e,
+                p.comment_e,
+            ]
+            for p in subsession.get_players()
+            if p.field_maybe_none("comment_e")
+        ]
+    )
+
+    return dict(
+        js_vars=js_vars,
+        list_comment_r=list_comment_r,
+        list_comment_u=list_comment_u,
+        list_comment_s=list_comment_s,
+        list_comment_e=list_comment_e,
+    )
