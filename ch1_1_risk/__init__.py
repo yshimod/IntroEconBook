@@ -8,6 +8,7 @@ class C(BaseConstants):
     NUM_ROUNDS = 1
 
     PROBLEMS = [150, 200, 250, 300, 350]
+    PROBLEMS_A = "50%の確率で400に、50%の確率で100になる"
     FORCE_SINGLE_SWITCH = 0  # 0:off, 1:on
 
     PROBLEMS_6 = {
