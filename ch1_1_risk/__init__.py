@@ -71,17 +71,6 @@ class Player(BasePlayer):
 
 
 # FUNCTIONS
-def keiosan_ratio(num_A, num_B, num_participants):
-    # 割合に計算
-    if num_A > 0:
-        prop_num_A = round((num_A / num_participants) * 100, 2)
-    else:
-        prop_num_A = 0
-    if num_B > 0:
-        prop_num_B = round((num_B / num_participants) * 100, 2)
-    else:
-        prop_num_B = 0
-    return prop_num_A, prop_num_B
 
 
 # PAGES
@@ -146,71 +135,44 @@ class ResultsWaitPage(WaitPage):
             prop_num_A = [
                 100 * list_num_A.count(i) / len(list_num_A) for i in range(6)
             ][::-1]
+        session.vars["num_participants"] = len(list_num_A)
         session.vars["prop_num_A"] = prop_num_A
 
-        # Decision_3:不確実性の質問グラフ
-        print("Decision_3:不確実性の質問グラフ")
-        num_participants_u = 0
-        u_count_A = 0
-        u_count_B = 0
-        for p in players:
-            u = p.u_individual_choice
-            if u != "":
-                num_participants_u += 1
-                if u == "A":
-                    u_count_A += 1
-                elif u == "B":
-                    u_count_B += 1
-
-        u_prop_num_A, u_prop_num_B = keiosan_ratio(
-            u_count_A, u_count_B, num_participants_u
-        )
-        print("Decision_3:不確実性の質問グラフー", u_prop_num_A, u_prop_num_B)
-        session.vars["num_participants_u"] = num_participants_u
+        # Decision_3 (q6)
+        list_numA_q6 = [
+            p.u_individual_choice
+            for p in players
+            if p.field_maybe_none("u_individual_choice")
+        ]
+        u_prop_num_A = -1
+        if len(list_numA_q6) > 0:
+            u_prop_num_A = 100 * list_numA_q6.count("A") / len(list_numA_q6)
+        session.vars["num_participants_u"] = len(list_numA_q6)
         session.vars["u_prop_num_A"] = u_prop_num_A
-        session.vars["u_prop_num_B"] = u_prop_num_B
 
-        # Decision_4:10倍の質問グラフ
-        num_participants_s = 0
-        s_count_A = 0
-        s_count_B = 0
-        for p in players:
-            s = p.s_individual_choice
-            if s != "":
-                num_participants_s += 1
-                if s == "A":
-                    s_count_A += 1
-                elif s == "B":
-                    s_count_B += 1
-
-        s_prop_num_A, s_prop_num_B = keiosan_ratio(
-            s_count_A, s_count_B, num_participants_s
-        )
-        print("Decision_4:10倍の質問グラフー", s_prop_num_A, s_prop_num_B)
-        session.vars["num_participants_s"] = num_participants_s
+        # Decision_4 (q7)
+        list_numA_q7 = [
+            p.s_individual_choice
+            for p in players
+            if p.field_maybe_none("s_individual_choice")
+        ]
+        s_prop_num_A = -1
+        if len(list_numA_q7) > 0:
+            s_prop_num_A = 100 * list_numA_q7.count("A") / len(list_numA_q7)
+        session.vars["num_participants_s"] = len(list_numA_q7)
         session.vars["s_prop_num_A"] = s_prop_num_A
-        session.vars["s_prop_num_B"] = s_prop_num_B
 
-        # 期待値が高い質問グラフ
-        num_participants_e = 0
-        e_count_A = 0
-        e_count_B = 0
-        for p in players:
-            e = p.e_individual_choice
-            if e != "":
-                num_participants_e += 1
-                if e == "A":
-                    e_count_A += 1
-                elif e == "B":
-                    e_count_B += 1
-
-        e_prop_num_A, e_prop_num_B = keiosan_ratio(
-            e_count_A, e_count_B, num_participants_e
-        )
-        print("期待値が高い質問グラフー", e_prop_num_A, e_prop_num_B)
-        session.vars["num_participants_e"] = num_participants_e
+        # Decision_5 (q8)
+        list_numA_q8 = [
+            p.e_individual_choice
+            for p in players
+            if p.field_maybe_none("e_individual_choice")
+        ]
+        e_prop_num_A = -1
+        if len(list_numA_q8) > 0:
+            e_prop_num_A = 100 * list_numA_q8.count("A") / len(list_numA_q8)
+        session.vars["num_participants_e"] = len(list_numA_q8)
         session.vars["e_prop_num_A"] = e_prop_num_A
-        session.vars["e_prop_num_B"] = e_prop_num_B
 
 
 class PreResults(Page):
@@ -222,17 +184,17 @@ class Results(Page):
     @staticmethod
     def js_vars(player: Player):
         return dict(
-            num_participants=player.session.num_participants,
+            num_participants=player.session.vars["num_participants"],
             prop_num_A=player.session.vars["prop_num_A"],
             num_participants_u=player.session.vars["num_participants_u"],
             u_numA=player.session.vars["u_prop_num_A"],
-            u_numB=player.session.vars["u_prop_num_B"],
+            u_numB=100 - player.session.vars["u_prop_num_A"],
             num_participants_s=player.session.vars["num_participants_s"],
             s_numA=player.session.vars["s_prop_num_A"],
-            s_numB=player.session.vars["s_prop_num_B"],
+            s_numB=100 - player.session.vars["s_prop_num_B"],
             num_participants_e=player.session.vars["num_participants_e"],
             e_numA=player.session.vars["e_prop_num_A"],
-            e_numB=player.session.vars["e_prop_num_B"],
+            e_numB=100 - player.session.vars["e_prop_num_B"],
         )
 
 
