@@ -20,7 +20,7 @@ class Group(BaseGroup):
 
 class Player(BasePlayer):
     # 入力されるID
-    input_id = models.StringField(verbose_name="", initial="")
+    input_id = models.StringField(verbose_name="学籍番号", initial="")
 
 
 # PAGES
