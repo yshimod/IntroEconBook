@@ -1,4 +1,5 @@
 from otree.api import *
+import random
 
 
 class C(BaseConstants):
@@ -8,6 +9,8 @@ class C(BaseConstants):
 
     PROBLEMS = [150, 200, 250, 300, 350]
     FORCE_SINGLE_SWITCH = 0  # 0:off, 1:on
+
+    WITH_BOT = True  # for testing
 
 
 class Subsession(BaseSubsession):
@@ -84,6 +87,14 @@ class Decision(Page):
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
+        if C.WITH_BOT and timeout_happened:
+            player.q1 = random.choice(["A", "B"])
+            player.q2 = random.choice(["A", "B"])
+            player.q3 = random.choice(["A", "B"])
+            player.q4 = random.choice(["A", "B"])
+            player.q5 = random.choice(["A", "B"])
+            player.individual_choice_r_comment = "bot"
+
         if player.q1 and player.q2 and player.q3 and player.q4 and player.q5:
             player.cnt_A = [
                 player.q1,
@@ -102,6 +113,12 @@ class Decision_3(Page):
     form_model = "player"
     form_fields = ["u_individual_choice", "individual_choice_u_comment"]
 
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened):
+        if C.WITH_BOT and timeout_happened:
+            player.u_individual_choice = random.choice(["A", "B"])
+            player.individual_choice_u_comment = "bot"
+
 
 class Decision_4(Page):
     """
@@ -111,6 +128,12 @@ class Decision_4(Page):
     form_model = "player"
     form_fields = ["s_individual_choice", "individual_choice_s_comment"]
 
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened):
+        if C.WITH_BOT and timeout_happened:
+            player.s_individual_choice = random.choice(["A", "B"])
+            player.individual_choice_s_comment = "bot"
+
 
 class Decision_5(Page):
     """
@@ -119,6 +142,12 @@ class Decision_5(Page):
 
     form_model = "player"
     form_fields = ["e_individual_choice", "individual_choice_e_comment"]
+
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened):
+        if C.WITH_BOT and timeout_happened:
+            player.e_individual_choice = random.choice(["A", "B"])
+            player.individual_choice_e_comment = "bot"
 
 
 class ResultsWaitPage(WaitPage):
