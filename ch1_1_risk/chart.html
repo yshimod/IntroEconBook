@@ -10,7 +10,7 @@
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/series-label.js"></script>
 <script>
-    function drawChart1(num_participants, prop_num_A, domname = 'highchart', titlestr = '質問1～5における選択肢Aを選んだ個数別の割合') {
+    function drawChart1(num_participants, list_prop_A, domname = 'highchart', titlestr = '質問1～5における選択肢Aを選んだ個数の割合') {
         Highcharts.chart(domname, {
             chart: {
                 type: 'bar'
@@ -22,7 +22,7 @@
                 text: num_participants + '名が実験に参加しました'
             },
             xAxis: {
-                categories: ['Aが5つ', 'Aが4つ', 'Aが3つ', 'Aが2つ', 'Aが1つ', 'Aが0つ'],
+                categories: ['Aが5個', 'Aが4個', 'Aが3個', 'Aが2個', 'Aが1個', 'Aが0個'],
                 title: {
                     text: null
                 }
@@ -39,7 +39,7 @@
             },
             series: [{
                 name: '割合',
-                data: prop_num_A,
+                data: list_prop_A,
                 color: '#1f77b4',
                 dataLabels: { enabled: true, format: '{point.y:.2f}%' }
             }],
@@ -57,7 +57,7 @@
     }
 
 
-    function drawChart2(num_participants, prop_num_A, domname, titlestr) {
+    function drawChart2(num_participants, prop_A, domname, titlestr) {
         Highcharts.chart(domname, {
             chart: {
                 type: 'bar'
@@ -87,8 +87,8 @@
             series: [{
                 name: '割合',
                 data: [
-                    { y: prop_num_A, color: '#ff7f0e' },
-                    { y: 100 - prop_num_A, color: '#1f77b4' },
+                    { y: prop_A, color: '#ff7f0e' },
+                    { y: 100 - prop_A, color: '#1f77b4' },
                 ],
                 dataLabels: { enabled: true, format: '{point.y:.2f}%' }
             }],

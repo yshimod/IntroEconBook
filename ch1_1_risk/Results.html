@@ -10,7 +10,7 @@
             <th>質問1～5</th>
         </tr>
         <tr>
-            <td>あなたの意思決定: <b>{{ player.cnt_A }}</b></td>
+            <td>あなたの意思決定: <b>Aが{{ player.choice_r_cntA }}個</b></td>
         </tr>
     </table>
     <div id="highchart"></div>
@@ -23,7 +23,7 @@
             <th>質問6</th>
         </tr>
         <tr>
-            <td>あなたの意思決定：<b>{{ player.u_individual_choice }}</b></td>
+            <td>あなたの意思決定：<b>{{ player.choice_u }}</b></td>
         </tr>
     </table>
     <div id="highchart3"></div>
@@ -35,7 +35,7 @@
             <th>質問7</th>
         </tr>
         <tr>
-            <td>あなたの意思決定：<b>{{ player.s_individual_choice }}</b></td>
+            <td>あなたの意思決定：<b>{{ player.choice_s }}</b></td>
         </tr>
     </table>
     <div id="highchart4"></div>
@@ -46,7 +46,7 @@
         <tr>
             <th>質問8</th>
         </tr>
-        <td>あなたの意思決定：<b>{{ player.e_individual_choice }}</b></td>
+        <td>あなたの意思決定：<b>{{ player.choice_e }}</b></td>
     </table>
     <div id="highchart5"></div>
 </div>
@@ -58,10 +58,10 @@
 {{ include 'ch1_1_risk/chart.html' }}
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        drawChart1(js_vars.num_participants, js_vars.prop_num_A);
-        drawChart2(js_vars.num_participants_u, js_vars.u_numA, 'highchart3', '質問6における選択割合');
-        drawChart2(js_vars.num_participants_s, js_vars.s_numA, 'highchart4', '質問7における選択割合');
-        drawChart2(js_vars.num_participants_e, js_vars.e_numA, 'highchart5', '質問8における選択割合');
+        drawChart1(js_vars.num_participants, js_vars.list_prop_A);
+        drawChart2(js_vars.num_participants_u, js_vars.prop_A_u, 'highchart3', '質問6における選択割合');
+        drawChart2(js_vars.num_participants_s, js_vars.prop_A_s, 'highchart4', '質問7における選択割合');
+        drawChart2(js_vars.num_participants_e, js_vars.prop_A_e, 'highchart5', '質問8における選択割合');
     });
 </script>
 {{ endblock }}

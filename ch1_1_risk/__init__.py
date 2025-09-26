@@ -23,18 +23,16 @@ class Group(BaseGroup):
 
 class Player(BasePlayer):
     # Decision
-    q1 = models.StringField()
-    q2 = models.StringField()
-    q3 = models.StringField()
-    q4 = models.StringField()
-    q5 = models.StringField()
-    cnt_A = models.IntegerField()
-    individual_choice_r_comment = models.LongStringField(
-        label="どのように考えて意思決定をしましたか？"
-    )
+    choice_r1 = models.StringField()
+    choice_r2 = models.StringField()
+    choice_r3 = models.StringField()
+    choice_r4 = models.StringField()
+    choice_r5 = models.StringField()
+    choice_r_cntA = models.IntegerField()
+    comment_r = models.LongStringField(label="どのように考えて意思決定をしましたか？")
 
     # Decision_3
-    u_individual_choice = models.StringField(
+    choice_u = models.StringField(
         widget=widgets.RadioSelectHorizontal,
         label="この時あなたは、A、Bのどちらを選びますか？",
         choices=[
@@ -42,12 +40,10 @@ class Player(BasePlayer):
             ["B", "Bを選ぶ"],
         ],
     )
-    individual_choice_u_comment = models.LongStringField(
-        label="どのように考えて意思決定をしましたか？"
-    )
+    comment_u = models.LongStringField(label="どのように考えて意思決定をしましたか？")
 
     # Decision_4
-    s_individual_choice = models.StringField(
+    choice_s = models.StringField(
         widget=widgets.RadioSelectHorizontal,
         label="この時あなたは、A、Bのどちらを選びますか？",
         choices=[
@@ -55,12 +51,10 @@ class Player(BasePlayer):
             ["B", "Bを選ぶ"],
         ],
     )
-    individual_choice_s_comment = models.LongStringField(
-        label="どのように考えて意思決定をしましたか？"
-    )
+    comment_s = models.LongStringField(label="どのように考えて意思決定をしましたか？")
 
     # Decision_5
-    e_individual_choice = models.StringField(
+    choice_e = models.StringField(
         widget=widgets.RadioSelectHorizontal,
         label="この時あなたは、A、Bのどちらを選びますか？",
         choices=[
@@ -68,9 +62,7 @@ class Player(BasePlayer):
             ["B", "Bを選ぶ"],
         ],
     )
-    individual_choice_e_comment = models.LongStringField(
-        label="どのように考えて意思決定をしましたか？"
-    )
+    comment_e = models.LongStringField(label="どのように考えて意思決定をしましたか？")
 
 
 # FUNCTIONS
@@ -79,75 +71,88 @@ class Player(BasePlayer):
 # PAGES
 class Decision(Page):
     """
-    実験 1.1 個人の意思決定 質問1～5
+    実験 1.1 個人の意思決定 質問1～5（リスク態度）
     """
 
     form_model = "player"
-    form_fields = ["q1", "q2", "q3", "q4", "q5", "individual_choice_r_comment"]
+    form_fields = [
+        "choice_r1",
+        "choice_r2",
+        "choice_r3",
+        "choice_r4",
+        "choice_r5",
+        "comment_r",
+    ]
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
         if C.WITH_BOT and timeout_happened:
-            player.q1 = random.choice(["A", "B"])
-            player.q2 = random.choice(["A", "B"])
-            player.q3 = random.choice(["A", "B"])
-            player.q4 = random.choice(["A", "B"])
-            player.q5 = random.choice(["A", "B"])
-            player.individual_choice_r_comment = "bot"
+            player.choice_r1 = random.choice(["A", "B"])
+            player.choice_r2 = random.choice(["A", "B"])
+            player.choice_r3 = random.choice(["A", "B"])
+            player.choice_r4 = random.choice(["A", "B"])
+            player.choice_r5 = random.choice(["A", "B"])
+            player.comment_r = "bot"
 
-        if player.q1 and player.q2 and player.q3 and player.q4 and player.q5:
-            player.cnt_A = [
-                player.q1,
-                player.q2,
-                player.q3,
-                player.q4,
-                player.q5,
+        if (
+            player.choice_r1
+            and player.choice_r2
+            and player.choice_r3
+            and player.choice_r4
+            and player.choice_r5
+        ):
+            player.choice_r_cntA = [
+                player.choice_r1,
+                player.choice_r2,
+                player.choice_r3,
+                player.choice_r4,
+                player.choice_r5,
             ].count("A")
 
 
 class Decision_3(Page):
     """
-    実験 1.1 個人の意思決定 質問6
+    実験 1.1 個人の意思決定 質問6（不確実性のある状況）
     """
 
     form_model = "player"
-    form_fields = ["u_individual_choice", "individual_choice_u_comment"]
+    form_fields = ["choice_u", "comment_u"]
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
         if C.WITH_BOT and timeout_happened:
-            player.u_individual_choice = random.choice(["A", "B"])
-            player.individual_choice_u_comment = "bot"
+            player.choice_u = random.choice(["A", "B"])
+            player.comment_u = "bot"
 
 
 class Decision_4(Page):
     """
-    実験 1.1 個人の意思決定 質問7
+    実験 1.1 個人の意思決定 質問7（スケールが大きくなった状況）
     """
 
     form_model = "player"
-    form_fields = ["s_individual_choice", "individual_choice_s_comment"]
+    form_fields = ["choice_s", "comment_s"]
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
         if C.WITH_BOT and timeout_happened:
-            player.s_individual_choice = random.choice(["A", "B"])
-            player.individual_choice_s_comment = "bot"
+            player.choice_s = random.choice(["A", "B"])
+            player.comment_s = "bot"
 
 
 class Decision_5(Page):
     """
-    実験 1.1 個人の意思決定 質問8
+    実験 1.1 個人の意思決定 質問8（確実にAを選ぶことで得をすることができる状況）
     """
 
     form_model = "player"
-    form_fields = ["e_individual_choice", "individual_choice_e_comment"]
+    form_fields = ["choice_e", "comment_e"]
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
         if C.WITH_BOT and timeout_happened:
-            player.e_individual_choice = random.choice(["A", "B"])
-            player.individual_choice_e_comment = "bot"
+            player.choice_e = random.choice(["A", "B"])
+            player.comment_e = "bot"
 
 
 class ResultsWaitPage(WaitPage):
@@ -158,50 +163,41 @@ class ResultsWaitPage(WaitPage):
         session = subsession.session
 
         # Decision (q1--5)
-        list_num_A = [p.cnt_A for p in players if p.field_maybe_none("cnt_A")]
-        prop_num_A = []
-        if len(list_num_A) > 0:
-            prop_num_A = [
-                100 * list_num_A.count(i) / len(list_num_A) for i in range(6)
+        list_choice_r_cntA = [
+            p.choice_r_cntA for p in players if p.field_maybe_none("choice_r_cntA")
+        ]
+        list_prop_A = []
+        if len(list_choice_r_cntA) > 0:
+            list_prop_A = [
+                100 * list_choice_r_cntA.count(i) / len(list_choice_r_cntA)
+                for i in range(6)
             ][::-1]
-        session.vars["num_participants"] = len(list_num_A)
-        session.vars["prop_num_A"] = prop_num_A
+        session.vars["ch1_1__num_participants"] = len(list_choice_r_cntA)
+        session.vars["ch1_1__list_prop_A"] = list_prop_A
 
         # Decision_3 (q6)
-        list_numA_q6 = [
-            p.u_individual_choice
-            for p in players
-            if p.field_maybe_none("u_individual_choice")
-        ]
-        u_prop_num_A = -1
-        if len(list_numA_q6) > 0:
-            u_prop_num_A = 100 * list_numA_q6.count("A") / len(list_numA_q6)
-        session.vars["num_participants_u"] = len(list_numA_q6)
-        session.vars["u_prop_num_A"] = u_prop_num_A
+        list_choice_u = [p.choice_u for p in players if p.field_maybe_none("choice_u")]
+        prop_A_u = -1
+        if len(list_choice_u) > 0:
+            prop_A_u = 100 * list_choice_u.count("A") / len(list_choice_u)
+        session.vars["ch1_1__num_participants_u"] = len(list_choice_u)
+        session.vars["ch1_1__prop_A_u"] = prop_A_u
 
         # Decision_4 (q7)
-        list_numA_q7 = [
-            p.s_individual_choice
-            for p in players
-            if p.field_maybe_none("s_individual_choice")
-        ]
-        s_prop_num_A = -1
-        if len(list_numA_q7) > 0:
-            s_prop_num_A = 100 * list_numA_q7.count("A") / len(list_numA_q7)
-        session.vars["num_participants_s"] = len(list_numA_q7)
-        session.vars["s_prop_num_A"] = s_prop_num_A
+        list_choice_s = [p.choice_s for p in players if p.field_maybe_none("choice_s")]
+        prop_A_s = -1
+        if len(list_choice_s) > 0:
+            prop_A_s = 100 * list_choice_s.count("A") / len(list_choice_s)
+        session.vars["ch1_1__num_participants_s"] = len(list_choice_s)
+        session.vars["ch1_1__prop_A_s"] = prop_A_s
 
         # Decision_5 (q8)
-        list_numA_q8 = [
-            p.e_individual_choice
-            for p in players
-            if p.field_maybe_none("e_individual_choice")
-        ]
-        e_prop_num_A = -1
-        if len(list_numA_q8) > 0:
-            e_prop_num_A = 100 * list_numA_q8.count("A") / len(list_numA_q8)
-        session.vars["num_participants_e"] = len(list_numA_q8)
-        session.vars["e_prop_num_A"] = e_prop_num_A
+        list_choice_e = [p.choice_e for p in players if p.field_maybe_none("choice_e")]
+        prop_A_e = -1
+        if len(list_choice_e) > 0:
+            prop_A_e = 100 * list_choice_e.count("A") / len(list_choice_e)
+        session.vars["ch1_1__num_participants_e"] = len(list_choice_e)
+        session.vars["ch1_1__prop_A_e"] = prop_A_e
 
 
 class PreResults(Page):
@@ -212,14 +208,14 @@ class Results(Page):
     @staticmethod
     def js_vars(player: Player):
         return dict(
-            num_participants=player.session.vars["num_participants"],
-            prop_num_A=player.session.vars["prop_num_A"],
-            num_participants_u=player.session.vars["num_participants_u"],
-            u_numA=player.session.vars["u_prop_num_A"],
-            num_participants_s=player.session.vars["num_participants_s"],
-            s_numA=player.session.vars["s_prop_num_A"],
-            num_participants_e=player.session.vars["num_participants_e"],
-            e_numA=player.session.vars["e_prop_num_A"],
+            num_participants=player.session.vars["ch1_1__num_participants"],
+            list_prop_A=player.session.vars["ch1_1__list_prop_A"],
+            num_participants_u=player.session.vars["ch1_1__num_participants_u"],
+            prop_A_u=player.session.vars["ch1_1__prop_A_u"],
+            num_participants_s=player.session.vars["ch1_1__num_participants_s"],
+            prop_A_s=player.session.vars["ch1_1__prop_A_s"],
+            num_participants_e=player.session.vars["ch1_1__num_participants_e"],
+            prop_A_e=player.session.vars["ch1_1__prop_A_e"],
         )
 
 
