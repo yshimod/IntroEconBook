@@ -1,18 +1,21 @@
 {{ block title }}
 結果：あなたと相手の意思決定の結果です。
 {{ endblock }}
+
+
 {{ block content }}
 
-    <p>
-             あなた{{ if player.flg_non_input == 1 }}(コンピュータが選びました){{ endif }}は<b>{{ my_decision }}</b> 、あなたの相手{{ if player.flg_pair_non_input == 1 }}(コンピュータが選びました){{ endif }}は <b>{{ opponent_decision }}</b>を選びました。
-    </p>
+<p>
+    あなた{{ if player.flg_non_input == 1 }}(コンピュータが選びました){{ endif }}は<b>{{ my_decision }}</b>
+    、あなたの相手{{ if player.flg_pair_non_input == 1 }}(コンピュータが選びました){{ endif }}は <b>{{ opponent_decision }}</b>を選びました。
+</p>
 
-    <p>
-        その結果、あなたのポイントは <b>{{ player.payoff }}</b>です。
-    </p>
+<p>
+    その結果、あなたのポイントは <b>{{ player.payoff }}</b>です。
+</p>
 
 
-    {{ include C.INSTRUCTIONS_TEMPLATE }}
+{{ include C.INSTRUCTIONS_TEMPLATE }}
 
 
 <!-- <p>他の参加者の方の結果</p> -->
@@ -20,8 +23,8 @@
 
 {{ include 'ch1_2_prisoner/chart.html' }}
 <script>
-drawChart();// グラフ描画
-drawChart_pair();// グラフ描画
+    drawChart();// グラフ描画
+    drawChart_pair();// グラフ描画
 </script>
 
 
