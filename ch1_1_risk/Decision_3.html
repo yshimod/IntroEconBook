@@ -5,14 +5,20 @@
 
 
 {{ block content }}
-<div style="padding: 10px; margin-bottom: 10px; border: 1px solid #333333; border-radius: 10px; width:65%">
-    <p>元手が250あります。<br>
-        A:投資する：ある未知の確率で400に、残りの確率で100になる<br>
-        B:投資しない：250をそのままもつ
-    </p>
+<div class="card fs-4">
+    <div class="card-body">
+        <p>元手が250あります。</p>
+        <ul>
+            <li><span class="fw-bold">A: 投資する</span> ある未知の確率で400に、残りの確率で100になる</li>
+            <li><span class="fw-bold">B: 投資しない</span> 250をそのままもつ</li>
+        </ul>
+    </div>
 </div>
 
-{{ formfields }}
+<div class="mt-5 fs-4">
+    {{ formfields }}
+</div>
+
 
 {{ next_button }}
 
