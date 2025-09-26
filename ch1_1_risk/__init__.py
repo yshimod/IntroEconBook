@@ -10,7 +10,7 @@ class C(BaseConstants):
     PROBLEMS = [150, 200, 250, 300, 350]
     FORCE_SINGLE_SWITCH = 0  # 0:off, 1:on
 
-    WITH_BOT = True  # for testing
+    WITH_BOT = False  # for testing
 
 
 class Subsession(BaseSubsession):
