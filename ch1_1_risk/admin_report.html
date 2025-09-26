@@ -1,0 +1,32 @@
+<div class="boxed-section">
+    <div id="highchart"></div>
+</div>
+
+<div class="boxed-section">
+    <div id="highchart2"></div>
+</div>
+
+<div class="boxed-section">
+    <div id="highchart3"></div>
+</div>
+
+<div class="boxed-section">
+    <div id="highchart4"></div>
+</div>
+
+<div class="boxed-section">
+    <div id="highchart5"></div>
+</div>
+
+{{ include 'ch1_1_risk/chart.html' }}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const js_vars = JSON.parse(`{{ js_vars | json }}`);
+        drawChart1(js_vars.num_participants, js_vars.list_prop_A);
+        drawChart2(js_vars.num_participants_r3, js_vars.prop_A_r3, 'highchart2', '質問3における選択割合');
+        drawChart2(js_vars.num_participants_u, js_vars.prop_A_u, 'highchart3', '質問6における選択割合');
+        drawChart2(js_vars.num_participants_s, js_vars.prop_A_s, 'highchart4', '質問7における選択割合');
+        drawChart2(js_vars.num_participants_e, js_vars.prop_A_e, 'highchart5', '質問8における選択割合');
+    });
+</script>

@@ -239,3 +239,19 @@ page_sequence = [
     PreResults,
     Results,
 ]
+
+
+def vars_for_admin_report(subsession: Subsession):
+    js_vars = dict(
+        num_participants=subsession.session.vars["ch1_1__num_participants"],
+        list_prop_A=subsession.session.vars["ch1_1__list_prop_A"],
+        num_participants_r3=subsession.session.vars["ch1_1__num_participants_r3"],
+        prop_A_r3=subsession.session.vars["ch1_1__prop_A_r3"],
+        num_participants_u=subsession.session.vars["ch1_1__num_participants_u"],
+        prop_A_u=subsession.session.vars["ch1_1__prop_A_u"],
+        num_participants_s=subsession.session.vars["ch1_1__num_participants_s"],
+        prop_A_s=subsession.session.vars["ch1_1__prop_A_s"],
+        num_participants_e=subsession.session.vars["ch1_1__num_participants_e"],
+        prop_A_e=subsession.session.vars["ch1_1__prop_A_e"],
+    )
+    return dict(js_vars=js_vars)
