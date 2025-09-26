@@ -51,6 +51,17 @@
     <div id="highchart5"></div>
 </div>
 
-{{ include 'ch1_1_risk/chart.html' }}
+{{ endblock }}
 
+
+{{ block script }}
+{{ include 'ch1_1_risk/chart.html' }}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        drawChart1(js_vars.num_participants, js_vars.prop_num_A);
+        drawChart2(js_vars.num_participants_u, js_vars.u_numA, 'highchart3', '質問6における選択割合');
+        drawChart2(js_vars.num_participants_s, js_vars.s_numA, 'highchart4', '質問7における選択割合');
+        drawChart2(js_vars.num_participants_e, js_vars.e_numA, 'highchart5', '質問8における選択割合');
+    });
+</script>
 {{ endblock }}

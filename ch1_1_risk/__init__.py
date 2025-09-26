@@ -209,7 +209,6 @@ class PreResults(Page):
 
 
 class Results(Page):
-    # グラフ描画用
     @staticmethod
     def js_vars(player: Player):
         return dict(
@@ -217,13 +216,10 @@ class Results(Page):
             prop_num_A=player.session.vars["prop_num_A"],
             num_participants_u=player.session.vars["num_participants_u"],
             u_numA=player.session.vars["u_prop_num_A"],
-            u_numB=100 - player.session.vars["u_prop_num_A"],
             num_participants_s=player.session.vars["num_participants_s"],
             s_numA=player.session.vars["s_prop_num_A"],
-            s_numB=100 - player.session.vars["s_prop_num_B"],
             num_participants_e=player.session.vars["num_participants_e"],
             e_numA=player.session.vars["e_prop_num_A"],
-            e_numB=100 - player.session.vars["e_prop_num_B"],
         )
 
 
