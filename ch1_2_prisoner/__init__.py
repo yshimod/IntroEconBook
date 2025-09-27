@@ -12,7 +12,9 @@ class C(BaseConstants):
     NAME_IN_URL = "ch1_2_prisoner"
     PLAYERS_PER_GROUP = 2
     NUM_ROUNDS = 1
+
     INSTRUCTIONS_TEMPLATE = "ch1_2_prisoner/instructions.html"
+
     PAYOFF_A = cu(150)
     PAYOFF_B = cu(100)
     PAYOFF_C = cu(50)
@@ -25,13 +27,12 @@ class Subsession(BaseSubsession):
     num_participants = models.IntegerField(initial=0)
     num_A = models.IntegerField(initial=0)
     num_B = models.IntegerField(initial=0)
-    err_message = models.StringField()
+
     pair_num = models.IntegerField(initial=0)
     pair_num_AA = models.IntegerField(initial=0)
     pair_num_AB = models.IntegerField(initial=0)
     pair_num_BA = models.IntegerField(initial=0)
     pair_num_BB = models.IntegerField(initial=0)
-    pair_err_message = models.StringField()
 
 
 class Group(BaseGroup):
@@ -39,16 +40,9 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer):
-    flg_non_input = models.IntegerField(initial=0)
-    flg_pair_non_input = models.IntegerField(initial=0)
-
     individual_choice = models.StringField(
-        choices=[["A", "A"], ["B", "B"]],
-        doc="""This player's decision""",
-        widget=widgets.RadioSelect,
+        choices=C.choice_list,
     )
-    # 相手のグループID
-    pair_id = models.IntegerField(initial=0)
     # 相手の意思決定
     pair_choice = models.StringField()
 
@@ -65,60 +59,33 @@ class Player(BasePlayer):
     # 意思決定の理由
     individual_choice_comment = models.LongStringField(verbose_name="", initial="")
 
+    flg_non_input = models.IntegerField(initial=0)
+    flg_pair_non_input = models.IntegerField(initial=0)
+
 
 # FUNCTIONS
-def keisan(player: Player):
-    sub = player.subsession
-    if player.individual_choice != "":
-        # グラフ用集計
-        sub.num_participants += 1
-        s = player.individual_choice
-        if s == "A":
-            sub.num_A += 1
-        elif s == "B":
-            sub.num_B += 1
-        else:
-            sub.err_message = "エラーあり"
-    else:
-        player.flg_non_input = 1
-        player.individual_choice = random.choice(C.choice_list)
+def summarize_data(subsession: Subsession):
+    list_choices = [
+        p.individual_choice
+        for p in subsession.get_players()
+        if p.field_maybe_none("individual_choice")
+    ]
+    subsession.num_participants = len(list_choices)
+    subsession.num_A = list_choices.count("A")
+    subsession.num_B = list_choices.count("B")
 
-
-def keisans(subsession: Subsession):
-    for p in subsession.get_players():
-        keisan(p)
-
-
-def set_graph(subsession: Subsession):
-    for p in subsession.get_players():
-        graph_pair(p)
-
-
-def set_payoffs(group: Group):
-    for p in group.get_players():
-        set_payoff(p)
-
-
-def other_player(player: Player):
-    return player.get_others_in_group()[0]
-
-
-def graph_pair(player: Player):
-    sub = player.subsession
-    sub.pair_num += 1
-    # グラフ用集計
-    s = player.individual_choice
-    sp = player.pair_choice
-    if (s == "A") and (sp == "A"):
-        sub.pair_num_AA += 1
-    elif (s == "A") and (sp == "B"):
-        sub.pair_num_AB += 1
-    elif (s == "B") and (sp == "A"):
-        sub.pair_num_BA += 1
-    elif (s == "B") and (sp == "B"):
-        sub.pair_num_BB += 1
-    else:
-        sub.pair_err_message = "エラーあり"
+    list_grp_results = [
+        (
+            g.get_player_by_id(1).individual_choice,
+            g.get_player_by_id(2).individual_choice,
+        )
+        for g in subsession.get_groups()
+    ]
+    subsession.pair_num = len(list_grp_results)
+    subsession.pair_num_AA = list_grp_results.count(("A", "A"))
+    subsession.pair_num_AB = list_grp_results.count(("A", "B"))
+    subsession.pair_num_BA = list_grp_results.count(("B", "A"))
+    subsession.pair_num_BB = list_grp_results.count(("B", "B"))
 
 
 def set_payoff(player: Player):
@@ -128,15 +95,16 @@ def set_payoff(player: Player):
         ("B", "A"): C.PAYOFF_A,
         ("B", "B"): C.PAYOFF_C,
     }
-    other = other_player(player)
-    player.pair_choice = other.individual_choice
-    player.pair_id = other.id_in_group
-    if other.flg_non_input == 1:
+    opponent: Player = player.get_others_in_group()[0]
+    player.pair_choice = opponent.individual_choice
+    if opponent.flg_non_input == 1:
         player.flg_pair_non_input = 1
-    player.payoff = payoff_matrix[(player.individual_choice, other.individual_choice)]
+    player.payoff = payoff_matrix[
+        (player.individual_choice, opponent.individual_choice)
+    ]
 
 
-# PAGES-----
+# PAGES
 class Introduction(Page):
     timeout_seconds = 100
 
@@ -149,25 +117,27 @@ class Decision(Page):
         "individual_choice_comment",
     ]
 
-
-class keisanWaitPage(WaitPage):
-    wait_for_all_groups = True
-    after_all_players_arrive = keisans
-
-
-class GraphWaitPage(WaitPage):
-    wait_for_all_groups = True
-    after_all_players_arrive = set_graph
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened):
+        if timeout_happened:
+            player.flg_non_input = 1
+            player.individual_choice = random.choice(C.choice_list)
 
 
 class ResultsWaitPage(WaitPage):
-    after_all_players_arrive = set_payoffs
+    wait_for_all_groups = True
+
+    @staticmethod
+    def after_all_players_arrive(subsession: Subsession):
+        summarize_data(subsession)
+        for p in subsession.get_players():
+            set_payoff(p)
 
 
 class Results(Page):
     @staticmethod
     def vars_for_template(player: Player):
-        opponent = other_player(player)
+        opponent: Player = player.get_others_in_group()[0]
         return dict(
             opponent=opponent,
             same_choice=player.individual_choice == opponent.individual_choice,
@@ -228,9 +198,7 @@ class PreResults(Page):
 page_sequence = [
     Introduction,
     Decision,
-    keisanWaitPage,
     ResultsWaitPage,
-    GraphWaitPage,
     PreResults,
     Results,
 ]
