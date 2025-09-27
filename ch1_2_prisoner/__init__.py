@@ -31,7 +31,6 @@ class Subsession(BaseSubsession):
     num_pairs = models.IntegerField(initial=0)
     num_pairs_AA = models.IntegerField(initial=0)
     num_pairs_AB = models.IntegerField(initial=0)
-    num_pairs_BA = models.IntegerField(initial=0)
     num_pairs_BB = models.IntegerField(initial=0)
 
 
@@ -88,14 +87,11 @@ def summarize_data(subsession: Subsession):
     subsession.num_pairs_AA = list_grp_results.count(
         (C.CHOICE_LIST[0], C.CHOICE_LIST[0])
     )
-    subsession.num_pairs_AB = list_grp_results.count(
-        (C.CHOICE_LIST[0], C.CHOICE_LIST[1])
-    )
-    subsession.num_pairs_BA = list_grp_results.count(
-        (C.CHOICE_LIST[1], C.CHOICE_LIST[0])
-    )
     subsession.num_pairs_BB = list_grp_results.count(
         (C.CHOICE_LIST[1], C.CHOICE_LIST[1])
+    )
+    subsession.num_pairs_AB = subsession.num_pairs - (
+        subsession.num_pairs_AA + subsession.num_pairs_BB
     )
 
 
@@ -172,12 +168,10 @@ class Results(Page):
 
         prop_pair_num_AA = -1
         prop_pair_num_AB = -1
-        prop_pair_num_BA = -1
         prop_pair_num_BB = -1
         if sub.num_pairs > 0:
             prop_pair_num_AA = (sub.num_pairs_AA / sub.num_pairs) * 100
             prop_pair_num_AB = (sub.num_pairs_AB / sub.num_pairs) * 100
-            prop_pair_num_BA = (sub.num_pairs_BA / sub.num_pairs) * 100
             prop_pair_num_BB = (sub.num_pairs_BB / sub.num_pairs) * 100
 
         return dict(
@@ -187,7 +181,6 @@ class Results(Page):
             num_pairs=sub.num_pairs,
             num_AA=prop_pair_num_AA,
             num_AB=prop_pair_num_AB,
-            num_BA=prop_pair_num_BA,
             num_BB=prop_pair_num_BB,
         )
 
