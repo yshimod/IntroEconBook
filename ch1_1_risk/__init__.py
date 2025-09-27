@@ -57,7 +57,7 @@ class Player(BasePlayer):
     # Decision_3
     choice_u = models.StringField(
         widget=widgets.RadioSelectHorizontal,
-        label="この時あなたは、AとBのどちらを選びますか？",
+        label="このとき、あなたはAとBのどちらを選びますか？",
         choices=[
             ["A", "Aを選ぶ"],
             ["B", "Bを選ぶ"],
@@ -68,7 +68,7 @@ class Player(BasePlayer):
     # Decision_4
     choice_s = models.StringField(
         widget=widgets.RadioSelectHorizontal,
-        label="この時あなたは、AとBのどちらを選びますか？",
+        label="このとき、あなたはAとBのどちらを選びますか？",
         choices=[
             ["A", "Aを選ぶ"],
             ["B", "Bを選ぶ"],
@@ -79,7 +79,7 @@ class Player(BasePlayer):
     # Decision_5
     choice_e = models.StringField(
         widget=widgets.RadioSelectHorizontal,
-        label="この時あなたは、AとBのどちらを選びますか？",
+        label="このとき、あなたはAとBのどちらを選びますか？",
         choices=[
             ["A", "Aを選ぶ"],
             ["B", "Bを選ぶ"],
