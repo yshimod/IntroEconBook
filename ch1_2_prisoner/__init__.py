@@ -28,11 +28,11 @@ class Subsession(BaseSubsession):
     num_A = models.IntegerField(initial=0)
     num_B = models.IntegerField(initial=0)
 
-    pair_num = models.IntegerField(initial=0)
-    pair_num_AA = models.IntegerField(initial=0)
-    pair_num_AB = models.IntegerField(initial=0)
-    pair_num_BA = models.IntegerField(initial=0)
-    pair_num_BB = models.IntegerField(initial=0)
+    num_pairs = models.IntegerField(initial=0)
+    num_pairs_AA = models.IntegerField(initial=0)
+    num_pairs_AB = models.IntegerField(initial=0)
+    num_pairs_BA = models.IntegerField(initial=0)
+    num_pairs_BB = models.IntegerField(initial=0)
 
 
 class Group(BaseGroup):
@@ -81,11 +81,11 @@ def summarize_data(subsession: Subsession):
         )
         for g in subsession.get_groups()
     ]
-    subsession.pair_num = len(list_grp_results)
-    subsession.pair_num_AA = list_grp_results.count(("A", "A"))
-    subsession.pair_num_AB = list_grp_results.count(("A", "B"))
-    subsession.pair_num_BA = list_grp_results.count(("B", "A"))
-    subsession.pair_num_BB = list_grp_results.count(("B", "B"))
+    subsession.num_pairs = len(list_grp_results)
+    subsession.num_pairs_AA = list_grp_results.count(("A", "A"))
+    subsession.num_pairs_AB = list_grp_results.count(("A", "B"))
+    subsession.num_pairs_BA = list_grp_results.count(("B", "A"))
+    subsession.num_pairs_BB = list_grp_results.count(("B", "B"))
 
 
 def set_payoff(player: Player):
@@ -149,7 +149,7 @@ class Results(Page):
     @staticmethod
     def js_vars(player: Player):
         print("js_vars")
-        sub = player.subsession
+        sub: Subsession = player.subsession
         # 割合に計算
         if sub.num_A > 0:
             prop_num_A = round((sub.num_A / sub.num_participants) * 100, 2)
@@ -162,20 +162,20 @@ class Results(Page):
 
         print("ここから追加")
         # 割合に計算s
-        if sub.pair_num_AA > 0:
-            prop_pair_num_AA = round((sub.pair_num_AA / sub.pair_num) * 100, 2)
+        if sub.num_pairs_AA > 0:
+            prop_pair_num_AA = round((sub.num_pairs_AA / sub.num_pairs) * 100, 2)
         else:
             prop_pair_num_AA = 0
-        if sub.pair_num_AB > 0:
-            prop_pair_num_AB = round((sub.pair_num_AB / sub.pair_num) * 100, 2)
+        if sub.num_pairs_AB > 0:
+            prop_pair_num_AB = round((sub.num_pairs_AB / sub.num_pairs) * 100, 2)
         else:
             prop_pair_num_AB = 0
-        if sub.pair_num_BA > 0:
-            prop_pair_num_BA = round((sub.pair_num_BA / sub.pair_num) * 100, 2)
+        if sub.num_pairs_BA > 0:
+            prop_pair_num_BA = round((sub.num_pairs_BA / sub.num_pairs) * 100, 2)
         else:
             prop_pair_num_BA = 0
-        if sub.pair_num_BB > 0:
-            prop_pair_num_BB = round((sub.pair_num_BB / sub.pair_num) * 100, 2)
+        if sub.num_pairs_BB > 0:
+            prop_pair_num_BB = round((sub.num_pairs_BB / sub.num_pairs) * 100, 2)
         else:
             prop_pair_num_BB = 0
 
@@ -183,7 +183,7 @@ class Results(Page):
             num_participants=sub.num_participants,
             num_A=prop_num_A,
             num_B=prop_num_B,
-            num_pairs=sub.pair_num,
+            num_pairs=sub.num_pairs,
             num_AA=prop_pair_num_AA,
             num_AB=prop_pair_num_AB,
             num_BA=prop_pair_num_BA,
