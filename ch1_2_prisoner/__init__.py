@@ -49,15 +49,16 @@ class Player(BasePlayer):
     # 相手はどちらを選ぶと思うか
     think_other_player_choice = models.StringField(
         widget=widgets.RadioSelectHorizontal,
-        verbose_name="",
-        choices=[
-            ["Aを選ぶと予想する", "Aを選ぶと予想する"],
-            ["Bを選ぶと予想する", "Bを選ぶと予想する"],
-        ],
+        label="【質問1】あなたの相手は{}と{}のどちらを選ぶと思いますか？".format(
+            *C.CHOICE_LIST
+        ),
+        choices=[[v, "{}を選ぶと予想する".format(v)] for v in C.CHOICE_LIST],
     )
 
     # 意思決定の理由
-    individual_choice_comment = models.LongStringField(verbose_name="", initial="")
+    individual_choice_comment = models.LongStringField(
+        label="【質問2】なぜあなたはその選択肢を選び、相手はその選択を選ぶと思ったのか、理由を教えてください。"
+    )
 
     flg_non_input = models.IntegerField(initial=0)
     flg_pair_non_input = models.IntegerField(initial=0)

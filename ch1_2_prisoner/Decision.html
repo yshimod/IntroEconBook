@@ -1,39 +1,68 @@
 {{ block title }}
 実験
 {{ endblock }}
+
+
 {{ block content }}
+<div>
+    <p><span class="fw-bold">質問1に回答したあと</span>、あなた自身の意思決定として、下の表の選択肢AとBのいずれかを選んでください。</p>
+</div>
 
-<font color="red"><b>質問1と2に回答したあと、</b></font>下記のテーブル(<u>左があなたのポイント</u>、右が相手のポイントを表しています)からあなたの意思決定である<font color="red">
-    <b>選択肢A、選択肢Bのいずれか押して回答</b>してください。
-</font>
-</p>
+<div>
+    {{ formfield player.think_other_player_choice }}
+</div>
 
 
-【質問1】あなたの相手はAとBのどちらを選ぶと思いますか？{{ formfield player.think_other_player_choice }}<br>
-【質問2】なぜあなたはその選択肢を選び相手はその選択を選ぶと思ったのか、理由を教えてください。<br>{{ formfield player.individual_choice_comment }}</p>
-
-<div class="form-group required">
-    <table class="table table-bordered text-center" style="width: auto; margin: auto">
+<div class="mt-4">
+    <p>【あなた自身の意思決定】</p>
+    <table class="table table-bordered text-center decision-table">
         <tr>
             <th colspan="2" rowspan="2"></th>
             <th colspan="2">あなたの相手</th>
         </tr>
         <tr>
-            <th>A</th>
-            <th>B</th>
+            <th>{{ C.CHOICE_LIST.0 }}</th>
+            <th>{{ C.CHOICE_LIST.1 }}</th>
         </tr>
         <tr>
             <th rowspan="2"><span>あなた</span></th>
-            <td><button name="individual_choice" value="A" class="btn btn-primary btn-large">A</button></td>
-            <td><u>{{C.PAYOFF_B}}</u>, {{C.PAYOFF_B}}</td>
-            <td><u>{{C.PAYOFF_D}}</u>, {{C.PAYOFF_A}}</td>
+            <td>
+                <input type="radio" class="btn-check" name="individual_choice" id="id_individual_choice_A"
+                    value="{{ C.CHOICE_LIST.0 }}" autocomplete="off" required>
+                <label class="btn btn-outline-primary btn-lg" style="width: 6em;"
+                    for="id_individual_choice_A">{{ C.CHOICE_LIST.0 }}</label>
+            </td>
+            <td><u>{{ C.PAYOFF_B }}</u>, {{ C.PAYOFF_B }}</td>
+            <td><u>{{ C.PAYOFF_D }}</u>, {{ C.PAYOFF_A }}</td>
         </tr>
         <tr>
-            <td><button name="individual_choice" value="B" class="btn btn-primary btn-large">B</button></td>
-            <td><u>{{C.PAYOFF_A}}</u>, {{ C.PAYOFF_D }}</td>
-            <td><u>{{C.PAYOFF_C}}</u>, {{C.PAYOFF_C}}</td>
+            <td>
+                <input type="radio" class="btn-check" name="individual_choice" id="id_individual_choice_B"
+                    value="{{ C.CHOICE_LIST.1 }}" autocomplete="off" required>
+                <label class="btn btn-outline-primary btn-lg" style="width: 6em;"
+                    for="id_individual_choice_B">{{ C.CHOICE_LIST.1 }}</label>
+            </td>
+            <td><u>{{ C.PAYOFF_A }}</u>, {{ C.PAYOFF_D }}</td>
+            <td><u>{{ C.PAYOFF_C }}</u>, {{ C.PAYOFF_C }}</td>
         </tr>
     </table>
 </div>
 
+
+<div class="mt-4">
+    {{ formfield player.individual_choice_comment }}
+</div>
+
+
+{{ next_button }}
+
+{{ endblock }}
+
+
+{{ block styles }}
+<style>
+    .decision-table {
+        vertical-align: middle;
+    }
+</style>
 {{ endblock }}
