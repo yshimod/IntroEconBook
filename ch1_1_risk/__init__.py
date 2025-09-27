@@ -28,13 +28,13 @@ class Player(BasePlayer):
     choice_r3 = models.StringField()
     choice_r4 = models.StringField()
     choice_r5 = models.StringField()
-    choice_r_cntA = models.IntegerField()
+    choice_r_cntA = models.IntegerField(initial=-1)
     comment_r = models.LongStringField(label="どのように考えて意思決定をしましたか？")
 
     # Decision_3
     choice_u = models.StringField(
         widget=widgets.RadioSelectHorizontal,
-        label="この時あなたは、A、Bのどちらを選びますか？",
+        label="このとき、あなたはAとBのどちらを選びますか？",
         choices=[
             ["A", "Aを選ぶ"],
             ["B", "Bを選ぶ"],
@@ -45,7 +45,7 @@ class Player(BasePlayer):
     # Decision_4
     choice_s = models.StringField(
         widget=widgets.RadioSelectHorizontal,
-        label="この時あなたは、A、Bのどちらを選びますか？",
+        label="このとき、あなたはAとBのどちらを選びますか？",
         choices=[
             ["A", "Aを選ぶ"],
             ["B", "Bを選ぶ"],
@@ -56,7 +56,7 @@ class Player(BasePlayer):
     # Decision_5
     choice_e = models.StringField(
         widget=widgets.RadioSelectHorizontal,
-        label="この時あなたは、A、Bのどちらを選びますか？",
+        label="このとき、あなたはAとBのどちらを選びますか？",
         choices=[
             ["A", "Aを選ぶ"],
             ["B", "Bを選ぶ"],
@@ -95,11 +95,11 @@ class Decision(Page):
             player.comment_r = "bot"
 
         if (
-            player.choice_r1
-            and player.choice_r2
-            and player.choice_r3
-            and player.choice_r4
-            and player.choice_r5
+            player.field_maybe_none("choice_r1")
+            and player.field_maybe_none("choice_r2")
+            and player.field_maybe_none("choice_r3")
+            and player.field_maybe_none("choice_r4")
+            and player.field_maybe_none("choice_r5")
         ):
             player.choice_r_cntA = [
                 player.choice_r1,
