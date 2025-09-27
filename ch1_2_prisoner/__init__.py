@@ -154,39 +154,25 @@ class Results(Page):
             opponent_decision=opponent.field_display("individual_choice"),
         )
 
-    # グラフ描画用
     @staticmethod
     def js_vars(player: Player):
-        print("js_vars")
         sub: Subsession = player.subsession
-        # 割合に計算
-        if sub.num_A > 0:
-            prop_num_A = round((sub.num_A / sub.num_participants) * 100, 2)
-        else:
-            prop_num_A = 0
-        if sub.num_B > 0:
-            prop_num_B = round((sub.num_B / sub.num_participants) * 100, 2)
-        else:
-            prop_num_B = 0
 
-        print("ここから追加")
-        # 割合に計算s
-        if sub.num_pairs_AA > 0:
-            prop_pair_num_AA = round((sub.num_pairs_AA / sub.num_pairs) * 100, 2)
-        else:
-            prop_pair_num_AA = 0
-        if sub.num_pairs_AB > 0:
-            prop_pair_num_AB = round((sub.num_pairs_AB / sub.num_pairs) * 100, 2)
-        else:
-            prop_pair_num_AB = 0
-        if sub.num_pairs_BA > 0:
-            prop_pair_num_BA = round((sub.num_pairs_BA / sub.num_pairs) * 100, 2)
-        else:
-            prop_pair_num_BA = 0
-        if sub.num_pairs_BB > 0:
-            prop_pair_num_BB = round((sub.num_pairs_BB / sub.num_pairs) * 100, 2)
-        else:
-            prop_pair_num_BB = 0
+        prop_num_A = -1
+        prop_num_B = -1
+        if sub.num_participants > 0:
+            prop_num_A = (sub.num_A / sub.num_participants) * 100
+            prop_num_B = (sub.num_B / sub.num_participants) * 100
+
+        prop_pair_num_AA = -1
+        prop_pair_num_AB = -1
+        prop_pair_num_BA = -1
+        prop_pair_num_BB = -1
+        if sub.num_pairs > 0:
+            prop_pair_num_AA = (sub.num_pairs_AA / sub.num_pairs) * 100
+            prop_pair_num_AB = (sub.num_pairs_AB / sub.num_pairs) * 100
+            prop_pair_num_BA = (sub.num_pairs_BA / sub.num_pairs) * 100
+            prop_pair_num_BB = (sub.num_pairs_BB / sub.num_pairs) * 100
 
         return dict(
             num_participants=sub.num_participants,
