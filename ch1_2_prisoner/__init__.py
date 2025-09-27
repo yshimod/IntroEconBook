@@ -20,7 +20,7 @@ class C(BaseConstants):
     PAYOFF_C = cu(50)
     PAYOFF_D = cu(10)
 
-    choice_list = ["A", "B"]
+    CHOICE_LIST = ["A", "B"]
 
 
 class Subsession(BaseSubsession):
@@ -41,7 +41,7 @@ class Group(BaseGroup):
 
 class Player(BasePlayer):
     individual_choice = models.StringField(
-        choices=C.choice_list,
+        choices=C.CHOICE_LIST,
     )
     # 相手の意思決定
     pair_choice = models.StringField()
@@ -71,8 +71,8 @@ def summarize_data(subsession: Subsession):
         if p.field_maybe_none("individual_choice")
     ]
     subsession.num_participants = len(list_choices)
-    subsession.num_A = list_choices.count("A")
-    subsession.num_B = list_choices.count("B")
+    subsession.num_A = list_choices.count(C.CHOICE_LIST[0])
+    subsession.num_B = list_choices.count(C.CHOICE_LIST[1])
 
     list_grp_results = [
         (
@@ -82,18 +82,26 @@ def summarize_data(subsession: Subsession):
         for g in subsession.get_groups()
     ]
     subsession.num_pairs = len(list_grp_results)
-    subsession.num_pairs_AA = list_grp_results.count(("A", "A"))
-    subsession.num_pairs_AB = list_grp_results.count(("A", "B"))
-    subsession.num_pairs_BA = list_grp_results.count(("B", "A"))
-    subsession.num_pairs_BB = list_grp_results.count(("B", "B"))
+    subsession.num_pairs_AA = list_grp_results.count(
+        (C.CHOICE_LIST[0], C.CHOICE_LIST[0])
+    )
+    subsession.num_pairs_AB = list_grp_results.count(
+        (C.CHOICE_LIST[0], C.CHOICE_LIST[1])
+    )
+    subsession.num_pairs_BA = list_grp_results.count(
+        (C.CHOICE_LIST[1], C.CHOICE_LIST[0])
+    )
+    subsession.num_pairs_BB = list_grp_results.count(
+        (C.CHOICE_LIST[1], C.CHOICE_LIST[1])
+    )
 
 
 def set_payoff(player: Player):
     payoff_matrix = {
-        ("A", "A"): C.PAYOFF_B,
-        ("A", "B"): C.PAYOFF_D,
-        ("B", "A"): C.PAYOFF_A,
-        ("B", "B"): C.PAYOFF_C,
+        (C.CHOICE_LIST[0], C.CHOICE_LIST[0]): C.PAYOFF_B,
+        (C.CHOICE_LIST[0], C.CHOICE_LIST[1]): C.PAYOFF_D,
+        (C.CHOICE_LIST[1], C.CHOICE_LIST[0]): C.PAYOFF_A,
+        (C.CHOICE_LIST[1], C.CHOICE_LIST[1]): C.PAYOFF_C,
     }
     opponent: Player = player.get_others_in_group()[0]
     player.pair_choice = opponent.individual_choice
@@ -121,7 +129,7 @@ class Decision(Page):
     def before_next_page(player: Player, timeout_happened):
         if timeout_happened:
             player.flg_non_input = 1
-            player.individual_choice = random.choice(C.choice_list)
+            player.individual_choice = random.choice(C.CHOICE_LIST)
 
 
 class ResultsWaitPage(WaitPage):
