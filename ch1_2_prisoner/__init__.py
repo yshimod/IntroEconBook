@@ -81,6 +81,8 @@ def summarize_data(subsession: Subsession):
             g.get_player_by_id(2).individual_choice,
         )
         for g in subsession.get_groups()
+        if g.get_player_by_id(1).field_maybe_none("individual_choice")
+        and g.get_player_by_id(2).field_maybe_none("individual_choice")
     ]
     subsession.num_pairs = len(list_grp_results)
     subsession.num_pairs_AA = list_grp_results.count(
@@ -105,12 +107,18 @@ def set_payoff(player: Player):
         (C.CHOICE_LIST[1], C.CHOICE_LIST[1]): C.PAYOFF_C,
     }
     opponent: Player = player.get_others_in_group()[0]
-    player.pair_choice = opponent.individual_choice
+    player.pair_choice = opponent.field_maybe_none("individual_choice")
     if opponent.flg_non_input == 1:
         player.flg_pair_non_input = 1
-    player.payoff = payoff_matrix[
-        (player.individual_choice, opponent.individual_choice)
-    ]
+
+    if player.field_maybe_none("individual_choice") and opponent.field_maybe_none(
+        "individual_choice"
+    ):
+        player.payoff = payoff_matrix[
+            (player.individual_choice, opponent.individual_choice)
+        ]
+    else:
+        player.payoff = -1
 
 
 # PAGES
@@ -148,10 +156,8 @@ class Results(Page):
     def vars_for_template(player: Player):
         opponent: Player = player.get_others_in_group()[0]
         return dict(
-            opponent=opponent,
-            same_choice=player.individual_choice == opponent.individual_choice,
-            my_decision=player.field_display("individual_choice"),
-            opponent_decision=opponent.field_display("individual_choice"),
+            my_decision=player.field_maybe_none("individual_choice"),
+            opponent_decision=opponent.field_maybe_none("individual_choice"),
         )
 
     @staticmethod
