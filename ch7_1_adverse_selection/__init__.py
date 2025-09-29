@@ -403,7 +403,7 @@ class Game(Page):
         return (group.start_timestamp + 120) - time.time()
 
 
-class quizwait(WaitPage):
+class Quizwait(WaitPage):
     @staticmethod
     def after_all_players_arrive(group: Group):
         init_player(group)
@@ -435,7 +435,7 @@ class Room_waiting(Page):
         return self.subsession.round_number == 1
 
 
-class quizPage1(Page):
+class QuizPage1(Page):
     form_model = "player"
     form_fields = ["q1", "q2", "q3"]
     timeout_seconds = 270
@@ -444,14 +444,14 @@ class quizPage1(Page):
         return player.round_number == 1
 
 
-class quizResult1(Page):
+class QuizResult1(Page):
     timeout_seconds = 120
 
     def is_displayed(player: Player):
         return player.round_number == 1
 
 
-class quizPage2(Page):
+class QuizPage2(Page):
     form_model = "player"
     form_fields = ["q4", "q5", "q6", "q7"]
     timeout_seconds = 270
@@ -460,7 +460,7 @@ class quizPage2(Page):
         return player.round_number == 1
 
 
-class quizResult2(Page):
+class QuizResult2(Page):
     timeout_seconds = 120
 
     def is_displayed(player: Player):
@@ -470,15 +470,15 @@ class quizResult2(Page):
 page_sequence = [
     # Room_waiting,
     Introduction,
-    quizPage1,
-    quizResult1,
-    quizPage2,
-    quizResult2,
+    QuizPage1,
+    QuizResult1,
+    QuizPage2,
+    QuizResult2,
     # Instruction2,
     # Correct,
     # Instruction3,
     # Correct,
-    quizwait,
+    Quizwait,
     Game,
     Results,
     Last,
