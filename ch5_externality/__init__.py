@@ -347,9 +347,9 @@ def keisan(group: Group):
     # 社会的損害額(20×全体取引量÷参加者)
 
     ####################################################################
-    num_participants = group.session.num_participants 
-    #事前に参加者人数が不明なので（C.PLAYERS_PER_GROUP = None）、ここでPLAYERS_PER_GROUPにより参加者人数を導出することができぬ
-    #sessionによって参加者人数を導出
+    num_participants = group.session.num_participants
+    # 事前に参加者人数が不明なので（C.PLAYERS_PER_GROUP = None）、ここでPLAYERS_PER_GROUPにより参加者人数を導出することができぬ
+    # sessionによって参加者人数を導出
     #####################################################################################
 
     group.social_damage = (
@@ -593,9 +593,9 @@ class Results(Page):
         tmp_seller = []
 
         ####################################################################
-        num_participants = player.session.num_participants 
-        #事前に参加者人数が不明なので（C.PLAYERS_PER_GROUP = None）、ここでPLAYERS_PER_GROUPにより参加者人数を導出することができぬ
-        #sessionにより参加者人数を導出
+        num_participants = player.session.num_participants
+        # 事前に参加者人数が不明なので（C.PLAYERS_PER_GROUP = None）、ここでPLAYERS_PER_GROUPにより参加者人数を導出することができぬ
+        # sessionにより参加者人数を導出
         #####################################################################################
 
         for j in range(num_participants // 2):
@@ -653,4 +653,11 @@ class Finish(Page):
         return player.round_number == C.NUM_ROUNDS
 
 
-page_sequence = [Room_waiting, WaitToStart, Trading, ResultsWaitPage, Results, Finish]
+page_sequence = [
+    Room_waiting,
+    WaitToStart,
+    Trading,
+    ResultsWaitPage,
+    Results,
+    Finish,
+]

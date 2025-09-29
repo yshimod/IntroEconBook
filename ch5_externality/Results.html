@@ -1,93 +1,99 @@
 {{ block title }}
-    結果
+結果
 {{ endblock }}
+
 
 {{ block content }}
 <style>
-.boxed-section{ /*creat a box*/
-    border: 2px solid #000; 
-    padding: 10px; 
-    margin: 10px 0; 
-}   
+    .boxed-section {
+        /*creat a box*/
+        border: 2px solid #000;
+        padding: 10px;
+        margin: 10px 0;
+    }
 </style>
 
 <div class="boxed-section">
-<h3>今回の実験結果</h3>
-<table class="table">
-    <tr>
-        <th>回</th>
-        <th>あなたの役割</th>
-        <th>評価額</th>
-        <th>取引価格</th>
-        <th>報酬</th>
-        <th>取引</th>
-
-<!--            <th>市場全体の<br>取引数</th>-->
-<!--            <th>実験参加者</th>-->
-<!--            <th>社会的損害額<br>(={{C.multiple_social_damage}} × 取引数 ÷人数)</th>-->
-<!--            <th>利益</th>-->
-    </tr>
+    <h3>今回の実験結果</h3>
+    <table class="table">
         <tr>
-                <td>{{ player.round_number }}</td>
-                <td>{{ if player.is_buyer }}
-                    買い手
+            <th>回</th>
+            <th>あなたの役割</th>
+            <th>評価額</th>
+            <th>取引価格</th>
+            <th>報酬</th>
+            <th>取引</th>
+
+            <!--            <th>市場全体の<br>取引数</th>-->
+            <!--            <th>実験参加者</th>-->
+            <!--            <th>社会的損害額<br>(={# {{C.multiple_social_damage}} #} × 取引数 ÷人数)</th>-->
+            <!--            <th>利益</th>-->
+        </tr>
+        <tr>
+            <td>{{ player.round_number }}</td>
+            <td>{{ if player.is_buyer }}
+                買い手
                 {{ else }}
-                    売り手
-                {{ endif }}</td>
-                <td>{{ player.break_even_point }}</td>
-                <td>{{ player.prices }}</td>
-                <td>
-                    {{ player.payoff }}
-                </td>
-                <td>
-                 {{ if player.finish_frag == 1}}
-                    取引した
+                売り手
                 {{ endif }}
-                </td>
-            </tr>
-</table>
+            </td>
+            <td>{{ player.break_even_point }}</td>
+            <td>{{ player.prices }}</td>
+            <td>
+                {{ player.payoff }}
+            </td>
+            <td>
+                {{ if player.finish_frag == 1}}
+                取引した
+                {{ endif }}
+            </td>
+        </tr>
+    </table>
 </div>
 
 <div class="boxed-section">
-<div id="highchart"></div></div>
+    <div id="highchart"></div>
+</div>
 
 <br><br>
 <div class="boxed-section">
-<h3>市場の結果</h3>
-<br><br>
-<table class="table">
-    <tr>
-        <th>回</th>
-        <th>生産者余剰</th>
-        <th>消費者余剰</th>
-        <th>総余剰</th>
-    </tr>
-    {{ for q in p_list2 }}
-    <tr>
-        <td>{{ q.round }}</td>
-        <td>{{ q.prod_surplus }} </td>
-        <td>{{ q.cons_surplus }}</td>
-        <td>{{ q.total_surplus }}</td>
-    </tr>
-    <tr>
-        <th></th>
-        <th>市場全体の取引数</th>
-        <th>社会的損害額(={{C.multiple_social_damage}} × 取引数 ÷人数)</th>
-        <th>あなたの利得</th>
-    </tr>
+    <h3>市場の結果</h3>
+    <br><br>
+    <table class="table">
         <tr>
-        <td></td>
-        <td>{{ q.sum_transactions }} </td>
-        <td>{{ q.social_damage }}（={{ C.multiple_social_damage }} × {{ q.sum_transactions }} ÷{{ C.PLAYERS_PER_GROUP }}）</td>
-        <td>{{ q.social_damage_payoff }}</td>
-    </tr>
+            <th>回</th>
+            <th>生産者余剰</th>
+            <th>消費者余剰</th>
+            <th>総余剰</th>
+        </tr>
+        {{ for q in p_list2 }}
+        <tr>
+            <td>{{ q.round }}</td>
+            <td>{{ q.prod_surplus }} </td>
+            <td>{{ q.cons_surplus }}</td>
+            <td>{{ q.total_surplus }}</td>
+        </tr>
+        <tr>
+            <th></th>
+            <th>市場全体の取引数</th>
+            <th>社会的損害額(={{C.multiple_social_damage}} × 取引数 ÷人数)</th>
+            <th>あなたの利得</th>
+        </tr>
+        <tr>
+            <td></td>
+            <td>{{ q.sum_transactions }} </td>
+            <td>{{ q.social_damage }}（={{ C.multiple_social_damage }} × {{ q.sum_transactions }}
+                ÷{{ C.PLAYERS_PER_GROUP }}）</td>
+            <td>{{ q.social_damage_payoff }}</td>
+        </tr>
 
-    {{ endfor }}
-</table>
+        {{ endfor }}
+    </table>
 </div>
 
 <div class="boxed-section">
-<div id="container"></div></div>
+    <div id="container"></div>
+</div>
 
 <br><br>
 {{ if player.round_number == C.NUM_ROUNDS }}
@@ -109,30 +115,30 @@
 <div id="highchart3"></div>
 {{ endif }}
 {{ include 'ch5_externality/chart.html' }}
-    
+
 <script>
-let my_id = js_vars.id_in_group;
-function cu(amount) {
-    return `${amount} `;
-}
+    let my_id = js_vars.id_in_group;
+    function cu(amount) {
+        return `${amount} `;
+    }
 
-function liveRecv(data) {
-    console.log(data)     
-    
-    let {highcharts_series,highcharts_buyer,highcharts_seller,last_flag,noBuyer,chart_idealBuyer,chart_idealSeller,chart_time,chart_buyer_seller} = data;
-    redrawChart(highcharts_series); // 取引履歴のグラフ
-    redrawChart4(chart_time, chart_buyer_seller);
-    if (last_flag === true){ 
-        if (noBuyer === false){
-          //  redrawChart2(highcharts_buyer,highcharts_seller); //需要と供給グラフ
+    function liveRecv(data) {
+        console.log(data)
+
+        let { highcharts_series, highcharts_buyer, highcharts_seller, last_flag, noBuyer, chart_idealBuyer, chart_idealSeller, chart_time, chart_buyer_seller } = data;
+        redrawChart(highcharts_series); // 取引履歴のグラフ
+        redrawChart4(chart_time, chart_buyer_seller);
+        if (last_flag === true) {
+            if (noBuyer === false) {
+                //  redrawChart2(highcharts_buyer,highcharts_seller); //需要と供給グラフ
+            }
+            redrawChart3(chart_idealBuyer, chart_idealSeller);
         }
-        redrawChart3(chart_idealBuyer,chart_idealSeller);
-    }    
-}
+    }
 
-document.addEventListener('DOMContentLoaded', (event) => {
-    liveSend({'offer_frag':false});
-});
+    document.addEventListener('DOMContentLoaded', (event) => {
+        liveSend({ 'offer_frag': false });
+    });
 
 </script>
 

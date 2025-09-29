@@ -6,8 +6,8 @@
 </div>
 
 <script>
-    function redrawChart(series) {  
-        if (series.length!=0){
+    function redrawChart(series) {
+        if (series.length != 0) {
             Highcharts.chart('highchart', {
                 title: {
                     text: '取引履歴'
@@ -22,7 +22,7 @@
                     title: {
                         text: '時間 (秒)'
                     },
-                    min: series[0][0]-1
+                    min: series[0][0] - 1
                 },
 
                 plotOptions: {
@@ -44,6 +44,6 @@
                 }
 
             });
-        }        
+        }
     }
 </script>
