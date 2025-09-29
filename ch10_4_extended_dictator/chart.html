@@ -25,7 +25,8 @@
 
 <script>
     function drawChart(graph_data) {
-        const base = {chart: {
+        const base = {
+            chart: {
                 type: 'bar'
             },
             legend: {
@@ -40,14 +41,14 @@
         // var graph_data = js_vars.graph_data
         console.log(graph_data)
 
-        if ('ch10_1' in graph_data){
+        if ('ch10_1' in graph_data) {
             ch10_1 = Object.assign({
                 title: {
                     text: "1. 個人の意思決定<br>" + graph_data.ch10_1.num_participants + "名が実験に参加しました。"
                 },
                 xAxis: {
-                categories: graph_data.ch10_1.graph_name_list,
-                title: {
+                    categories: graph_data.ch10_1.graph_name_list,
+                    title: {
                         text: '選択肢'
                     }
                 },
@@ -60,16 +61,16 @@
             }, base);
             Highcharts.chart('ch10_1', ch10_1);
         }
-        if ('ch10_2' in graph_data){
+        if ('ch10_2' in graph_data) {
             ch10_2 = Object.assign({
                 title: {
                     text: "2. 最後通牒ゲーム<br>" + graph_data.ch10_2.num_participants + "名が実験に参加しました。"
                 },
                 xAxis: {
-                categories: ['(0,1000)', '(100,900)', '(200,800)', '(300,700)', '(400,600)', '(500,500)', '(600,400)', '(700,300)', '(800,200)', '(900,100)', '(1000,0)'],
-                title: {
+                    categories: ['(0,1000)', '(100,900)', '(200,800)', '(300,700)', '(400,600)', '(500,500)', '(600,400)', '(700,300)', '(800,200)', '(900,100)', '(1000,0)'],
+                    title: {
                         text: '（プレイヤー1の利得, プレイヤー2の利得）'
-                }
+                    }
                 },
                 yAxis: {
                     min: 0,
@@ -94,8 +95,8 @@
                     text: "3. 独裁者ゲーム<br>" + graph_data.ch10_3.num_participants + "名が実験に参加しました。"
                 },
                 xAxis: {
-                   categories: ['(0,1000)', '(100,900)', '(200,800)', '(300,700)', '(400,600)', '(500,500)', '(600,400)', '(700,300)', '(800,200)', '(900,100)', '(1000,0)'],
-                   title: {
+                    categories: ['(0,1000)', '(100,900)', '(200,800)', '(300,700)', '(400,600)', '(500,500)', '(600,400)', '(700,300)', '(800,200)', '(900,100)', '(1000,0)'],
+                    title: {
                         text: '（プレイヤー1の利得, プレイヤー2の利得）'
                     }
                 },
@@ -107,21 +108,21 @@
             Highcharts.chart('ch10_3', ch10_3);
             document.getElementById('ch10_3_result').innerHTML = graph_data.ch10_3.ch10_3_result;
         }
-        if ('ch10_4' in graph_data){
+        if ('ch10_4' in graph_data) {
             ch10_4 = Object.assign({
                 title: {
                     text: "4. [拡張版]独裁者ゲーム<br>" + graph_data.ch10_4.num_participants + "名が実験に参加しました。"
                 },
                 xAxis: {
-                   categories: graph_data.ch10_4.graph_name_list,
-                   title: {
+                    categories: graph_data.ch10_4.graph_name_list,
+                    title: {
                         text: '選択肢'
                     }
                 },
                 yAxis: {
                     min: 0,
                 },
-                        series: [{
+                series: [{
                     //name: '受入',
                     data: graph_data.ch10_4.graph_list
                 }]

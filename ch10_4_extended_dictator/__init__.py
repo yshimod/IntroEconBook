@@ -295,4 +295,10 @@ class Results(Page):
         return player.session.graph_data
 
 
-page_sequence = [Introduction, Send, WaitForP1, ResultsWaitPage, Results]
+page_sequence = [
+    Introduction,
+    Send,
+    WaitForP1,
+    ResultsWaitPage,
+    Results,
+]
