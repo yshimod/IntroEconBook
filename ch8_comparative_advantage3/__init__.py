@@ -173,7 +173,9 @@ def live_bid(player: Player, data):
                 compID = str(p.id_in_group) + "_sell_" + str(num)
                 tmpSell = p.session.vars[compID]
                 if closedTransaction:
-                    if value >= tmpSell:  # 取引が成立する売値を見つけた後にまた取引が成立する売値を見つけたとき
+                    if (
+                        value >= tmpSell
+                    ):  # 取引が成立する売値を見つけた後にまた取引が成立する売値を見つけたとき
                         if (
                             player.session.vars[currentKey + "_time"]
                             > player.session.vars[compID + "_time"]
@@ -233,7 +235,9 @@ def live_bid(player: Player, data):
                             elif p.session.vars[compID] == sell:
                                 flg = True
             torihikigaku = sell
-            player.cheese = round(player.cheese - sell, 2)  # 自分の現金から買った分を引く
+            player.cheese = round(
+                player.cheese - sell, 2
+            )  # 自分の現金から買った分を引く
             player.bread += 1  # 資産が1つ増える
             closedTransaction = True
         response = dict(
@@ -304,7 +308,9 @@ def live_bid(player: Player, data):
         else:
             for p in players:
                 if p.id_in_group == yourID:
-                    p.cheese = round(p.cheese - buyValue, 2)  # 相手の現金に買った分を足す
+                    p.cheese = round(
+                        p.cheese - buyValue, 2
+                    )  # 相手の現金に買った分を足す
                     p.bread += 1  # 資産が1つ減る
                     if Constants.autoClearFlg == 1:
                         p.sellCount = 0
@@ -327,7 +333,9 @@ def live_bid(player: Player, data):
                             elif p.session.vars[compID] == buyValue:
                                 flg = True
             torihikigaku = buyValue
-            player.cheese = round(player.cheese + buyValue, 2)  # 自分の現金から買った分を引く
+            player.cheese = round(
+                player.cheese + buyValue, 2
+            )  # 自分の現金から買った分を引く
             player.bread -= 1  # 資産が1つ増える
         response = dict(
             formSyubetu="sell",
@@ -511,14 +519,14 @@ class Game(Page):
         )
 
 
-class waitpage(WaitPage):
+class WaitBeforeGame(WaitPage):
     @staticmethod
     def after_all_players_arrive(group: Group):
         nextGame(group)
         group.start_time = time.time()
 
 
-class preResultsPage(WaitPage):
+class PreResultsPage(WaitPage):
     @staticmethod
     def after_all_players_arrive(group: Group):
         computeResult(group)
@@ -528,4 +536,11 @@ class Results(Page):
     timeout_seconds = Constants.timeout_question_result
 
 
-page_sequence = [Init, Screen1, waitpage, Game, preResultsPage, Results]
+page_sequence = [
+    Init,
+    Screen1,
+    WaitBeforeGame,
+    Game,
+    PreResultsPage,
+    Results,
+]
