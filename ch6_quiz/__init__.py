@@ -117,4 +117,9 @@ class Results(Page):
     timeout_seconds = 120
 
 
-page_sequence = [Introduction, QuizPage, ResultsWaitPage, Results]
+page_sequence = [
+    Introduction,
+    QuizPage,
+    ResultsWaitPage,
+    Results,
+]
