@@ -103,7 +103,7 @@ class Introduction(Page):
     timeout_seconds = 40
 
 
-class quizPage(Page):
+class QuizPage(Page):
     form_model = "player"
     form_fields = ["q1", "q2", "q3", "q4", "q5", "q6", "q7"]
     timeout_seconds = 270
@@ -117,4 +117,4 @@ class Results(Page):
     timeout_seconds = 120
 
 
-page_sequence = [Introduction, quizPage, ResultsWaitPage, Results]
+page_sequence = [Introduction, QuizPage, ResultsWaitPage, Results]
