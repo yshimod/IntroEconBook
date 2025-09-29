@@ -102,4 +102,8 @@ class Results(Page):
     pass
 
 
-page_sequence = [Init, Screen1, Results]
+page_sequence = [
+    Init,
+    Screen1,
+    Results,
+]
