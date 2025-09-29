@@ -32,19 +32,23 @@ class Player(BasePlayer):
 
 # FUNCTIONS
 # PAGES
-class instruction0(Page):
+class Instruction0(Page):
     timeout_seconds = Constants.timeout_question_per_page
     pass
 
 
-class instruction1(Page):
+class Instruction1(Page):
     timeout_seconds = Constants.timeout_question_per_page
     pass
 
 
-class instruction2(Page):
+class Instruction2(Page):
     timeout_seconds = Constants.timeout_question_per_page
     pass
 
 
-page_sequence = [instruction0, instruction1, instruction2]
+page_sequence = [
+    Instruction0,
+    Instruction1,
+    Instruction2,
+]
