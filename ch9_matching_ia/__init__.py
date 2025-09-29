@@ -139,9 +139,15 @@ def ia_algorithm(
     print("totyu_studentStatus", totyu_studentStatus, student_choices1, teiinflg)
     for s in C.student:
         if totyu_studentStatus[s] is None:  # 相手が決まっていない学生がいれば・・・
-            t = student_choices1[s].pop(0)  # まだ断られていない学類の中で一番選好の高い学類に申し込む
-            if len(totyu_teacherStatus[t]) < C.capacity_lim[t]:  # 定員に空きがあれば・・・
-                totyu_teacherStatus[t].append(s)  # 先生のマッチング相手のリストに申し込んできた学生を追加
+            t = student_choices1[s].pop(
+                0
+            )  # まだ断られていない学類の中で一番選好の高い学類に申し込む
+            if (
+                len(totyu_teacherStatus[t]) < C.capacity_lim[t]
+            ):  # 定員に空きがあれば・・・
+                totyu_teacherStatus[t].append(
+                    s
+                )  # 先生のマッチング相手のリストに申し込んできた学生を追加
                 totyu_studentStatus[s] = t  # 学生のマッチング相手を更新
             elif (
                 len(totyu_teacherStatus[t]) == C.capacity_lim[t]
@@ -159,11 +165,15 @@ def ia_algorithm(
                 if C.teacher_choices[t].index(s) <= C.teacher_choices[t].index(
                     currentPartner
                 ):  # currentPartnerより順位が高ければマッチング成功
-                    totyu_teacherStatus[t].remove(currentPartner)  # currentPartnerを削除
-                    totyu_studentStatus[
+                    totyu_teacherStatus[t].remove(
                         currentPartner
-                    ] = None  # currentPartnerだった学生のマッチングを解除
-                    totyu_teacherStatus[t].append(s)  # 先生のマッチング相手のリストに申し込んできた学生を追加
+                    )  # currentPartnerを削除
+                    totyu_studentStatus[currentPartner] = (
+                        None  # currentPartnerだった学生のマッチングを解除
+                    )
+                    totyu_teacherStatus[t].append(
+                        s
+                    )  # 先生のマッチング相手のリストに申し込んできた学生を追加
                     totyu_studentStatus[s] = t  # 学生のマッチング相手を更新
             # elif len(totyu_teacherStatus[t]) == totyu_t_lim[t] and teiinflg[t] == "shime":  # ボストン用追加：定員がいっぱい、かつ、定員が一杯フラグ
 
@@ -452,4 +462,9 @@ class Results(Page):
     pass
 
 
-page_sequence = [Introduction, Students, ResultsWaitPage, Results]
+page_sequence = [
+    Introduction,
+    Students,
+    ResultsWaitPage,
+    Results,
+]
