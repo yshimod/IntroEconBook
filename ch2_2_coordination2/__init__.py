@@ -228,7 +228,7 @@ class Question(Page):
     form_fields = ["q1", "q2", "q3"]
 
 
-class keisanWaitPage(WaitPage):
+class KeisanWaitPage(WaitPage):
     wait_for_all_groups = True
     after_all_players_arrive = keisans
 
@@ -312,8 +312,10 @@ class Results(Page):
         print("ここから追加")
         # 割合に計算s
 
-        pair_num = sub.pair_num / 2#ここまで計算されたsub.pair_numはpairの数ではなくて、参加人数になっちゃた。その原因はまだわからなくて、一応sub.pair_numを２で割ってpair数にした
-        
+        pair_num = (
+            sub.pair_num / 2
+        )  # ここまで計算されたsub.pair_numはpairの数ではなくて、参加人数になっちゃた。その原因はまだわからなくて、一応sub.pair_numを２で割ってpair数にした
+
         if sub.pair_num_AA > 0:
             prop_pair_num_AA = round((sub.pair_num_AA / pair_num) * 100, 2)
         else:
@@ -357,7 +359,7 @@ page_sequence = [
     Introduction,
     Decision,
     Question,
-    keisanWaitPage,
+    KeisanWaitPage,
     ResultsWaitPage,
     GraphWaitPage,
     PreResults,
