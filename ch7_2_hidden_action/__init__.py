@@ -59,7 +59,7 @@ def other_player(player: Player):
 
 
 # PAGES
-class wait_confirmation(WaitPage):
+class Wait_confirmation(WaitPage):
     body_text = "相手の確認を待っています。"
 
 
@@ -82,13 +82,13 @@ class Introduction(Page):
 
 
 # 最後のページ
-class over(Page):
+class Over(Page):
     @staticmethod
     def is_displayed(player: Player):
         return player.round_number == C.NUM_ROUNDS
 
 
-class page_1A(Page):
+class Page_1A(Page):
     @staticmethod
     def is_displayed(player: Player):
         return player.role == C.A_ROLE
@@ -107,7 +107,7 @@ class page_1A(Page):
     timeout_seconds = 30
 
 
-class page_1B(WaitPage):
+class Page_1B(WaitPage):
     # 実際にはBだけに表示
     template_name = "Wait.html"
 
@@ -121,7 +121,7 @@ class page_1B(WaitPage):
         group.get_player_by_role(C.B_ROLE).payoff = C.pt_D_B
 
 
-class result1(Page):
+class Result1(Page):
     # AがDを選択した時に表示
     @staticmethod
     def is_displayed(player: Player):
@@ -136,7 +136,7 @@ class result1(Page):
     timeout_seconds = 50
 
 
-class page_2B(Page):
+class Page_2B(Page):
     @staticmethod
     def is_displayed(player: Player):
         return player.role == C.B_ROLE and player.group.SKIP == False
@@ -159,7 +159,7 @@ class page_2B(Page):
     timeout_seconds = 30
 
 
-class page_2A(WaitPage):
+class Page_2A(WaitPage):
     # 実際にはAだけに表示
     template_name = "Wait.html"
 
@@ -190,7 +190,7 @@ class page_2A(WaitPage):
                 group.get_player_by_role(C.B_ROLE).payoff = C.pt_R15_B
 
 
-class result2(Page):
+class Result2(Page):
     @staticmethod
     def is_displayed(player: Player):
         return player.group.SKIP == False
@@ -208,14 +208,14 @@ class result2(Page):
 page_sequence = [
     Introduction,
     Shuffle_Wait_Page,
-    wait_confirmation,
-    page_1A,
-    page_1B,
-    result1,
-    wait_confirmation,
-    page_2B,
-    page_2A,
-    result2,
-    wait_confirmation,
-    over,
+    Wait_confirmation,
+    Page_1A,
+    Page_1B,
+    Result1,
+    Wait_confirmation,
+    Page_2B,
+    Page_2A,
+    Result2,
+    Wait_confirmation,
+    Over,
 ]
