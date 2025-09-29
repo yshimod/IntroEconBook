@@ -1,9 +1,13 @@
-{{ block title }}確認クイズ４{{ endblock }}
-{{ block content }}
-    {{ include C.INCORRECT_TEMPLATE }}
-    {{ include C.INSTRUCTION_TEMPLATE_SEC }}
+{{ block title }}
+確認クイズ４
+{{ endblock }}
 
-    <p>
-        <button class="otree-btn-next btn btn-primary">OK</button>
-    </p>
+
+{{ block content }}
+{{ include C.INCORRECT_TEMPLATE }}
+{{ include C.INSTRUCTION_TEMPLATE_SEC }}
+
+<p>
+    <button class="otree-btn-next btn btn-primary">OK</button>
+</p>
 {{ endblock }}
