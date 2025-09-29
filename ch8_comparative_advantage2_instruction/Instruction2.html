@@ -1,11 +1,9 @@
-{% extends "ch8_comparative_advantage2_instruction/Page.html" %}
-{% load otree static %}
+{{ block title }}
+市場取引
+{{ endblock }}
 
-{% block title %}
-    市場取引
-{% endblock %}
 
-{% block content %}
+{{ block content }}
 
 <div>
     市場では、パン1個に対する注文を出します。
@@ -27,5 +25,5 @@
     </ul>
 </div>
 
-    {% next_button %}
-{% endblock %}
+{{ next_button }}
+{{ endblock }}
