@@ -89,7 +89,7 @@ class Contribute(Page):
     form_fields = ["individual_choice"]
 
 
-class keisanWaitPage(WaitPage):
+class KeisanWaitPage(WaitPage):
     wait_for_all_groups = True
     after_all_players_arrive = keisans
 
@@ -136,7 +136,7 @@ page_sequence = [
     WaitToStart,
     Introduction,
     Contribute,
-    keisanWaitPage,
+    KeisanWaitPage,
     ResultsWaitPage,
     Results,
     Summarize_Result,
