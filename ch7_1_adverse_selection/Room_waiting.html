@@ -1,31 +1,29 @@
-{% extends "global/Page.html" %}
-{% load otree static %}
+{{ block title }}
+待機画面
+{{ endblock }}
 
-{% block title %}
-    待機画面
-{% endblock %}
 
-{% block content %}
+{{ block content }}
 
 <div class="card card-body bg-light instructions">
     <div class="big">
 
-<p>     </p>
+        <p> </p>
         <p>全員がそろうまでお待ちください。</p>
-            </div>
+    </div>
 </div>
 
-    <!--{% next_button %}-->
+{{ endblock }}
 
-{% endblock %}
 
-{% block styles %}
-    <style type="text/css">
-        .big{
-            font-size: large;
-        }
-        ul li {
-    padding: 5px 0px;
+{{ block styles }}
+<style type="text/css">
+    .big {
+        font-size: large;
     }
-    </style>
-{% endblock %}
+
+    ul li {
+        padding: 5px 0px;
+    }
+</style>
+{{ endblock }}

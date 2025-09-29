@@ -1,4 +1,3 @@
-import os
 import random
 import time
 
@@ -20,7 +19,10 @@ class C(BaseConstants):
     VALUE_GOOD_SELLER = 1600  # 売り手にとって状態の良い中古品の価値
     VALUE_BAD_SELLER = 0  # 売り手にとって状態の悪い中古品の価値
     BUYER_NUM = 6  # Buyer数＝Seller数とする
-    OWN_RATE = [[1, 1], [1, 2]]  # 保有数の割合をラウンド毎に設定([良い中古品：悪い中古品の比率])
+    OWN_RATE = [
+        [1, 1],
+        [1, 2],
+    ]  # 保有数の割合をラウンド毎に設定([良い中古品：悪い中古品の比率])
 
     VALUE_GOOD_SELLER_ONE = 1601  # 売り手にとって状態の良い中古品を売却する価格
     VALUE_BAD_SELLER_ONE = 1  # 売り手にとって状態の悪い中古品の価値
@@ -408,10 +410,6 @@ class Quizwait(WaitPage):
     def after_all_players_arrive(group: Group):
         init_player(group)
         group.start_timestamp = int(time.time())
-
-
-class wait(WaitPage):
-    pass
 
 
 class Results(Page):
