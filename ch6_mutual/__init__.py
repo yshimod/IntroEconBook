@@ -118,4 +118,9 @@ class Over(Page):
         return player.round_number == C.NUM_ROUNDS
 
 
-page_sequence = [Exp, ResultsWaitPage, ExpResults, Over]
+page_sequence = [
+    Exp,
+    ResultsWaitPage,
+    ExpResults,
+    Over,
+]
