@@ -1,11 +1,9 @@
-{% extends "ch8_comparative_advantage1_instruction/Page.html" %}
-{% load otree static %}
+{{ block title }}
+実験の設定
+{{ endblock }}
 
-{% block title %}
-    実験の設定
-{% endblock %}
 
-{% block content %}
+{{ block content }}
 
 <p>次のような状況を考えてください。</p>
 <p>
@@ -14,5 +12,5 @@
     チーズサンド一個を作るのに必要なものは、チーズ1個、パン1個です。
 </p>
 
-    {% next_button %}
-{% endblock %}
+{{ next_button }}
+{{ endblock }}
