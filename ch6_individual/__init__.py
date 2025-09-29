@@ -41,7 +41,6 @@ class Player(BasePlayer):
     flg_non_input = models.IntegerField()
 
     sellingPrice = models.IntegerField(label="")
-    pass
 
 
 # FUNCTIONS
@@ -144,7 +143,10 @@ class ExpResults(Page):
 
 class ResultsWaitPage(WaitPage):
     body_text = "相手の確認を待っています。"
-    pass
 
 
-page_sequence = [Exp, ExpResults, ResultsWaitPage]
+page_sequence = [
+    Exp,
+    ExpResults,
+    ResultsWaitPage,
+]
