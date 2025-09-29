@@ -226,7 +226,7 @@ class Question(Page):
     form_fields = ["q1", "q2"]
 
 
-class keisanWaitPage(WaitPage):
+class KeisanWaitPage(WaitPage):
     wait_for_all_groups = True
     after_all_players_arrive = keisans
 
@@ -320,7 +320,7 @@ page_sequence = [
     Introduction,
     Decision,
     # Question,
-    keisanWaitPage,
+    KeisanWaitPage,
     ResultsWaitPage,
     # PreResults,
     Results,
