@@ -133,9 +133,15 @@ def da_algorithm(
     print("totyu_studentStatus", totyu_studentStatus, student_choices1)
     for s in C.student:
         if totyu_studentStatus[s] is None:  # 相手が決まっていない学生がいれば・・・
-            t = student_choices1[s].pop(0)  # まだ断られていない学類の中で一番選好の高い学類に申し込む
-            if len(totyu_teacherStatus[t]) < C.capacity_lim[t]:  # 定員に空きがあれば・・・
-                totyu_teacherStatus[t].append(s)  # 先生のマッチング相手のリストに申し込んできた学生を追加
+            t = student_choices1[s].pop(
+                0
+            )  # まだ断られていない学類の中で一番選好の高い学類に申し込む
+            if (
+                len(totyu_teacherStatus[t]) < C.capacity_lim[t]
+            ):  # 定員に空きがあれば・・・
+                totyu_teacherStatus[t].append(
+                    s
+                )  # 先生のマッチング相手のリストに申し込んできた学生を追加
                 totyu_studentStatus[s] = t  # 学生のマッチング相手を更新
             elif len(totyu_teacherStatus[t]) == C.capacity_lim[t]:  # 定員がいっぱいなら
                 for x in totyu_teacherStatus[
@@ -150,11 +156,15 @@ def da_algorithm(
                 if C.teacher_choices[t].index(s) <= C.teacher_choices[t].index(
                     currentPartner
                 ):  # currentPartnerより順位が高ければマッチング成功
-                    totyu_teacherStatus[t].remove(currentPartner)  # currentPartnerを削除
-                    totyu_studentStatus[
+                    totyu_teacherStatus[t].remove(
                         currentPartner
-                    ] = None  # currentPartnerだった学生のマッチングを解除
-                    totyu_teacherStatus[t].append(s)  # 先生のマッチング相手のリストに申し込んできた学生を追加
+                    )  # currentPartnerを削除
+                    totyu_studentStatus[currentPartner] = (
+                        None  # currentPartnerだった学生のマッチングを解除
+                    )
+                    totyu_teacherStatus[t].append(
+                        s
+                    )  # 先生のマッチング相手のリストに申し込んできた学生を追加
                     totyu_studentStatus[s] = t  # 学生のマッチング相手を更新
     if len([1 for y in totyu_studentStatus if totyu_studentStatus[y] is None]) != 0:
         da_algorithm(
@@ -428,4 +438,9 @@ class Results(Page):
     pass
 
 
-page_sequence = [Introduction, Students, ResultsWaitPage, Results]
+page_sequence = [
+    Introduction,
+    Students,
+    ResultsWaitPage,
+    Results,
+]
