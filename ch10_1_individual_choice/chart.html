@@ -5,7 +5,7 @@
     <p class="highcharts-description"></p>
     <div class="mx-auto" style="width: fit-content;">
         {{ for item in graph_choice_list }}
-            {{ item }}<br>
+        {{ item }}<br>
         {{ endfor }}
     </div>
 </figure>
@@ -22,10 +22,10 @@
                 text: disp_title
             },
             xAxis: {
-               categories: js_vars.graph_name_list,
-               title: {
+                categories: js_vars.graph_name_list,
+                title: {
                     text: '選択肢'
-               }
+                }
             },
             yAxis: {
                 min: 0,
@@ -42,6 +42,6 @@
                 data: js_vars.graph_list,
             }]
         });
-        }
+    }
     //}
 </script>

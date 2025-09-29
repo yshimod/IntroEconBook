@@ -119,4 +119,10 @@ class Results(Page):
         return dict(graph_choice_list=[c[1] for c in C.CHOICE_LIST_SENTE])
 
 
-page_sequence = [Question1, Question2, Question3, ResultsWaitPage, Results]
+page_sequence = [
+    Question1,
+    Question2,
+    Question3,
+    ResultsWaitPage,
+    Results,
+]

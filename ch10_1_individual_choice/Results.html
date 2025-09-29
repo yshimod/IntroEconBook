@@ -1,8 +1,12 @@
-{{ block title }}実験結果{{ endblock }}
+{{ block title }}
+実験結果
+{{ endblock }}
+
+
 {{ block content }}
 <p>全ての参加者の結果</p>
 {{ include '././ch10_4_extended_dictator/chart.html'}}
 <script>
-drawChart(js_vars);// グラフ描画
+    drawChart(js_vars);// グラフ描画
 </script>
 {{ endblock }}
