@@ -3,83 +3,85 @@
 
 
 <style>
-.boxed-section{ /*creat a box*/
-    border: 2px solid #000; 
-    padding: 10px; 
-    margin: 10px 0; 
-}   
+    .boxed-section {
+        /*creat a box*/
+        border: 2px solid #000;
+        padding: 10px;
+        margin: 10px 0;
+    }
 </style>
 
 <div class="boxed-section">
-    <div id="highchart"></div></div>
+    <div id="highchart"></div>
+</div>
 
 <script>
     function drawChart() {
         disp_title = js_vars.num_participants + "名が実験に参加しました。"
         //alert(disp_title)
         //if (series.length!=0){
-            Highcharts.chart('highchart', {
-                chart: {
+        Highcharts.chart('highchart', {
+            chart: {
                 type: 'bar'
-                },
+            },
+            title: {
+                text: disp_title
+            },
+            subtitle: {
+                text: ''
+            },
+            xAxis: {
+                //categories: ['Aが1つ', 'Aが2つ', 'Aが3つ', 'Aが4つ', 'Aが5つ'],
+                categories: ['「仕事する」を選んだ人', '「仕事しない」を選んだ人'],
                 title: {
-                    text: disp_title
+                    text: null
+                }
+            },
+            yAxis: {
+                min: 0,
+                max: 100,
+                title: {
+                    text: '',
+                    align: 'high'
                 },
-                subtitle: {
-                    text: ''
-                },
-                xAxis: {
-                    //categories: ['Aが1つ', 'Aが2つ', 'Aが3つ', 'Aが4つ', 'Aが5つ'],
-                    categories: ['「仕事する」を選んだ人','「仕事しない」を選んだ人'],
-                    title: {
-                        text: null
+                labels: {
+                    overflow: 'justify'
+                }
+            },
+            tooltip: {
+                valueSuffix: ' millions'
+            },
+            plotOptions: {
+                bar: {
+                    dataLabels: {
+                        enabled: true
                     }
-                },
-                yAxis: {
-                    min: 0,
-                    max: 100,
-                    title: {
-                        text: '',
-                        align: 'high'
-                    },
-                    labels: {
-                        overflow: 'justify'
-                    }
-                },
-                tooltip: {
-                    valueSuffix: ' millions'
-                },
-                plotOptions: {
-                    bar: {
-                        dataLabels: {
-                            enabled: true
-                        }
-                    }
-                },
-                legend: {
-                    layout: 'vertical',
-                    align: 'right',
-                    verticalAlign: 'top',
-                    x: -40,
-                    y: 80,
-                    floating: true,
-                    borderWidth: 1,
-                    backgroundColor:
-                        Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF',
-                    shadow: true
-                },
-                credits: {
-                    enabled: false
-                },
-                series: [{
-                    name: '%',
-                    //data: [js_vars.num_A, js_vars.num_B]
-                    data: [
-                      {y: js_vars.num_A_1, color: 'orange'},
-                      {y: js_vars.num_B_1, color: 'green'},
-                    ]
-                }]
-            });
-        }
+                }
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'top',
+                x: -40,
+                y: 80,
+                floating: true,
+                borderWidth: 1,
+                backgroundColor:
+                    Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF',
+                shadow: true
+            },
+            credits: {
+                enabled: false
+            },
+            series: [{
+                name: '%',
+                //data: [js_vars.num_A, js_vars.num_B]
+                data: [
+                    { y: js_vars.num_A_1, color: 'orange' },
+                    { y: js_vars.num_B_1, color: 'green' },
+                ]
+            }]
+        });
+    }
     //}
 </script>

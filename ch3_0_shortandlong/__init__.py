@@ -73,7 +73,7 @@ class Decision_1(Page):
     form_fields = ["individual_choice_1", "individual_choice_comment_1"]
 
 
-class keisanWaitPage_1(WaitPage):
+class KeisanWaitPage_1(WaitPage):
     wait_for_all_groups = True
     after_all_players_arrive = keisans_1
 
@@ -118,6 +118,6 @@ class Results1(Page):
 page_sequence = [
     Introduction,
     Decision_1,
-    keisanWaitPage_1,
+    KeisanWaitPage_1,
     Results1,
 ]
