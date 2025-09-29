@@ -371,3 +371,34 @@ def vars_for_admin_report(subsession: Subsession):
         list_comment_s=list_comment_s,
         list_comment_e=list_comment_e,
     )
+
+
+def custom_export(players: list[Player]):
+    yield [
+        "session.code",
+        "id_in_subsession",
+        "choice_r1",
+        "choice_r2",
+        "choice_r3",
+        "choice_r4",
+        "choice_r5",
+        "choice_r_cntA",
+        "choice_u",
+        "choice_s",
+        "choice_e",
+    ]
+
+    for p in players:
+        yield [
+            p.session.code,
+            p.id_in_subsession,
+            p.choice_r1,
+            p.choice_r2,
+            p.choice_r3,
+            p.choice_r4,
+            p.choice_r5,
+            p.choice_r_cntA,
+            p.choice_u,
+            p.choice_s,
+            p.choice_e,
+        ]
