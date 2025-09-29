@@ -1,11 +1,9 @@
-{% extends "ch8_comparative_advantage2/Page.html" %}
-{% load otree static %}
-
-{% block title %}
+{{ block title }}
 取引
-{% endblock %}
+{{ endblock }}
 
-{% block content %}
+
+{{ block content }}
 
 
 <h3>あなたの情報</h3>
@@ -90,7 +88,7 @@
     // 1次元配列: [price]
     let closed_value_str = "";
 
-    window.onload = function(){
+    window.onload = function () {
         closed_value_str = sessionStorage.getItem('closed_value');
         document.getElementById("closed").innerHTML = closed_value_str;
     }
@@ -119,7 +117,7 @@
             alert("数値を入力してください");
             return false;
         }
-        if (!Number.isInteger(form_value*10)) {
+        if (!Number.isInteger(form_value * 10)) {
             alert("小数点以下1桁までで入力してください");
             return false;
         }
@@ -138,7 +136,7 @@
         if (sellOffer_flg === false) {
             sellOffer_flg = true;
             liveSend({ 'player_type': player_type, 'type': 'sell', 'value': form_value, 'sellOffer_flg': sellOffer_flg });
-        e.value = '';
+            e.value = '';
         }
     }
 
@@ -153,7 +151,7 @@
             alert("数値を入力してください");
             return false;
         }
-        if (!Number.isInteger(form_value*10)) {
+        if (!Number.isInteger(form_value * 10)) {
             alert("小数点以下1桁までで入力してください");
             return false;
         }
@@ -176,20 +174,20 @@
         }
         if (buyOffer_flg === false) {
             liveSend({ 'player_type': player_type, 'type': 'buy', 'value': form_value, 'buyOffer_flg': buyOffer_flg });
-        e.value = '';
-    }
+            e.value = '';
+        }
     }
 
     function clear_seller(i) {
         if (clearSeller_flg === false) {
             clearSeller_flg = true;
-            liveSend({ 'player_type': player_type, 'type': 'sell_clear', 'id': Number(all_sell_value[i][0]), 'value': Number(all_sell_value[i][1]), 'time' : Number(all_sell_value[i][2]), 'clearSeller_flg' : clearSeller_flg });
+            liveSend({ 'player_type': player_type, 'type': 'sell_clear', 'id': Number(all_sell_value[i][0]), 'value': Number(all_sell_value[i][1]), 'time': Number(all_sell_value[i][2]), 'clearSeller_flg': clearSeller_flg });
         }
     }
     function clear_buyer(i) {
         if (clearBuyer_flg === false) {
             clearBuyer_flg = true;
-            liveSend({ 'player_type': player_type, 'type': 'buy_clear', 'id': Number(all_buy_value[i][0]), 'value': Number(all_buy_value[i][1]), 'time' : Number(all_buy_value[i][2]), 'clearBuyer_flg' : clearBuyer_flg });
+            liveSend({ 'player_type': player_type, 'type': 'buy_clear', 'id': Number(all_buy_value[i][0]), 'value': Number(all_buy_value[i][1]), 'time': Number(all_buy_value[i][2]), 'clearBuyer_flg': clearBuyer_flg });
         }
     }
 
@@ -326,14 +324,14 @@
             }
         } else if (data['seiritu'] === -1) { // 価格の消去メッセージ
             if (data['formSyubetu'] == 'sell_clear') {
-                for (let i=0; i < all_sell_value.length; i++) {
+                for (let i = 0; i < all_sell_value.length; i++) {
                     if (data['formData'] == all_sell_value[i][1] && data['time'] == all_sell_value[i][2]) {
                         all_sell_value.splice(i, 1);
                         break;
                     }
                 }
                 if (data['formInputPlayerID'] == id) {
-                    for (let i=0; i < my_sell_value.length; i++) {
+                    for (let i = 0; i < my_sell_value.length; i++) {
                         if (data['formData'] == my_sell_value[i][0] && data['time'] == my_sell_value[i][1]) {
                             my_sell_value.splice(i, 1);
                             break;
@@ -342,14 +340,14 @@
                 }
                 clearSeller_flg = false;
             } else if (data['formSyubetu'] == 'buy_clear') {
-                for (let i=0; i < all_buy_value.length; i++) {
+                for (let i = 0; i < all_buy_value.length; i++) {
                     if (data['formData'] == all_buy_value[i][1] && data['time'] == all_buy_value[i][2]) {
                         all_buy_value.splice(i, 1);
                         break;
                     }
                 }
                 if (data['formInputPlayerID'] == id) {
-                    for (let i=0; i < my_buy_value.length; i++) {
+                    for (let i = 0; i < my_buy_value.length; i++) {
                         if (data['formData'] == my_buy_value[i][0] && data['time'] == my_buy_value[i][1]) {
                             my_buy_value.splice(i, 1);
                             break;
@@ -389,4 +387,4 @@
     }
 </script>
 
-{% endblock %}
+{{ endblock }}

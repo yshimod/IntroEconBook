@@ -1,11 +1,9 @@
-{% extends "global/Page.html" %}
-{% load otree static %}
+{{ block title }}
+結果
+{{ endblock }}
 
-{% block title %}
-    結果
-{% endblock %}
 
-{% block content %}
+{{ block content }}
 
 <p>
     あなたはチーズを{{player.cheese}}個、パンを{{player.bread}}個保有しているので、
@@ -20,7 +18,5 @@
         sessionStorage.removeItem('closed_value');
     }
 </script>
-    {% next_button %}
-{% endblock %}
-
-
+{{ next_button }}
+{{ endblock }}
