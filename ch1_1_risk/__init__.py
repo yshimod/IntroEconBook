@@ -225,9 +225,7 @@ class ResultsWaitPage(WaitPage):
         session = subsession.session
 
         # 質問1--5
-        list_choice_r_cntA = [
-            p.choice_r_cntA for p in players if p.field_maybe_none("choice_r_cntA")
-        ]
+        list_choice_r_cntA = [p.choice_r_cntA for p in players if p.choice_r_cntA != -1]
         list_prop_A = []
         if len(list_choice_r_cntA) > 0:
             list_prop_A = [
