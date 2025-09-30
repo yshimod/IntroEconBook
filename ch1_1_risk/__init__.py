@@ -151,6 +151,7 @@ class Decision_3(Page):
     @staticmethod
     def vars_for_template(player: Player):
         return dict(
+            qnum=6,
             Value_B=C.PROBLEM_6["B"],
             Value_A_WIN=C.PROBLEM_6["AWIN"],
             Value_A_LOSE=C.PROBLEM_6["ALOSE"],
@@ -177,6 +178,7 @@ class Decision_4(Page):
     @staticmethod
     def vars_for_template(player: Player):
         return dict(
+            qnum=7,
             Value_B=C.PROBLEM_7["B"],
             Value_A_WIN=C.PROBLEM_7["AWIN"],
             Value_A_LOSE=C.PROBLEM_7["ALOSE"],
@@ -203,6 +205,7 @@ class Decision_5(Page):
     @staticmethod
     def vars_for_template(player: Player):
         return dict(
+            qnum=8,
             Value_B=C.PROBLEM_8["B"],
             Value_A_WIN=C.PROBLEM_8["AWIN"],
             Value_A_LOSE=C.PROBLEM_8["ALOSE"],
