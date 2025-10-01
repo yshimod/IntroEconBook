@@ -109,7 +109,7 @@
     document.querySelectorAll('input[name="individual_choice"]').forEach((elem) => {
         elem.addEventListener('change', updateTableHighlight);
     });
-    document.addEventListener('load', function () {
+    document.addEventListener('DOMContentLoaded', function () {
         updateTableHighlight();
     });
 </script>
