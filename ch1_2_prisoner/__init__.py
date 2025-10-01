@@ -13,7 +13,7 @@ class C(BaseConstants):
     PLAYERS_PER_GROUP = 2
     NUM_ROUNDS = 1
 
-    INSTRUCTIONS_TEMPLATE = "ch1_2_prisoner/instructions.html"
+    INSTRUCTIONS_TEMPLATE = __name__ + "instructions.html"
 
     PAYOFF_A = cu(150)
     PAYOFF_B = cu(100)
