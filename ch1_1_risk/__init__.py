@@ -7,6 +7,7 @@ class C(BaseConstants):
     PLAYERS_PER_GROUP = None
     NUM_ROUNDS = 1
 
+    # 質問1--5
     PROBLEMS = [150, 200, 250, 300, 350]
     FORCE_SINGLE_SWITCH = 0  # 0:off, 1:on
 
@@ -22,7 +23,7 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer):
-    # Decision
+    # 質問1--5
     choice_r1 = models.StringField()
     choice_r2 = models.StringField()
     choice_r3 = models.StringField()
@@ -31,7 +32,7 @@ class Player(BasePlayer):
     choice_r_cntA = models.IntegerField(initial=-1)
     comment_r = models.LongStringField(label="どのように考えて意思決定をしましたか？")
 
-    # Decision_3
+    # 質問6
     choice_u = models.StringField(
         widget=widgets.RadioSelectHorizontal,
         label="このとき、あなたはAとBのどちらを選びますか？",
@@ -42,7 +43,7 @@ class Player(BasePlayer):
     )
     comment_u = models.LongStringField(label="どのように考えて意思決定をしましたか？")
 
-    # Decision_4
+    # 質問7
     choice_s = models.StringField(
         widget=widgets.RadioSelectHorizontal,
         label="このとき、あなたはAとBのどちらを選びますか？",
@@ -53,7 +54,7 @@ class Player(BasePlayer):
     )
     comment_s = models.LongStringField(label="どのように考えて意思決定をしましたか？")
 
-    # Decision_5
+    # 質問8
     choice_e = models.StringField(
         widget=widgets.RadioSelectHorizontal,
         label="このとき、あなたはAとBのどちらを選びますか？",
@@ -162,10 +163,8 @@ class ResultsWaitPage(WaitPage):
         players: list[Player] = subsession.get_players()
         session = subsession.session
 
-        # Decision (q1--5)
-        list_choice_r_cntA = [
-            p.choice_r_cntA for p in players if p.field_maybe_none("choice_r_cntA")
-        ]
+        # 質問1--5
+        list_choice_r_cntA = [p.choice_r_cntA for p in players if p.choice_r_cntA != -1]
         list_prop_A = []
         if len(list_choice_r_cntA) > 0:
             list_prop_A = [
@@ -184,7 +183,7 @@ class ResultsWaitPage(WaitPage):
         session.vars["ch1_1__num_participants_r3"] = len(list_choice_r3)
         session.vars["ch1_1__prop_A_r3"] = prop_A_r3
 
-        # Decision_3 (q6)
+        # 質問6
         list_choice_u = [p.choice_u for p in players if p.field_maybe_none("choice_u")]
         prop_A_u = -1
         if len(list_choice_u) > 0:
@@ -192,7 +191,7 @@ class ResultsWaitPage(WaitPage):
         session.vars["ch1_1__num_participants_u"] = len(list_choice_u)
         session.vars["ch1_1__prop_A_u"] = prop_A_u
 
-        # Decision_4 (q7)
+        # 質問7
         list_choice_s = [p.choice_s for p in players if p.field_maybe_none("choice_s")]
         prop_A_s = -1
         if len(list_choice_s) > 0:
@@ -200,7 +199,7 @@ class ResultsWaitPage(WaitPage):
         session.vars["ch1_1__num_participants_s"] = len(list_choice_s)
         session.vars["ch1_1__prop_A_s"] = prop_A_s
 
-        # Decision_5 (q8)
+        # 質問8
         list_choice_e = [p.choice_e for p in players if p.field_maybe_none("choice_e")]
         prop_A_e = -1
         if len(list_choice_e) > 0:
