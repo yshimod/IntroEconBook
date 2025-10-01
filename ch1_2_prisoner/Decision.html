@@ -4,25 +4,34 @@
 
 
 {{ block content }}
-<div class="fs-5">
-    <p><span class="fw-bold">質問1に回答したあと</span>、あなた自身の意思決定として、下の表の選択肢AとBのいずれかを選んでください。</p>
+<div class="fs-4">
+    <ol>
+        <li>あなたの相手はどちらの選択肢を選ぶと思いますか？<br>
+            <span class="text-success fw-bold">緑色のボタン</span>を押して選択してください．
+        </li>
+        <li>あなた自身の意思決定として<span class="text-primary fw-bold">青色のボタン</span>を押して選択してください．</li>
+    </ol>
 </div>
 
-<div class="mt-4 fs-4">
-    {{ formfield player.think_other_player_choice }}
-</div>
-
-
-<div class="mt-4 fs-4">
-    <p>【あなた自身の意思決定】</p>
+<div class="mt-5 fs-4">
     <table class="table table-bordered text-center" style="vertical-align: middle;">
         <tr>
             <th colspan="2" rowspan="2"></th>
             <th colspan="2">あなたの相手</th>
         </tr>
         <tr>
-            <th>{{ C.CHOICE_LIST.0 }}</th>
-            <th>{{ C.CHOICE_LIST.1 }}</th>
+            <th>
+                <input type="radio" class="btn-check" name="think_other_player_choice"
+                    id="id_think_other_player_choice_A" value="{{ C.CHOICE_LIST.0 }}" autocomplete="off" required>
+                <label class="btn btn-outline-success btn-lg" style="width: 6em;"
+                    for="id_think_other_player_choice_A">{{ C.CHOICE_LIST.0 }}</label>
+            </th>
+            <th>
+                <input type="radio" class="btn-check" name="think_other_player_choice"
+                    id="id_think_other_player_choice_B" value="{{ C.CHOICE_LIST.1 }}" autocomplete="off" required>
+                <label class="btn btn-outline-success btn-lg" style="width: 6em;"
+                    for="id_think_other_player_choice_B">{{ C.CHOICE_LIST.1 }}</label>
+            </th>
         </tr>
         <tr>
             <th rowspan="2">あなた</th>
@@ -32,8 +41,8 @@
                 <label class="btn btn-outline-primary btn-lg" style="width: 6em;"
                     for="id_individual_choice_A">{{ C.CHOICE_LIST.0 }}</label>
             </td>
-            <td><u>{{ C.PAYOFF_B }}</u>, {{ C.PAYOFF_B }}</td>
-            <td><u>{{ C.PAYOFF_D }}</u>, {{ C.PAYOFF_A }}</td>
+            <td id="cell_AA"><u>{{ C.PAYOFF_B }}</u>, {{ C.PAYOFF_B }}</td>
+            <td id="cell_AB"><u>{{ C.PAYOFF_D }}</u>, {{ C.PAYOFF_A }}</td>
         </tr>
         <tr>
             <td>
@@ -42,18 +51,61 @@
                 <label class="btn btn-outline-primary btn-lg" style="width: 6em;"
                     for="id_individual_choice_B">{{ C.CHOICE_LIST.1 }}</label>
             </td>
-            <td><u>{{ C.PAYOFF_A }}</u>, {{ C.PAYOFF_D }}</td>
-            <td><u>{{ C.PAYOFF_C }}</u>, {{ C.PAYOFF_C }}</td>
+            <td id="cell_BA"><u>{{ C.PAYOFF_A }}</u>, {{ C.PAYOFF_D }}</td>
+            <td id="cell_BB"><u>{{ C.PAYOFF_C }}</u>, {{ C.PAYOFF_C }}</td>
         </tr>
     </table>
 </div>
 
-
-<div class="mt-4 fs-4">
-    {{ formfield player.individual_choice_comment }}
+<div class="my-5 fs-4">
+    <label for="id_individual_choice_comment">
+        なぜあなたは相手が<span class='text-success fw-bold' id='id_disp_think_other_player_choice'>その選択肢</span>を選ぶと思い，<br>
+        その予想を踏まえて，なぜあなた自身は<span class='text-primary fw-bold' id='id_disp_individual_choice'>その選択肢</span>を選んだのか，<br>
+        理由を教えてください．
+    </label>
+    <textarea class="form-control" id="id_individual_choice_comment" name="individual_choice_comment"
+        required></textarea>
 </div>
 
 
 {{ next_button }}
 
+{{ endblock }}
+
+
+{{ block scripts }}
+<script>
+    function updateTableHighlight() {
+        document.getElementById('cell_AA').style.backgroundColor = '';
+        document.getElementById('cell_AB').style.backgroundColor = '';
+        document.getElementById('cell_BA').style.backgroundColor = '';
+        document.getElementById('cell_BB').style.backgroundColor = '';
+        const thinkOther = document.querySelector('input[name="think_other_player_choice"]:checked');
+        const individual = document.querySelector('input[name="individual_choice"]:checked');
+        if (thinkOther && individual) {
+            const thinkValue = thinkOther.value;
+            const individualValue = individual.value;
+            if (thinkValue === '{{ C.CHOICE_LIST.0 }}' && individualValue === '{{ C.CHOICE_LIST.0 }}') {
+                document.getElementById('cell_AA').style.backgroundColor = 'yellow';
+            } else if (thinkValue === '{{ C.CHOICE_LIST.0 }}' && individualValue === '{{ C.CHOICE_LIST.1 }}') {
+                document.getElementById('cell_BA').style.backgroundColor = 'yellow';
+            } else if (thinkValue === '{{ C.CHOICE_LIST.1 }}' && individualValue === '{{ C.CHOICE_LIST.0 }}') {
+                document.getElementById('cell_AB').style.backgroundColor = 'yellow';
+            } else if (thinkValue === '{{ C.CHOICE_LIST.1 }}' && individualValue === '{{ C.CHOICE_LIST.1 }}') {
+                document.getElementById('cell_BB').style.backgroundColor = 'yellow';
+            }
+            document.getElementById('id_disp_think_other_player_choice').textContent = thinkValue;
+            document.getElementById('id_disp_individual_choice').textContent = individualValue;
+        }
+    }
+    document.querySelectorAll('input[name="think_other_player_choice"]').forEach((elem) => {
+        elem.addEventListener('change', updateTableHighlight);
+    });
+    document.querySelectorAll('input[name="individual_choice"]').forEach((elem) => {
+        elem.addEventListener('change', updateTableHighlight);
+    });
+    document.addEventListener('load', function () {
+        updateTableHighlight();
+    });
+</script>
 {{ endblock }}
