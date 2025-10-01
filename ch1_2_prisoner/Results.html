@@ -1,5 +1,5 @@
 {{ block title }}
-結果：あなたと相手の意思決定の結果です。
+結果
 {{ endblock }}
 
 
@@ -12,11 +12,11 @@
 </p>
 
 <p>
-    その結果、あなたのポイントは <b>{{ player.payoff }}</b>です。
+    その結果、あなたが獲得したポイントは <b>{{ player.payoff }}</b>です。
 </p>
 
 
-<h1 class="mt-5">全体としての結果</h1>
+<h3 class="mt-5">全体の結果</h3>
 
 <div class="boxed-section">
     <div id="highchart"></div>
@@ -26,14 +26,15 @@
     <div id="highchart2"></div>
 </div>
 
-
-{{ include C.INSTRUCTIONS_TEMPLATE }}
+<div class="mt-5">
+    {{ include_sibling 'instructions.html' }}
+</div>
 
 {{ endblock }}
 
 
 {{ block script }}
-{{ include 'ch1_2_prisoner/chart.html' }}
+{{ include_sibling 'chart.html' }}
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         drawChart();

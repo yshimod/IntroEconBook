@@ -15,7 +15,7 @@
 
 <div class="mt-4">
     <p>【あなた自身の意思決定】</p>
-    <table class="table table-bordered text-center decision-table">
+    <table class="table table-bordered text-center" style="vertical-align: middle;">
         <tr>
             <th colspan="2" rowspan="2"></th>
             <th colspan="2">あなたの相手</th>
@@ -25,7 +25,7 @@
             <th>{{ C.CHOICE_LIST.1 }}</th>
         </tr>
         <tr>
-            <th rowspan="2"><span>あなた</span></th>
+            <th rowspan="2">あなた</th>
             <td>
                 <input type="radio" class="btn-check" name="individual_choice" id="id_individual_choice_A"
                     value="{{ C.CHOICE_LIST.0 }}" autocomplete="off" required>
@@ -56,13 +56,4 @@
 
 {{ next_button }}
 
-{{ endblock }}
-
-
-{{ block styles }}
-<style>
-    .decision-table {
-        vertical-align: middle;
-    }
-</style>
 {{ endblock }}
