@@ -109,6 +109,32 @@ def set_payoff(player: Player):
         player.payoff = -1
 
 
+def dump_js_vars(sub: Subsession):
+    prop_num_A = -1
+    prop_num_B = -1
+    if sub.num_participants > 0:
+        prop_num_A = (sub.num_A / sub.num_participants) * 100
+        prop_num_B = (sub.num_B / sub.num_participants) * 100
+
+    prop_pair_num_AA = -1
+    prop_pair_num_AB = -1
+    prop_pair_num_BB = -1
+    if sub.num_pairs > 0:
+        prop_pair_num_AA = (sub.num_pairs_AA / sub.num_pairs) * 100
+        prop_pair_num_AB = (sub.num_pairs_AB / sub.num_pairs) * 100
+        prop_pair_num_BB = (sub.num_pairs_BB / sub.num_pairs) * 100
+
+    return dict(
+        num_participants=sub.num_participants,
+        num_A=prop_num_A,
+        num_B=prop_num_B,
+        num_pairs=sub.num_pairs,
+        num_AA=prop_pair_num_AA,
+        num_AB=prop_pair_num_AB,
+        num_BB=prop_pair_num_BB,
+    )
+
+
 # PAGES
 class Introduction(Page):
     pass
@@ -151,30 +177,7 @@ class Results(Page):
     @staticmethod
     def js_vars(player: Player):
         sub: Subsession = player.subsession
-
-        prop_num_A = -1
-        prop_num_B = -1
-        if sub.num_participants > 0:
-            prop_num_A = (sub.num_A / sub.num_participants) * 100
-            prop_num_B = (sub.num_B / sub.num_participants) * 100
-
-        prop_pair_num_AA = -1
-        prop_pair_num_AB = -1
-        prop_pair_num_BB = -1
-        if sub.num_pairs > 0:
-            prop_pair_num_AA = (sub.num_pairs_AA / sub.num_pairs) * 100
-            prop_pair_num_AB = (sub.num_pairs_AB / sub.num_pairs) * 100
-            prop_pair_num_BB = (sub.num_pairs_BB / sub.num_pairs) * 100
-
-        return dict(
-            num_participants=sub.num_participants,
-            num_A=prop_num_A,
-            num_B=prop_num_B,
-            num_pairs=sub.num_pairs,
-            num_AA=prop_pair_num_AA,
-            num_AB=prop_pair_num_AB,
-            num_BB=prop_pair_num_BB,
-        )
+        return dump_js_vars(sub)
 
 
 class PreResults(Page):
