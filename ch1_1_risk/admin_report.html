@@ -1,7 +1,7 @@
 <div class="boxed-section">
     <div id="highchart"></div>
     <ul>
-        <li>A: 「{{ C.PROBLEM_A }}」</li>
+        <li>A: 「{{ for t in C.PROBLEM_A }}{{ t }}{{ endfor }}」</li>
         <li>
             B: 「X をそのまま持つ」
             （ X =
@@ -16,7 +16,7 @@
 <div class="boxed-section">
     <div id="highchart2"></div>
     <ul>
-        <li>A: 「{{ C.PROBLEM_A }}」</li>
+        <li>A: 「{{ for t in C.PROBLEM_A }}{{ t }}{{ endfor }}」</li>
         <li>B: 「{{ C.PROBLEMS.2 }}をそのまま持つ」</li>
     </ul>
 </div>

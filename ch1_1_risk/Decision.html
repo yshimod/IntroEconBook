@@ -6,7 +6,7 @@
 
 {{ block content }}
 <table class="table table-hover decision-table">
-    <thead>
+    <thead class="fs-4">
         <tr>
             <th rowspan="2" style="border-bottom: 1px double #000;"></th>
             <th class="tab-opt-a">A</th>
@@ -24,9 +24,11 @@
     <tbody>
         {{ for v in C.PROBLEMS }}
         <tr>
-            <th>質問{{ forloop.counter }}: 元手が{{ v }}あります。</th>
+            <th>質問{{ forloop.counter }}: 元手が<span class="fs-4">{{ v }}</span>あります。</th>
             <td class="tab-opt-a">
-                <label for="id_choice_r{{ forloop.counter }}_A">{{ C.PROBLEM_A }}</label>
+                <label for="id_choice_r{{ forloop.counter }}_A">
+                    {{ for t in C.PROBLEM_A }}{{ t }}<br>{{ endfor }}
+                </label>
             </td>
             <td class="tab-opt-a">
                 <label for="id_choice_r{{ forloop.counter }}_A">A</label>
@@ -46,10 +48,9 @@
     </tbody>
 </table>
 
-<div class="mt-5">
+<div class="mt-5 fs-4">
     {{ formfield 'comment_r' }}
 </div>
-
 {{ next_button }}
 
 {{ endblock }}
@@ -57,6 +58,10 @@
 
 {{ block styles }}
 <style>
+    .decision-table {
+        vertical-align: middle;
+    }
+
     .decision-table td>* {
         vertical-align: middle;
     }
