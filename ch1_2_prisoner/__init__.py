@@ -45,17 +45,11 @@ class Player(BasePlayer):
 
     # 相手はどちらを選ぶと思うか
     think_other_player_choice = models.StringField(
-        widget=widgets.RadioSelectHorizontal,
-        label="【質問1】あなたの相手は{}と{}のどちらを選ぶと思いますか？".format(
-            *C.CHOICE_LIST
-        ),
-        choices=[[v, "{}を選ぶと予想する".format(v)] for v in C.CHOICE_LIST],
+        choices=C.CHOICE_LIST,
     )
 
     # 意思決定の理由
-    individual_choice_comment = models.LongStringField(
-        label="【質問2】なぜあなたはその選択肢を選び、相手はその選択を選ぶと思ったのか、理由を教えてください。"
-    )
+    individual_choice_comment = models.LongStringField(label="")
 
     flg_non_input = models.IntegerField(initial=0)
     flg_pair_non_input = models.IntegerField(initial=0)
@@ -115,9 +109,34 @@ def set_payoff(player: Player):
         player.payoff = -1
 
 
+def dump_js_vars(sub: Subsession):
+    prop_num_A = -1
+    prop_num_B = -1
+    if sub.num_participants > 0:
+        prop_num_A = (sub.num_A / sub.num_participants) * 100
+        prop_num_B = (sub.num_B / sub.num_participants) * 100
+
+    prop_pair_num_AA = -1
+    prop_pair_num_AB = -1
+    prop_pair_num_BB = -1
+    if sub.num_pairs > 0:
+        prop_pair_num_AA = (sub.num_pairs_AA / sub.num_pairs) * 100
+        prop_pair_num_AB = (sub.num_pairs_AB / sub.num_pairs) * 100
+        prop_pair_num_BB = (sub.num_pairs_BB / sub.num_pairs) * 100
+
+    return dict(
+        num_participants=sub.num_participants,
+        num_A=prop_num_A,
+        num_B=prop_num_B,
+        num_pairs=sub.num_pairs,
+        num_AA=prop_pair_num_AA,
+        num_AB=prop_pair_num_AB,
+        num_BB=prop_pair_num_BB,
+    )
+
+
 # PAGES
 class Introduction(Page):
-    # timeout_seconds = 100
     pass
 
 
@@ -158,30 +177,7 @@ class Results(Page):
     @staticmethod
     def js_vars(player: Player):
         sub: Subsession = player.subsession
-
-        prop_num_A = -1
-        prop_num_B = -1
-        if sub.num_participants > 0:
-            prop_num_A = (sub.num_A / sub.num_participants) * 100
-            prop_num_B = (sub.num_B / sub.num_participants) * 100
-
-        prop_pair_num_AA = -1
-        prop_pair_num_AB = -1
-        prop_pair_num_BB = -1
-        if sub.num_pairs > 0:
-            prop_pair_num_AA = (sub.num_pairs_AA / sub.num_pairs) * 100
-            prop_pair_num_AB = (sub.num_pairs_AB / sub.num_pairs) * 100
-            prop_pair_num_BB = (sub.num_pairs_BB / sub.num_pairs) * 100
-
-        return dict(
-            num_participants=sub.num_participants,
-            num_A=prop_num_A,
-            num_B=prop_num_B,
-            num_pairs=sub.num_pairs,
-            num_AA=prop_pair_num_AA,
-            num_AB=prop_pair_num_AB,
-            num_BB=prop_pair_num_BB,
-        )
+        return dump_js_vars(sub)
 
 
 class PreResults(Page):
@@ -195,3 +191,43 @@ page_sequence = [
     PreResults,
     Results,
 ]
+
+
+def vars_for_admin_report(subsession: Subsession):
+    list_comment = sorted(
+        [
+            [
+                p.individual_choice,
+                p.field_maybe_none("think_other_player_choice"),
+                p.pair_choice,
+                p.field_maybe_none("individual_choice_comment"),
+            ]
+            for p in subsession.get_players()
+        ]
+    )
+
+    return dict(
+        js_vars=dump_js_vars(subsession),
+        list_comment=list_comment,
+    )
+
+
+def custom_export(players: list[Player]):
+    yield [
+        "session.code",
+        "id_in_subsession",
+        "round_number",
+        "individual_choice",
+        "think_other_player_choice",
+        "pair_choice",
+    ]
+
+    for p in players:
+        yield [
+            p.session.code,
+            p.id_in_subsession,
+            p.round_number,
+            p.individual_choice,
+            p.think_other_player_choice,
+            p.pair_choice,
+        ]
