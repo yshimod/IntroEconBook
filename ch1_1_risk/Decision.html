@@ -26,20 +26,20 @@
         <tr>
             <th>質問{{ forloop.counter }}: 元手が{{ v }}あります。</th>
             <td class="tab-opt-a">
-                <label for="id_q{{ forloop.counter }}_A">50%の確率で400に、50%の確率で100になる</label>
+                <label for="id_choice_r{{ forloop.counter }}_A">50%の確率で400に、50%の確率で100になる</label>
             </td>
             <td class="tab-opt-a">
-                <label for="id_q{{ forloop.counter }}_A">A</label>
-                <input type="radio" class="optbtn optA" id="id_q{{ forloop.counter }}_A" name="q{{ forloop.counter }}"
-                    value="A" data-rownum="{{ forloop.counter }}" required>
+                <label for="id_choice_r{{ forloop.counter }}_A">A</label>
+                <input type="radio" class="optbtn optA" id="id_choice_r{{ forloop.counter }}_A"
+                    name="choice_r{{ forloop.counter }}" value="A" data-rownum="{{ forloop.counter }}" required>
             </td>
             <td class="tab-opt-b">
-                <input type="radio" class="optbtn optB" id="id_q{{ forloop.counter }}_B" name="q{{ forloop.counter }}"
-                    value="B" data-rownum="{{ forloop.counter }}" required>
-                <label for="id_q{{ forloop.counter }}_B">B</label>
+                <input type="radio" class="optbtn optB" id="id_choice_r{{ forloop.counter }}_B"
+                    name="choice_r{{ forloop.counter }}" value="B" data-rownum="{{ forloop.counter }}" required>
+                <label for="id_choice_r{{ forloop.counter }}_B">B</label>
             </td>
             <td class="tab-opt-b">
-                <label for="id_q{{ forloop.counter }}_B">{{ v }}をそのまま持つ</label>
+                <label for="id_choice_r{{ forloop.counter }}_B">{{ v }}をそのまま持つ</label>
             </td>
         </tr>
         {{ endfor }}
@@ -91,7 +91,7 @@
             }
 
             for (var i = 1; i <= choise_num; i++) {
-                const tmpEl = document.getElementsByName('q' + i);
+                const tmpEl = document.getElementsByName('choice_r' + i);
                 if (flag_single_switch) {
                     if (i < switchingPoint) {
                         tmpEl[0].checked = true;
