@@ -5,16 +5,17 @@
 
 {{ block content }}
 
-<p>
-    あなた{{ if player.flg_non_input == 1 }}（コンピュータが選択）{{ endif }}は<b>{{ my_decision }}</b>、
-    <br>
-    あなたの相手{{ if player.flg_pair_non_input == 1 }}（コンピュータが選択）{{ endif }}は<b>{{ opponent_decision }}</b>を選びました。
-</p>
+<div class="fs-4">
+    <p>
+        あなた{{ if player.flg_non_input == 1 }}（コンピュータが選択）{{ endif }}は<b>{{ my_decision }}</b>、
+        <br>
+        あなたの相手{{ if player.flg_pair_non_input == 1 }}（コンピュータが選択）{{ endif }}は<b>{{ opponent_decision }}</b>を選びました。
+    </p>
 
-<p>
-    その結果、あなたが獲得したポイントは <b>{{ player.payoff }}</b>です。
-</p>
-
+    <p>
+        その結果、あなたが獲得したポイントは <b>{{ player.payoff }}</b>です。
+    </p>
+</div>
 
 <h3 class="mt-5">全体の結果</h3>
 
