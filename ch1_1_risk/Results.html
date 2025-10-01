@@ -123,7 +123,7 @@
 
 
 {{ block script }}
-{{ include 'ch1_1_risk/chart.html' }}
+{{ include_sibling 'chart.html' }}
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         drawChart1(js_vars.num_participants, js_vars.list_prop_A);
