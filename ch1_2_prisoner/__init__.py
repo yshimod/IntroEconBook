@@ -191,3 +191,23 @@ page_sequence = [
     PreResults,
     Results,
 ]
+
+
+def vars_for_admin_report(subsession: Subsession):
+    list_comment = sorted(
+        [
+            [
+                p.individual_choice,
+                p.field_maybe_none("think_other_player_choice"),
+                p.pair_choice,
+                p.field_maybe_none("individual_choice_comment"),
+            ]
+            for p in subsession.get_players()
+        ]
+    )
+
+    return dict(
+        js_vars=dump_js_vars(subsession),
+        list_comment=list_comment,
+    )
+

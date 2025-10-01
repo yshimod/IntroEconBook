@@ -38,8 +38,8 @@
 {{ include_sibling 'chart.html' }}
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        drawChart();
-        drawChart_pair();
+        drawChart(js_vars);
+        drawChart_pair(js_vars);
     });
 </script>
 {{ endblock }}
