@@ -6,6 +6,7 @@
     <div id="highchart2"></div>
 </div>
 
+{{ if list_comment }}
 <div class="mt-5 fs-5">
     <table class="table table-bordered">
         <thead>
@@ -28,6 +29,8 @@
         </tbody>
     </table>
 </div>
+{{ endif }}
+
 
 <div class="mt-5">
     {{ include_sibling 'instructions.html' }}
