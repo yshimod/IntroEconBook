@@ -67,6 +67,12 @@
     <div id="highchart2"></div>
 </div>
 
+{{ if player.round_number > 1 }}
+<div class="boxed-section">
+    <div id="highchart3"></div>
+</div>
+{{ endif }}
+
 <div class="mt-5">
     {{ include_sibling 'instructions.html' }}
 </div>
@@ -92,6 +98,10 @@
 
         drawChart(js_vars);
         drawChart_pair(js_vars);
+
+        // {{ if player.round_number > 1 }}
+        drawChart_series(js_vars);
+        // {{ endif }}
     });
 </script>
 {{ endblock }}

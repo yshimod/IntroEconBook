@@ -94,4 +94,39 @@
             accessibility: { enabled: false }
         });
     }
+
+    function drawChart_series(js_vars) {
+        Highcharts.chart('highchart3', {
+            chart: {
+                type: 'line'
+            },
+            title: {
+                text: 'Aを選んだ人の割合の変化'
+            },
+            subtitle: {
+                text: null
+            },
+            xAxis: {
+                categories: Array.from({ length: js_vars.series_prop_num_A.length }, (_, i) => i + 1),
+                title: { text: 'ラウンド' }
+            },
+            yAxis: {
+                min: 0,
+                max: 100,
+                title: { text: 'Aを選んだ人の割合（%）' }
+            },
+            series: [{
+                name: '',
+                data: js_vars.series_prop_num_A,
+                dataLabels: { enabled: false }
+            }],
+            tooltip: {
+                enabled: true,
+                format: '{point.y:.2f}%'
+            },
+            legend: { enabled: false },
+            credits: { enabled: false },
+            accessibility: { enabled: false }
+        });
+    }
 </script>

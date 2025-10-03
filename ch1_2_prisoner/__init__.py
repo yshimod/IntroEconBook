@@ -11,7 +11,7 @@ payoffs.
 class C(BaseConstants):
     NAME_IN_URL = "ch1_2_prisoner"
     PLAYERS_PER_GROUP = 2
-    NUM_ROUNDS = 1
+    NUM_ROUNDS = 5
 
     PAYOFF_A = cu(150)
     PAYOFF_B = cu(100)
@@ -132,6 +132,13 @@ def dump_js_vars(sub: Subsession):
         prop_pair_num_AB = (sub.num_pairs_AB / sub.num_pairs) * 100
         prop_pair_num_BB = (sub.num_pairs_BB / sub.num_pairs) * 100
 
+    series_prop_num_A = [-1] * sub.round_number
+    for ss_t in sub.in_rounds(1, sub.round_number):
+        if ss_t.num_participants > 0:
+            series_prop_num_A[ss_t.round_number - 1] = (
+                100 * ss_t.num_A / ss_t.num_participants
+            )
+
     return dict(
         num_participants=sub.num_participants,
         num_A=prop_num_A,
@@ -140,6 +147,7 @@ def dump_js_vars(sub: Subsession):
         num_AA=prop_pair_num_AA,
         num_AB=prop_pair_num_AB,
         num_BB=prop_pair_num_BB,
+        series_prop_num_A=series_prop_num_A,
     )
 
 
@@ -221,6 +229,7 @@ def vars_for_admin_report(subsession: Subsession):
     return dict(
         js_vars=dump_js_vars(subsession),
         list_comment=list_comment,
+        show_series=(C.NUM_ROUNDS > 1 and subsession.round_number == C.NUM_ROUNDS),
     )
 
 
