@@ -8,7 +8,7 @@ class C(BaseConstants):
     NAME_IN_URL = "ch2_1_coordination"
     PLAYERS_PER_GROUP = 2
     NUM_ROUNDS = 1
-    INSTRUCTIONS_TEMPLATE = "ch2_1_coordination/instructions.html"
+
     PAYOFF_A = cu(5)
     PAYOFF_B = cu(10)
     PAYOFF_C = cu(3)
