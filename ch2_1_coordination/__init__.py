@@ -179,7 +179,8 @@ def set_payoff(player: Player):
 
 # PAGES-----
 class Introduction(Page):
-    timeout_seconds = 100
+    # timeout_seconds = 100
+    pass
 
 
 class Decision(Page):
