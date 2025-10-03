@@ -118,36 +118,36 @@ def set_payoff(player: Player):
 
 
 def dump_js_vars(sub: Subsession):
-    prop_num_A = -1
-    prop_num_B = -1
+    prop_A = -1
+    prop_B = -1
     if sub.num_participants > 0:
-        prop_num_A = (sub.num_A / sub.num_participants) * 100
-        prop_num_B = (sub.num_B / sub.num_participants) * 100
+        prop_A = (sub.num_A / sub.num_participants) * 100
+        prop_B = (sub.num_B / sub.num_participants) * 100
 
-    prop_pair_num_AA = -1
-    prop_pair_num_AB = -1
-    prop_pair_num_BB = -1
+    prop_pairs_AA = -1
+    prop_pairs_AB = -1
+    prop_pairs_BB = -1
     if sub.num_pairs > 0:
-        prop_pair_num_AA = (sub.num_pairs_AA / sub.num_pairs) * 100
-        prop_pair_num_AB = (sub.num_pairs_AB / sub.num_pairs) * 100
-        prop_pair_num_BB = (sub.num_pairs_BB / sub.num_pairs) * 100
+        prop_pairs_AA = (sub.num_pairs_AA / sub.num_pairs) * 100
+        prop_pairs_AB = (sub.num_pairs_AB / sub.num_pairs) * 100
+        prop_pairs_BB = (sub.num_pairs_BB / sub.num_pairs) * 100
 
-    series_prop_num_A = [-1] * sub.round_number
+    series_prop_A = [-1] * sub.round_number
     for ss_t in sub.in_rounds(1, sub.round_number):
         if ss_t.num_participants > 0:
-            series_prop_num_A[ss_t.round_number - 1] = (
+            series_prop_A[ss_t.round_number - 1] = (
                 100 * ss_t.num_A / ss_t.num_participants
             )
 
     return dict(
         num_participants=sub.num_participants,
-        num_A=prop_num_A,
-        num_B=prop_num_B,
+        prop_A=prop_A,
+        prop_B=prop_B,
         num_pairs=sub.num_pairs,
-        num_AA=prop_pair_num_AA,
-        num_AB=prop_pair_num_AB,
-        num_BB=prop_pair_num_BB,
-        series_prop_num_A=series_prop_num_A,
+        prop_pairs_AA=prop_pairs_AA,
+        prop_pairs_AB=prop_pairs_AB,
+        prop_pairs_BB=prop_pairs_BB,
+        series_prop_A=series_prop_A,
     )
 
 

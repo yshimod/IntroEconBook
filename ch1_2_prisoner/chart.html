@@ -40,8 +40,8 @@
             series: [{
                 name: '割合',
                 data: [
-                    { y: js_vars.num_A, color: '#ff7f0e' },
-                    { y: js_vars.num_B, color: '#1f77b4' },
+                    { y: js_vars.prop_A, color: '#ff7f0e' },
+                    { y: js_vars.prop_B, color: '#1f77b4' },
                 ],
                 dataLabels: { enabled: true, format: '{point.y:.2f}%' }
             }],
@@ -82,9 +82,9 @@
             series: [{
                 name: '割合',
                 data: [
-                    js_vars.num_AA,
-                    js_vars.num_AB,
-                    js_vars.num_BB
+                    js_vars.prop_pairs_AA,
+                    js_vars.prop_pairs_AB,
+                    js_vars.prop_pairs_BB
                 ],
                 dataLabels: { enabled: true, format: '{point.y:.2f}%' }
             }],
@@ -107,7 +107,7 @@
                 text: null
             },
             xAxis: {
-                categories: Array.from({ length: js_vars.series_prop_num_A.length }, (_, i) => i + 1),
+                categories: Array.from({ length: js_vars.series_prop_A.length }, (_, i) => i + 1),
                 title: { text: 'ラウンド' }
             },
             yAxis: {
@@ -117,7 +117,7 @@
             },
             series: [{
                 name: '',
-                data: js_vars.series_prop_num_A,
+                data: js_vars.series_prop_A,
                 dataLabels: { enabled: false }
             }],
             tooltip: {
