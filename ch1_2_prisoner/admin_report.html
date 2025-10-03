@@ -6,6 +6,7 @@
     <div id="highchart2"></div>
 </div>
 
+{{ if list_comment }}
 <div class="mt-5 fs-5">
     <table class="table table-bordered">
         <thead>
@@ -28,6 +29,13 @@
         </tbody>
     </table>
 </div>
+{{ endif }}
+
+{{ if show_series }}
+<div class="boxed-section">
+    <div id="highchart3"></div>
+</div>
+{{ endif }}
 
 <div class="mt-5">
     {{ include_sibling 'instructions.html' }}
@@ -39,5 +47,9 @@
         const js_vars = JSON.parse(`{{ js_vars | json }}`);
         drawChart(js_vars);
         drawChart_pair(js_vars);
+
+        // {{ if show_series }}
+        drawChart_series(js_vars);
+        // {{ endif }}
     });
 </script>

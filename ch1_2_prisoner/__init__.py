@@ -11,7 +11,7 @@ payoffs.
 class C(BaseConstants):
     NAME_IN_URL = "ch1_2_prisoner"
     PLAYERS_PER_GROUP = 2
-    NUM_ROUNDS = 1
+    NUM_ROUNDS = 5
 
     PAYOFF_A = cu(150)
     PAYOFF_B = cu(100)
@@ -46,16 +46,24 @@ class Player(BasePlayer):
     # 相手はどちらを選ぶと思うか
     think_other_player_choice = models.StringField(
         choices=C.CHOICE_LIST,
+        initial="",
     )
 
     # 意思決定の理由
-    individual_choice_comment = models.LongStringField(label="")
+    individual_choice_comment = models.LongStringField(
+        label="",
+        initial="",
+    )
 
     flg_non_input = models.IntegerField(initial=0)
     flg_pair_non_input = models.IntegerField(initial=0)
 
 
 # FUNCTIONS
+def creating_session(subsession: Subsession):
+    subsession.group_randomly()
+
+
 def summarize_data(subsession: Subsession):
     list_choices = [
         p.individual_choice
@@ -124,6 +132,13 @@ def dump_js_vars(sub: Subsession):
         prop_pair_num_AB = (sub.num_pairs_AB / sub.num_pairs) * 100
         prop_pair_num_BB = (sub.num_pairs_BB / sub.num_pairs) * 100
 
+    series_prop_num_A = [-1] * sub.round_number
+    for ss_t in sub.in_rounds(1, sub.round_number):
+        if ss_t.num_participants > 0:
+            series_prop_num_A[ss_t.round_number - 1] = (
+                100 * ss_t.num_A / ss_t.num_participants
+            )
+
     return dict(
         num_participants=sub.num_participants,
         num_A=prop_num_A,
@@ -132,21 +147,29 @@ def dump_js_vars(sub: Subsession):
         num_AA=prop_pair_num_AA,
         num_AB=prop_pair_num_AB,
         num_BB=prop_pair_num_BB,
+        series_prop_num_A=series_prop_num_A,
     )
 
 
 # PAGES
 class Introduction(Page):
-    pass
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.round_number == 1
 
 
 class Decision(Page):
     form_model = "player"
-    form_fields = [
-        "individual_choice",
-        "think_other_player_choice",
-        "individual_choice_comment",
-    ]
+
+    @staticmethod
+    def get_form_fields(player: Player):
+        form_fields = [
+            "individual_choice",
+            "think_other_player_choice",
+        ]
+        if (player.round_number == 1) or (player.round_number == C.NUM_ROUNDS):
+            form_fields.append("individual_choice_comment")
+        return form_fields
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
@@ -180,35 +203,33 @@ class Results(Page):
         return dump_js_vars(sub)
 
 
-class PreResults(Page):
-    pass
-
-
 page_sequence = [
     Introduction,
     Decision,
     ResultsWaitPage,
-    PreResults,
     Results,
 ]
 
 
 def vars_for_admin_report(subsession: Subsession):
-    list_comment = sorted(
-        [
+    list_comment = []
+    if subsession.round_number == 1 or subsession.round_number == C.NUM_ROUNDS:
+        list_comment = sorted(
             [
-                p.individual_choice,
-                p.field_maybe_none("think_other_player_choice"),
-                p.pair_choice,
-                p.field_maybe_none("individual_choice_comment"),
+                [
+                    p.individual_choice,
+                    p.think_other_player_choice,
+                    p.pair_choice,
+                    p.individual_choice_comment,
+                ]
+                for p in subsession.get_players()
             ]
-            for p in subsession.get_players()
-        ]
-    )
+        )
 
     return dict(
         js_vars=dump_js_vars(subsession),
         list_comment=list_comment,
+        show_series=(C.NUM_ROUNDS > 1 and subsession.round_number == C.NUM_ROUNDS),
     )
 
 
@@ -217,6 +238,8 @@ def custom_export(players: list[Player]):
         "session.code",
         "id_in_subsession",
         "round_number",
+        "group.id_in_subsession",
+        "id_in_group",
         "individual_choice",
         "think_other_player_choice",
         "pair_choice",
@@ -227,6 +250,8 @@ def custom_export(players: list[Player]):
             p.session.code,
             p.id_in_subsession,
             p.round_number,
+            p.group.id_in_subsession,
+            p.id_in_group,
             p.individual_choice,
             p.think_other_player_choice,
             p.pair_choice,

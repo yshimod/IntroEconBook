@@ -1,5 +1,5 @@
 {{ block title }}
-実験
+実験 {{ if C.NUM_ROUNDS > 1 }}（ラウンド {{ player.round_number }} / {{ C.NUM_ROUNDS }}）{{ endif }}
 {{ endblock }}
 
 
@@ -57,6 +57,7 @@
     </table>
 </div>
 
+{{ if player.round_number == 1 or player.round_number == C.NUM_ROUNDS }}
 <div class="my-5 fs-4">
     <label for="id_individual_choice_comment">
         なぜあなたは相手が<span class='text-success fw-bold' id='id_disp_think_other_player_choice'>その選択肢</span>を選ぶと思い，<br>
@@ -66,7 +67,7 @@
     <textarea class="form-control" id="id_individual_choice_comment" name="individual_choice_comment"
         required></textarea>
 </div>
-
+{{ endif }}
 
 {{ next_button }}
 
