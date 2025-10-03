@@ -145,16 +145,23 @@ def dump_js_vars(sub: Subsession):
 
 # PAGES
 class Introduction(Page):
-    pass
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.round_number == 1
 
 
 class Decision(Page):
     form_model = "player"
-    form_fields = [
-        "individual_choice",
-        "think_other_player_choice",
-        "individual_choice_comment",
-    ]
+
+    @staticmethod
+    def get_form_fields(player: Player):
+        form_fields = [
+            "individual_choice",
+            "think_other_player_choice",
+        ]
+        if (player.round_number == 1) or (player.round_number == C.NUM_ROUNDS):
+            form_fields.append("individual_choice_comment")
+        return form_fields
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
