@@ -46,10 +46,14 @@ class Player(BasePlayer):
     # 相手はどちらを選ぶと思うか
     think_other_player_choice = models.StringField(
         choices=C.CHOICE_LIST,
+        initial="",
     )
 
     # 意思決定の理由
-    individual_choice_comment = models.LongStringField(label="")
+    individual_choice_comment = models.LongStringField(
+        label="",
+        initial="",
+    )
 
     flg_non_input = models.IntegerField(initial=0)
     flg_pair_non_input = models.IntegerField(initial=0)
@@ -193,9 +197,9 @@ def vars_for_admin_report(subsession: Subsession):
         [
             [
                 p.individual_choice,
-                p.field_maybe_none("think_other_player_choice"),
+                p.think_other_player_choice,
                 p.pair_choice,
-                p.field_maybe_none("individual_choice_comment"),
+                p.individual_choice_comment,
             ]
             for p in subsession.get_players()
         ]
