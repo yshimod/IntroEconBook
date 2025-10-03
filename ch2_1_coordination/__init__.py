@@ -14,7 +14,7 @@ class C(BaseConstants):
     PAYOFF_C = cu(3)
     PAYOFF_D = cu(2)
 
-    choice_list = ["A", "B"]
+    CHOICE_LIST = ["A", "B"]
 
 
 class Subsession(BaseSubsession):
@@ -106,7 +106,7 @@ def keisan(player: Player):
             sub.err_message = "エラーあり"
     else:
         player.flg_non_input = 1
-        player.individual_choice = random.choice(C.choice_list)
+        player.individual_choice = random.choice(C.CHOICE_LIST)
 
 
 def keisans(subsession: Subsession):
