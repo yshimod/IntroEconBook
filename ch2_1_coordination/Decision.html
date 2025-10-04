@@ -23,12 +23,14 @@
         </tr>
         <tr>
             <th rowspan="2"><span>あなた（プレイヤー1）</span></th>
-            <td><button name="individual_choice" value="A" class="btn btn-primary btn-large">映画1</button></td>
+            <td><button name="individual_choice" value="{{ C.CHOICE_LIST.0 }}"
+                    class="btn btn-primary btn-large">映画1</button></td>
             <td><u>{{ C.PAYOFF_A }}</u>, {{ C.PAYOFF_B }}</td>
             <td><u>{{ C.PAYOFF_D }}</u>, {{ C.PAYOFF_D }}</td>
         </tr>
         <tr>
-            <td><button name="individual_choice" value="B" class="btn btn-primary btn-large">映画2</button></td>
+            <td><button name="individual_choice" value="{{ C.CHOICE_LIST.1 }}"
+                    class="btn btn-primary btn-large">映画2</button></td>
             <td><u>{{ C.PAYOFF_C }}</u>, {{ C.PAYOFF_C }}</td>
             <td><u>{{ C.PAYOFF_B }}</u>, {{ C.PAYOFF_A }}</td>
         </tr>
@@ -49,8 +51,10 @@
             <th colspan="2">あなた（プレイヤー2）</th>
         </tr>
         <tr>
-            <th><button name="individual_choice" value="A" class="btn btn-primary btn-large">映画1</button></th>
-            <th><button name="individual_choice" value="B" class="btn btn-primary btn-large">映画2</button></th>
+            <th><button name="individual_choice" value="{{ C.CHOICE_LIST.0 }}"
+                    class="btn btn-primary btn-large">映画1</button></th>
+            <th><button name="individual_choice" value="{{ C.CHOICE_LIST.1 }}"
+                    class="btn btn-primary btn-large">映画2</button></th>
         </tr>
         <tr>
             <th rowspan="2"><span>あなたの相手（プレイヤー1）</span></th>

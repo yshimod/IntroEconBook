@@ -14,7 +14,7 @@ class C(BaseConstants):
     PAYOFF_C = cu(3)
     PAYOFF_D = cu(2)
 
-    CHOICE_LIST = ["A", "B"]
+    CHOICE_LIST = ["1", "2"]
 
 
 class Subsession(BaseSubsession):
@@ -28,9 +28,6 @@ class Subsession(BaseSubsession):
     num_pairs_BA = models.IntegerField(initial=0)
     num_pairs_BB = models.IntegerField(initial=0)
 
-    err_message = models.StringField()
-    pair_err_message = models.StringField()
-
 
 class Group(BaseGroup):
     pass
@@ -39,39 +36,35 @@ class Group(BaseGroup):
 class Player(BasePlayer):
     # 自身の意思決定
     individual_choice = models.StringField(
-        choices=[["A", "A"], ["B", "B"]],
-        doc="""This player's decision""",
-        widget=widgets.RadioSelect,
+        choices=C.CHOICE_LIST,
     )
     flg_non_input = models.IntegerField(initial=0)
 
     # 相手の意思決定
     pair_choice = models.StringField()
     flg_pair_non_input = models.IntegerField(initial=0)
-    # 相手のグループID
-    pair_id = models.IntegerField(initial=0)
 
     # 相手はどちらを選ぶと思うか
     think_other_player_choice = models.StringField(
         widget=widgets.RadioSelectHorizontal,
-        verbose_name="",
-        choices=[
-            ["Aを選ぶと予想する", "映画1を選ぶと予想する"],
-            ["Bを選ぶと予想する", "映画2を選ぶと予想する"],
-        ],
+        label="",
+        choices=[[v, "映画{}を選ぶと予想する".format(v)] for v in C.CHOICE_LIST],
     )
 
     # 意思決定の理由
-    individual_choice_comment = models.LongStringField(verbose_name="", initial="")
+    individual_choice_comment = models.LongStringField(
+        verbose_name="",
+        initial="",
+    )
 
     # 相手の予想のの理由
     think_other_player_choice_comment = models.LongStringField(
-        verbose_name="", initial=""
+        verbose_name="",
+        initial="",
     )
 
     # 相手が映画１を選んだ際に、あなたは何ポイント獲得しますか？
     q1 = models.StringField(
-        # widget=widgets.RadioSelectHorizontal,
         verbose_name="",
         choices=[
             ["5", "5"],
@@ -83,7 +76,6 @@ class Player(BasePlayer):
 
     # 相手が映画2を選んだ際に、あなたは何ポイント獲得しますか？
     q2 = models.StringField(
-        # widget=widgets.RadioSelectHorizontal,
         verbose_name="",
         choices=[
             ["5", "5"],
@@ -95,70 +87,63 @@ class Player(BasePlayer):
 
 
 # FUNCTIONS
-def keisan(player: Player):
-    sub = player.subsession
-    if player.individual_choice != "":
-        # グラフ用集計
-        sub.num_participants += 1
-        s = player.individual_choice
-        if s == "A":
-            sub.num_A += 1
-        elif s == "B":
-            sub.num_B += 1
-        else:
-            sub.err_message = "エラーあり"
-    else:
-        player.flg_non_input = 1
-        player.individual_choice = random.choice(C.CHOICE_LIST)
+def summarize_data(subsession: Subsession):
+    list_choices = [
+        p.individual_choice
+        for p in subsession.get_players()
+        if p.field_maybe_none("individual_choice")
+    ]
+    subsession.num_participants = len(list_choices)
+    subsession.num_A = list_choices.count(C.CHOICE_LIST[0])
+    subsession.num_B = list_choices.count(C.CHOICE_LIST[1])
+
+    list_grp_results = [
+        (
+            g.get_player_by_id(1).individual_choice,
+            g.get_player_by_id(2).individual_choice,
+        )
+        for g in subsession.get_groups()
+        if g.get_player_by_id(1).field_maybe_none("individual_choice")
+        and g.get_player_by_id(2).field_maybe_none("individual_choice")
+    ]
+    subsession.num_pairs = len(list_grp_results)
+    subsession.num_pairs_AA = list_grp_results.count(
+        (C.CHOICE_LIST[0], C.CHOICE_LIST[0])
+    )
+    subsession.num_pairs_AB = list_grp_results.count(
+        (C.CHOICE_LIST[0], C.CHOICE_LIST[1])
+    )
+    subsession.num_pairs_BA = list_grp_results.count(
+        (C.CHOICE_LIST[1], C.CHOICE_LIST[0])
+    )
+    subsession.num_pairs_BB = list_grp_results.count(
+        (C.CHOICE_LIST[1], C.CHOICE_LIST[1])
+    )
 
 
-def graph_pair(player: Player):
-    sub = player.subsession
-    sub.num_pairs += 1
-    # グラフ用集計
-    s = player.individual_choice
-    sp = player.pair_choice
-    if (s == "A") and (sp == "A"):
-        sub.num_pairs_AA += 1
-    elif (s == "A") and (sp == "B"):
-        sub.num_pairs_AB += 1
-    elif (s == "B") and (sp == "A"):
-        sub.num_pairs_BA += 1
-    elif (s == "B") and (sp == "B"):
-        sub.num_pairs_BB += 1
-    else:
-        sub.pair_err_message = "エラーあり"
-
-
-def set_payoff(player: Player):
-    payoff_matrix_p1 = {
-        ("A", "A"): C.PAYOFF_A,
-        ("A", "B"): C.PAYOFF_D,
-        ("B", "A"): C.PAYOFF_C,
-        ("B", "B"): C.PAYOFF_B,
+def set_payoff(group: Group):
+    payoff_matrix = {
+        (C.CHOICE_LIST[0], C.CHOICE_LIST[0]): (C.PAYOFF_A, C.PAYOFF_B),
+        (C.CHOICE_LIST[0], C.CHOICE_LIST[1]): (C.PAYOFF_D, C.PAYOFF_D),
+        (C.CHOICE_LIST[1], C.CHOICE_LIST[0]): (C.PAYOFF_C, C.PAYOFF_C),
+        (C.CHOICE_LIST[1], C.CHOICE_LIST[1]): (C.PAYOFF_B, C.PAYOFF_A),
     }
-    payoff_matrix_p2 = {
-        ("A", "A"): C.PAYOFF_B,
-        ("A", "B"): C.PAYOFF_D,
-        ("B", "A"): C.PAYOFF_C,
-        ("B", "B"): C.PAYOFF_A,
-    }
-    opponent: Player = player.get_others_in_group()[0]
-    player.pair_choice = opponent.individual_choice
-    player.pair_id = opponent.id_in_group
-    if opponent.flg_non_input == 1:
-        player.flg_pair_non_input = 1
+    p1: Player = group.get_player_by_id(1)
+    p2: Player = group.get_player_by_id(2)
+    p1.pair_choice = p2.field_maybe_none("individual_choice")
+    p2.pair_choice = p1.field_maybe_none("individual_choice")
+    p1.flg_pair_non_input = p2.flg_non_input
+    p2.flg_pair_non_input = p1.flg_non_input
 
-    print(player.individual_choice, opponent.individual_choice)
-    if player.id_in_group == 1:
-        player.payoff = payoff_matrix_p1[
-            (player.individual_choice, opponent.individual_choice)
+    if p1.field_maybe_none("individual_choice") and p2.field_maybe_none(
+        "individual_choice"
+    ):
+        p1.payoff, p2.payoff = payoff_matrix[
+            (p1.individual_choice, p2.individual_choice)
         ]
     else:
-        player.payoff = payoff_matrix_p2[
-            (opponent.individual_choice, player.individual_choice)
-        ]
-    print(player.id_in_group, player.payoff)
+        p1.payoff = -1
+        p2.payoff = -1
 
 
 # PAGES
@@ -173,6 +158,12 @@ class Decision(Page):
         "individual_choice",
         "individual_choice_comment",
     ]
+
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened):
+        if timeout_happened:
+            player.flg_non_input = 1
+            player.individual_choice = random.choice(C.CHOICE_LIST)
 
 
 class Question(Page):
@@ -190,12 +181,9 @@ class ResultsWaitPage(WaitPage):
 
     @staticmethod
     def after_all_players_arrive(subsession: Subsession):
-        for p in subsession.get_players():
-            keisan(p)
-        for p in subsession.get_players():
-            set_payoff(p)
-        for p in subsession.get_players():
-            graph_pair(p)
+        summarize_data(subsession)
+        for grp in subsession.get_groups():
+            set_payoff(grp)
 
 
 class Results(Page):
@@ -203,17 +191,16 @@ class Results(Page):
     def vars_for_template(player: Player):
         opponent: Player = player.get_others_in_group()[0]
 
-        if player.individual_choice == "A":
+        if player.individual_choice == C.CHOICE_LIST[0]:
             disp_my_decision = "映画1"
         else:
             disp_my_decision = "映画2"
 
-        if opponent.individual_choice == "A":
+        if opponent.individual_choice == C.CHOICE_LIST[0]:
             disp_opponent_decision = "映画1"
         else:
             disp_opponent_decision = "映画2"
 
-        print(disp_my_decision)
         return dict(
             opponent=opponent,
             same_choice=player.individual_choice == opponent.individual_choice,
@@ -233,7 +220,6 @@ class Results(Page):
 
         prop_pairs_AA = -1
         prop_pairs_AB = -1
-        prop_pairs_BA = -1
         prop_pairs_BB = -1
         if sub.num_pairs > 0:
             prop_pairs_AA = (sub.num_pairs_AA / sub.num_pairs) * 100
