@@ -130,17 +130,16 @@ def set_payoff(group: Group):
     }
     p1: Player = group.get_player_by_id(1)
     p2: Player = group.get_player_by_id(2)
-    p1.pair_choice = p2.field_maybe_none("individual_choice")
-    p2.pair_choice = p1.field_maybe_none("individual_choice")
+    p1_choice = p1.field_maybe_none("individual_choice")
+    p2_choice = p2.field_maybe_none("individual_choice")
+
+    p1.pair_choice = p2_choice
+    p2.pair_choice = p1_choice
     p1.flg_pair_non_input = p2.flg_non_input
     p2.flg_pair_non_input = p1.flg_non_input
 
-    if p1.field_maybe_none("individual_choice") and p2.field_maybe_none(
-        "individual_choice"
-    ):
-        p1.payoff, p2.payoff = payoff_matrix[
-            (p1.individual_choice, p2.individual_choice)
-        ]
+    if p1_choice and p2_choice:
+        p1.payoff, p2.payoff = payoff_matrix[(p1_choice, p2_choice)]
     else:
         p1.payoff = -1
         p2.payoff = -1
