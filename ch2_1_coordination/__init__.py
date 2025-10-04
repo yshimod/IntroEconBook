@@ -22,11 +22,11 @@ class Subsession(BaseSubsession):
     num_A = models.IntegerField(initial=0)
     num_B = models.IntegerField(initial=0)
     err_message = models.StringField()
-    pair_num = models.IntegerField(initial=0)
-    pair_num_AA = models.IntegerField(initial=0)
-    pair_num_AB = models.IntegerField(initial=0)
-    pair_num_BA = models.IntegerField(initial=0)
-    pair_num_BB = models.IntegerField(initial=0)
+    num_pairs = models.IntegerField(initial=0)
+    num_pairs_AA = models.IntegerField(initial=0)
+    num_pairs_AB = models.IntegerField(initial=0)
+    num_pairs_BA = models.IntegerField(initial=0)
+    num_pairs_BB = models.IntegerField(initial=0)
     pair_err_message = models.StringField()
 
 
@@ -130,18 +130,18 @@ def other_player(player: Player):
 
 def graph_pair(player: Player):
     sub = player.subsession
-    sub.pair_num += 1
+    sub.num_pairs += 1
     # グラフ用集計
     s = player.individual_choice
     sp = player.pair_choice
     if (s == "A") and (sp == "A"):
-        sub.pair_num_AA += 1
+        sub.num_pairs_AA += 1
     elif (s == "A") and (sp == "B"):
-        sub.pair_num_AB += 1
+        sub.num_pairs_AB += 1
     elif (s == "B") and (sp == "A"):
-        sub.pair_num_BA += 1
+        sub.num_pairs_BA += 1
     elif (s == "B") and (sp == "B"):
-        sub.pair_num_BB += 1
+        sub.num_pairs_BB += 1
     else:
         sub.pair_err_message = "エラーあり"
 
@@ -244,42 +244,42 @@ class Results(Page):
         sub = player.subsession
         # 割合に計算
         if sub.num_A > 0:
-            prop_num_A = round((sub.num_A / sub.num_participants) * 100, 2)
+            prop_A = round((sub.num_A / sub.num_participants) * 100, 2)
         else:
-            prop_num_A = 0
+            prop_A = 0
         if sub.num_B > 0:
-            prop_num_B = round((sub.num_B / sub.num_participants) * 100, 2)
+            prop_B = round((sub.num_B / sub.num_participants) * 100, 2)
         else:
-            prop_num_B = 0
+            prop_B = 0
 
         print("ここから追加")
         # 割合に計算s
-        if sub.pair_num_AA > 0:
-            prop_pair_num_AA = round((sub.pair_num_AA / sub.pair_num) * 100, 2)
+        if sub.num_pairs_AA > 0:
+            prop_pairs_AA = round((sub.num_pairs_AA / sub.num_pairs) * 100, 2)
         else:
-            prop_pair_num_AA = 0
-        if sub.pair_num_AB > 0:
-            prop_pair_num_AB = round((sub.pair_num_AB / sub.pair_num) * 100, 2)
+            prop_pairs_AA = 0
+        if sub.num_pairs_AB > 0:
+            prop_pairs_AB = round((sub.num_pairs_AB / sub.num_pairs) * 100, 2)
         else:
-            prop_pair_num_AB = 0
-        if sub.pair_num_BA > 0:
-            prop_pair_num_BA = round((sub.pair_num_BA / sub.pair_num) * 100, 2)
+            prop_pairs_AB = 0
+        if sub.num_pairs_BA > 0:
+            prop_pairs_BA = round((sub.num_pairs_BA / sub.num_pairs) * 100, 2)
         else:
-            prop_pair_num_BA = 0
-        if sub.pair_num_BB > 0:
-            prop_pair_num_BB = round((sub.pair_num_BB / sub.pair_num) * 100, 2)
+            prop_pairs_BA = 0
+        if sub.num_pairs_BB > 0:
+            prop_pairs_BB = round((sub.num_pairs_BB / sub.num_pairs) * 100, 2)
         else:
-            prop_pair_num_BB = 0
+            prop_pairs_BB = 0
 
         return dict(
             num_participants=sub.num_participants,
-            num_A=prop_num_A,
-            num_B=prop_num_B,
-            num_pairs=sub.pair_num,
-            num_AA=prop_pair_num_AA,
-            num_AB=prop_pair_num_AB,
-            num_BA=prop_pair_num_BA,
-            num_BB=prop_pair_num_BB,
+            prop_A=prop_A,
+            prop_B=prop_B,
+            num_pairs=sub.num_pairs,
+            prop_pairs_AA=prop_pairs_AA,
+            prop_pairs_AB=prop_pairs_AB,
+            prop_pairs_BA=prop_pairs_BA,
+            prop_pairs_BB=prop_pairs_BB,
         )
 
 
