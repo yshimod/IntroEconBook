@@ -37,11 +37,15 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer):
+    # 自身の意思決定
     individual_choice = models.StringField(
         choices=C.CHOICE_LIST,
     )
+    flg_non_input = models.IntegerField(initial=0)
+
     # 相手の意思決定
     pair_choice = models.StringField()
+    flg_pair_non_input = models.IntegerField(initial=0)
 
     # 相手はどちらを選ぶと思うか
     think_other_player_choice = models.StringField(
@@ -54,9 +58,6 @@ class Player(BasePlayer):
         label="",
         initial="",
     )
-
-    flg_non_input = models.IntegerField(initial=0)
-    flg_pair_non_input = models.IntegerField(initial=0)
 
 
 # FUNCTIONS
