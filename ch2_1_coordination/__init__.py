@@ -37,18 +37,19 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer):
-    flg_non_input = models.IntegerField(initial=0)
-    flg_pair_non_input = models.IntegerField(initial=0)
-
+    # 自身の意思決定
     individual_choice = models.StringField(
         choices=[["A", "A"], ["B", "B"]],
         doc="""This player's decision""",
         widget=widgets.RadioSelect,
     )
-    # 相手のグループID
-    pair_id = models.IntegerField(initial=0)
+    flg_non_input = models.IntegerField(initial=0)
+
     # 相手の意思決定
     pair_choice = models.StringField()
+    flg_pair_non_input = models.IntegerField(initial=0)
+    # 相手のグループID
+    pair_id = models.IntegerField(initial=0)
 
     # 相手はどちらを選ぶと思うか
     think_other_player_choice = models.StringField(
