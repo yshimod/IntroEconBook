@@ -103,15 +103,12 @@ def set_payoff(player: Player):
     }
     opponent: Player = player.get_others_in_group()[0]
     player.pair_choice = opponent.field_maybe_none("individual_choice")
-    if opponent.flg_non_input == 1:
-        player.flg_pair_non_input = 1
+    player.flg_pair_non_input = opponent.flg_non_input
 
-    if player.field_maybe_none("individual_choice") and opponent.field_maybe_none(
-        "individual_choice"
-    ):
-        player.payoff = payoff_matrix[
-            (player.individual_choice, opponent.individual_choice)
-        ]
+    p_choice = player.field_maybe_none("individual_choice")
+    o_choice = opponent.field_maybe_none("individual_choice")
+    if p_choice and o_choice:
+        player.payoff = payoff_matrix[(p_choice, o_choice)]
     else:
         player.payoff = -1
 
