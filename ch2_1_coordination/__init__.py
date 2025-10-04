@@ -21,12 +21,14 @@ class Subsession(BaseSubsession):
     num_participants = models.IntegerField(initial=0)
     num_A = models.IntegerField(initial=0)
     num_B = models.IntegerField(initial=0)
-    err_message = models.StringField()
+
     num_pairs = models.IntegerField(initial=0)
     num_pairs_AA = models.IntegerField(initial=0)
     num_pairs_AB = models.IntegerField(initial=0)
     num_pairs_BA = models.IntegerField(initial=0)
     num_pairs_BB = models.IntegerField(initial=0)
+
+    err_message = models.StringField()
     pair_err_message = models.StringField()
 
 
