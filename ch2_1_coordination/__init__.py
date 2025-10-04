@@ -112,25 +112,6 @@ def keisan(player: Player):
         player.individual_choice = random.choice(C.CHOICE_LIST)
 
 
-def keisans(subsession: Subsession):
-    for p in subsession.get_players():
-        keisan(p)
-
-
-def set_graph(subsession: Subsession):
-    for p in subsession.get_players():
-        graph_pair(p)
-
-
-def set_payoffs(group: Group):
-    for p in group.get_players():
-        set_payoff(p)
-
-
-def other_player(player: Player):
-    return player.get_others_in_group()[0]
-
-
 def graph_pair(player: Player):
     sub = player.subsession
     sub.num_pairs += 1
@@ -162,20 +143,20 @@ def set_payoff(player: Player):
         ("B", "A"): C.PAYOFF_C,
         ("B", "B"): C.PAYOFF_A,
     }
-    other = other_player(player)
-    player.pair_choice = other.individual_choice
-    player.pair_id = other.id_in_group
-    if other.flg_non_input == 1:
+    opponent: Player = player.get_others_in_group()[0]
+    player.pair_choice = opponent.individual_choice
+    player.pair_id = opponent.id_in_group
+    if opponent.flg_non_input == 1:
         player.flg_pair_non_input = 1
 
-    print(player.individual_choice, other.individual_choice)
+    print(player.individual_choice, opponent.individual_choice)
     if player.id_in_group == 1:
         player.payoff = payoff_matrix_p1[
-            (player.individual_choice, other.individual_choice)
+            (player.individual_choice, opponent.individual_choice)
         ]
     else:
         player.payoff = payoff_matrix_p2[
-            (other.individual_choice, player.individual_choice)
+            (opponent.individual_choice, player.individual_choice)
         ]
     print(player.id_in_group, player.payoff)
 
@@ -201,24 +182,23 @@ class Question(Page):
     ]
 
 
-class keisanWaitPage(WaitPage):
-    wait_for_all_groups = True
-    after_all_players_arrive = keisans
-
-
-class GraphWaitPage(WaitPage):
-    wait_for_all_groups = True
-    after_all_players_arrive = set_graph
-
-
 class ResultsWaitPage(WaitPage):
-    after_all_players_arrive = set_payoffs
+    wait_for_all_groups = True
+
+    @staticmethod
+    def after_all_players_arrive(subsession: Subsession):
+        for p in subsession.get_players():
+            keisan(p)
+        for p in subsession.get_players():
+            set_payoff(p)
+        for p in subsession.get_players():
+            graph_pair(p)
 
 
 class Results(Page):
     @staticmethod
     def vars_for_template(player: Player):
-        opponent = other_player(player)
+        opponent: Player = player.get_others_in_group()[0]
 
         if player.individual_choice == "A":
             disp_my_decision = "映画1"
@@ -294,9 +274,7 @@ page_sequence = [
     Introduction,
     Decision,
     Question,
-    keisanWaitPage,
     ResultsWaitPage,
-    GraphWaitPage,
     PreResults,
     Results,
 ]
