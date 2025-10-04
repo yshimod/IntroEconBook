@@ -161,7 +161,7 @@ def set_payoff(player: Player):
     print(player.id_in_group, player.payoff)
 
 
-# PAGES-----
+# PAGES
 class Introduction(Page):
     # timeout_seconds = 100
     pass
@@ -169,7 +169,10 @@ class Introduction(Page):
 
 class Decision(Page):
     form_model = "player"
-    form_fields = ["individual_choice", "individual_choice_comment"]
+    form_fields = [
+        "individual_choice",
+        "individual_choice_comment",
+    ]
 
 
 class Question(Page):
@@ -214,13 +217,10 @@ class Results(Page):
         return dict(
             opponent=opponent,
             same_choice=player.individual_choice == opponent.individual_choice,
-            # my_decision=player.field_display('individual_choice'),
             my_decision=disp_my_decision,
             opponent_decision=disp_opponent_decision,
-            # opponent_decision=opponent.field_display('individual_choice'),
         )
 
-    # グラフ描画用
     @staticmethod
     def js_vars(player: Player):
         print("js_vars")
