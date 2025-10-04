@@ -223,36 +223,23 @@ class Results(Page):
 
     @staticmethod
     def js_vars(player: Player):
-        print("js_vars")
-        sub = player.subsession
-        # 割合に計算
-        if sub.num_A > 0:
-            prop_A = round((sub.num_A / sub.num_participants) * 100, 2)
-        else:
-            prop_A = 0
-        if sub.num_B > 0:
-            prop_B = round((sub.num_B / sub.num_participants) * 100, 2)
-        else:
-            prop_B = 0
+        sub: Subsession = player.subsession
 
-        print("ここから追加")
-        # 割合に計算s
-        if sub.num_pairs_AA > 0:
-            prop_pairs_AA = round((sub.num_pairs_AA / sub.num_pairs) * 100, 2)
-        else:
-            prop_pairs_AA = 0
-        if sub.num_pairs_AB > 0:
-            prop_pairs_AB = round((sub.num_pairs_AB / sub.num_pairs) * 100, 2)
-        else:
-            prop_pairs_AB = 0
-        if sub.num_pairs_BA > 0:
-            prop_pairs_BA = round((sub.num_pairs_BA / sub.num_pairs) * 100, 2)
-        else:
-            prop_pairs_BA = 0
-        if sub.num_pairs_BB > 0:
-            prop_pairs_BB = round((sub.num_pairs_BB / sub.num_pairs) * 100, 2)
-        else:
-            prop_pairs_BB = 0
+        prop_A = -1
+        prop_B = -1
+        if sub.num_participants > 0:
+            prop_A = (sub.num_A / sub.num_participants) * 100
+            prop_B = (sub.num_B / sub.num_participants) * 100
+
+        prop_pairs_AA = -1
+        prop_pairs_AB = -1
+        prop_pairs_BA = -1
+        prop_pairs_BB = -1
+        if sub.num_pairs > 0:
+            prop_pairs_AA = (sub.num_pairs_AA / sub.num_pairs) * 100
+            prop_pairs_AB = (sub.num_pairs_AB / sub.num_pairs) * 100
+            prop_pairs_BA = (sub.num_pairs_BA / sub.num_pairs) * 100
+            prop_pairs_BB = (sub.num_pairs_BB / sub.num_pairs) * 100
 
         return dict(
             num_participants=sub.num_participants,
