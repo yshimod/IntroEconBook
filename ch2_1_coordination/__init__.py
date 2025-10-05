@@ -53,13 +53,12 @@ class Player(BasePlayer):
 
     # 意思決定の理由
     individual_choice_comment = models.LongStringField(
-        label="なぜあなたはその選択肢を選んだのか、理由を教えてください。"
+        label="【質問】なぜあなたはその選択肢を選んだのか、理由を教えてください。"
     )
 
     # 相手の予想のの理由
     think_other_player_choice_comment = models.LongStringField(
-        verbose_name="",
-        initial="",
+        label="【質問】なぜあなたは、相手がその選択肢を選ぶと思ったのか、理由を教えてください。"
     )
 
     # 相手が映画１を選んだ際に、あなたは何ポイント獲得しますか？
