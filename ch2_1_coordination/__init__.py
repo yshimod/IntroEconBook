@@ -61,7 +61,7 @@ class Player(BasePlayer):
         label="【質問】なぜあなたは、相手がその選択肢を選ぶと思ったのか、理由を教えてください。"
     )
 
-    # 相手が映画１を選んだ際に、あなたは何ポイント獲得しますか？
+    # 相手が映画1を選んだ際に、あなたは何ポイント獲得しますか？
     q1 = models.StringField(
         widget=widgets.RadioSelectHorizontal,
         label="【質問】相手が映画1を選んでいたら、あなたは何ポイント獲得しますか？",
