@@ -53,8 +53,7 @@ class Player(BasePlayer):
 
     # 意思決定の理由
     individual_choice_comment = models.LongStringField(
-        verbose_name="",
-        initial="",
+        label="なぜあなたはその選択肢を選んだのか、理由を教えてください。"
     )
 
     # 相手の予想のの理由
