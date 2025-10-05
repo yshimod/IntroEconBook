@@ -58,7 +58,7 @@ class Player(BasePlayer):
 
     # 意思決定の理由
     individual_choice_comment = models.LongStringField(
-        label="【質問2】なぜあなたはその選択肢を選び、相手はその選択を選ぶと思ったのか、理由を教えてください。"
+        label="【質問2】なぜあなたはその選択肢を選び、相手はその選択肢を選ぶと思ったのか、理由を教えてください。"
     )
 
 
