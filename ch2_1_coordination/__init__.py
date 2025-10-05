@@ -189,22 +189,9 @@ class Results(Page):
     @staticmethod
     def vars_for_template(player: Player):
         opponent: Player = player.get_others_in_group()[0]
-
-        if player.individual_choice == C.CHOICE_LIST[0]:
-            disp_my_decision = "映画1"
-        else:
-            disp_my_decision = "映画2"
-
-        if opponent.individual_choice == C.CHOICE_LIST[0]:
-            disp_opponent_decision = "映画1"
-        else:
-            disp_opponent_decision = "映画2"
-
         return dict(
-            opponent=opponent,
-            same_choice=player.individual_choice == opponent.individual_choice,
-            my_decision=disp_my_decision,
-            opponent_decision=disp_opponent_decision,
+            my_decision=player.field_maybe_none("individual_choice"),
+            opponent_decision=opponent.field_maybe_none("individual_choice"),
         )
 
     @staticmethod
