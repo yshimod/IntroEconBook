@@ -34,7 +34,9 @@
 {{ block script }}
 {{ include_sibling 'chart.html' }}
 <script>
-    drawChart();// グラフ描画
-    drawChart_pair();// グラフ描画
+    document.addEventListener('DOMContentLoaded', function () {
+        drawChart();
+        drawChart_pair();
+    });
 </script>
 {{ endblock }}
