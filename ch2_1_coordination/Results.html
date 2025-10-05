@@ -15,8 +15,14 @@
 </div>
 
 <h3 class="mt-5">全体の結果</h3>
-{{ include_sibling 'chart.html' }}
 
+<div class="boxed-section">
+    <div id="highchart"></div>
+</div>
+
+<div class="boxed-section">
+    <div id="highchart2"></div>
+</div>
 
 <div class="mt-5">
     {{ include_sibling 'instructions.html' }}
@@ -26,6 +32,7 @@
 
 
 {{ block script }}
+{{ include_sibling 'chart.html' }}
 <script>
     drawChart();// グラフ描画
     drawChart_pair();// グラフ描画
