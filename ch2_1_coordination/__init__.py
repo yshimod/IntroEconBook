@@ -47,7 +47,7 @@ class Player(BasePlayer):
     # 相手はどちらを選ぶと思うか
     think_other_player_choice = models.StringField(
         widget=widgets.RadioSelectHorizontal,
-        label="",
+        label="【質問】あなたの相手はどちらを選ぶと思いますか？",
         choices=[[v, "映画{}を選ぶと予想する".format(v)] for v in C.CHOICE_LIST],
     )
 
@@ -63,24 +63,16 @@ class Player(BasePlayer):
 
     # 相手が映画１を選んだ際に、あなたは何ポイント獲得しますか？
     q1 = models.StringField(
-        verbose_name="",
-        choices=[
-            ["5", "5"],
-            ["10", "10"],
-            ["2", "2"],
-            ["3", "3"],
-        ],
+        widget=widgets.RadioSelectHorizontal,
+        label="【質問】相手が映画1を選んでいたら、あなたは何ポイント獲得しますか？",
+        choices=[C.PAYOFF_A, C.PAYOFF_B, C.PAYOFF_C, C.PAYOFF_D],
     )
 
     # 相手が映画2を選んだ際に、あなたは何ポイント獲得しますか？
     q2 = models.StringField(
-        verbose_name="",
-        choices=[
-            ["5", "5"],
-            ["10", "10"],
-            ["2", "2"],
-            ["3", "3"],
-        ],
+        widget=widgets.RadioSelectHorizontal,
+        label="【質問】相手が映画2を選んでいたら、あなたは何ポイント獲得しますか？",
+        choices=[C.PAYOFF_A, C.PAYOFF_B, C.PAYOFF_C, C.PAYOFF_D],
     )
 
 
