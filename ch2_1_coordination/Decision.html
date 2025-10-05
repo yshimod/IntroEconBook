@@ -13,7 +13,9 @@
     <table class="table table-bordered text-center" style="vertical-align: middle;">
         <tr>
             <th colspan="2" rowspan="2"></th>
-            <th colspan="2">プレイヤー2（あなた{{ if player.id_in_group == 1 }}の相手{{ endif }}）</th>
+            <th colspan="2" class="uline-p2">
+                プレイヤー2（あなた{{ if player.id_in_group == 1 }}の相手{{ endif }}）
+            </th>
         </tr>
         <tr>
             <td>
@@ -38,7 +40,9 @@
             </td>
         </tr>
         <tr>
-            <th rowspan="2"><u>プレイヤー1（あなた{{ if player.id_in_group == 2 }}の相手{{ endif }}）</u></th>
+            <th rowspan="2" class="uline-p1">
+                プレイヤー1（あなた{{ if player.id_in_group == 2 }}の相手{{ endif }}）
+            </th>
             <td>
                 {{ if player.id_in_group == 1 }}
                 <input type="radio" class="btn-check" name="individual_choice" id="id_individual_choice_A"
@@ -49,8 +53,14 @@
                     映画{{ C.CHOICE_LIST.0 }}
                 </label>
             </td>
-            <td><u>{{ C.PAYOFF_A }}</u>, {{ C.PAYOFF_B }}</td>
-            <td><u>{{ C.PAYOFF_D }}</u>, {{ C.PAYOFF_D }}</td>
+            <td>
+                <span class="uline-p1">{{ C.PAYOFF_A }}</span>,
+                <span class="uline-p2">{{ C.PAYOFF_B }}</span>
+            </td>
+            <td>
+                <span class="uline-p1">{{ C.PAYOFF_D }}</span>,
+                <span class="uline-p2">{{ C.PAYOFF_D }}</span>
+            </td>
         </tr>
         <tr>
             <td>
@@ -63,8 +73,14 @@
                     映画{{ C.CHOICE_LIST.1 }}
                 </label>
             </td>
-            <td><u>{{ C.PAYOFF_C }}</u>, {{ C.PAYOFF_C }}</td>
-            <td><u>{{ C.PAYOFF_B }}</u>, {{ C.PAYOFF_A }}</td>
+            <td>
+                <span class="uline-p1">{{ C.PAYOFF_C }}</span>,
+                <span class="uline-p2">{{ C.PAYOFF_C }}</span>
+            </td>
+            <td>
+                <span class="uline-p1">{{ C.PAYOFF_B }}</span>,
+                <span class="uline-p2">{{ C.PAYOFF_A }}</span>
+            </td>
         </tr>
     </table>
 </div>
@@ -77,4 +93,21 @@
 
 {{ next_button }}
 
+{{ endblock }}
+
+
+{{ block scripts }}
+<style>
+    /* {{ if player.id_in_group == 1 }} */
+    .uline-p1 {
+        text-decoration: underline;
+    }
+
+    /* {{ else }} */
+    .uline-p2 {
+        text-decoration: underline;
+    }
+
+    /* {{ endif }} */
+</style>
 {{ endblock }}
