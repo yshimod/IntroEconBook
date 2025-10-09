@@ -72,6 +72,10 @@ class Player(BasePlayer):
 
 
 # FUNCTIONS
+def creating_session(subsession: Subsession):
+    subsession.group_randomly()
+
+
 def summarize_data(subsession: Subsession):
     list_choices = [
         p.individual_choice
