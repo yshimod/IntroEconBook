@@ -135,6 +135,34 @@ def set_payoff(group: Group):
         p2.payoff = -1
 
 
+def dump_js_vars(sub: Subsession):
+    prop_A = -1
+    prop_B = -1
+    if sub.num_participants > 0:
+        prop_A = (sub.num_A / sub.num_participants) * 100
+        prop_B = (sub.num_B / sub.num_participants) * 100
+
+    prop_pairs_AA = -1
+    prop_pairs_AB = -1
+    prop_pairs_BB = -1
+    if sub.num_pairs > 0:
+        prop_pairs_AA = (sub.num_pairs_AA / sub.num_pairs) * 100
+        prop_pairs_AB = (sub.num_pairs_AB / sub.num_pairs) * 100
+        prop_pairs_BA = (sub.num_pairs_BA / sub.num_pairs) * 100
+        prop_pairs_BB = (sub.num_pairs_BB / sub.num_pairs) * 100
+
+    return dict(
+        num_participants=sub.num_participants,
+        prop_A=prop_A,
+        prop_B=prop_B,
+        num_pairs=sub.num_pairs,
+        prop_pairs_AA=prop_pairs_AA,
+        prop_pairs_AB=prop_pairs_AB,
+        prop_pairs_BA=prop_pairs_BA,
+        prop_pairs_BB=prop_pairs_BB,
+    )
+
+
 # PAGES
 class Introduction(Page):
     # timeout_seconds = 100
@@ -187,32 +215,7 @@ class Results(Page):
     @staticmethod
     def js_vars(player: Player):
         sub: Subsession = player.subsession
-
-        prop_A = -1
-        prop_B = -1
-        if sub.num_participants > 0:
-            prop_A = (sub.num_A / sub.num_participants) * 100
-            prop_B = (sub.num_B / sub.num_participants) * 100
-
-        prop_pairs_AA = -1
-        prop_pairs_AB = -1
-        prop_pairs_BB = -1
-        if sub.num_pairs > 0:
-            prop_pairs_AA = (sub.num_pairs_AA / sub.num_pairs) * 100
-            prop_pairs_AB = (sub.num_pairs_AB / sub.num_pairs) * 100
-            prop_pairs_BA = (sub.num_pairs_BA / sub.num_pairs) * 100
-            prop_pairs_BB = (sub.num_pairs_BB / sub.num_pairs) * 100
-
-        return dict(
-            num_participants=sub.num_participants,
-            prop_A=prop_A,
-            prop_B=prop_B,
-            num_pairs=sub.num_pairs,
-            prop_pairs_AA=prop_pairs_AA,
-            prop_pairs_AB=prop_pairs_AB,
-            prop_pairs_BA=prop_pairs_BA,
-            prop_pairs_BB=prop_pairs_BB,
-        )
+        return dump_js_vars(sub)
 
 
 class PreResults(Page):
@@ -227,3 +230,9 @@ page_sequence = [
     PreResults,
     Results,
 ]
+
+
+def vars_for_admin_report(subsession: Subsession):
+    return dict(
+        js_vars=dump_js_vars(subsession),
+    )

@@ -1,0 +1,21 @@
+<div class="boxed-section">
+    <div id="highchart"></div>
+</div>
+
+<div class="boxed-section">
+    <div id="highchart2"></div>
+</div>
+
+
+<div class="mt-5">
+    {{ include_sibling 'instructions.html' }}
+</div>
+
+{{ include_sibling 'chart.html' }}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const js_vars = JSON.parse(`{{ js_vars | json }}`);
+        drawChart(js_vars);
+        drawChart_pair(js_vars);
+    });
+</script>
