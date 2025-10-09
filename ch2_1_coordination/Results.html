@@ -23,7 +23,7 @@
             </th>
         </tr>
         <tr>
-            <td>
+            <th>
                 <label class="btn btn-lg
                     {{ if player.id_in_group == 2 }}
                     {{ if player.individual_choice == C.CHOICE_LIST.0 }}btn-primary{{ else }}btn-outline-primary{{ endif }}
@@ -32,8 +32,8 @@
                     {{ endif }} disabled" style="width: 6em;">
                     映画{{ C.CHOICE_LIST.0 }}
                 </label>
-            </td>
-            <td>
+            </th>
+            <th>
                 <label class="btn btn-lg
                     {{ if player.id_in_group == 2 }}
                     {{ if player.individual_choice == C.CHOICE_LIST.1 }}btn-primary{{ else }}btn-outline-primary{{ endif }}
@@ -42,13 +42,13 @@
                     {{ endif }} disabled" style="width: 6em;">
                     映画{{ C.CHOICE_LIST.1 }}
                 </label>
-            </td>
+            </th>
         </tr>
         <tr>
             <th rowspan="2" class="uline-p1">
                 プレイヤー1（あなた{{ if player.id_in_group == 2 }}の相手{{ endif }}）
             </th>
-            <td>
+            <th>
                 <label class="btn btn-lg
                     {{ if player.id_in_group == 1 }}
                     {{ if player.individual_choice == C.CHOICE_LIST.0 }}btn-primary{{ else }}btn-outline-primary{{ endif }}
@@ -57,7 +57,7 @@
                     {{ endif }} disabled" style="width: 6em;">
                     映画{{ C.CHOICE_LIST.0 }}
                 </label>
-            </td>
+            </th>
             <td>
                 <span class="uline-p1">{{ C.PAYOFF_A }}</span>,
                 <span class="uline-p2">{{ C.PAYOFF_B }}</span>
@@ -68,7 +68,7 @@
             </td>
         </tr>
         <tr>
-            <td>
+            <th>
                 <label class="btn btn-lg
                     {{ if player.id_in_group == 1 }}
                     {{ if player.individual_choice == C.CHOICE_LIST.1 }}btn-primary{{ else }}btn-outline-primary{{ endif }}
@@ -77,7 +77,7 @@
                     {{ endif }} disabled" style="width: 6em;">
                     映画{{ C.CHOICE_LIST.1 }}
                 </label>
-            </td>
+            </th>
             <td>
                 <span class="uline-p1">{{ C.PAYOFF_C }}</span>,
                 <span class="uline-p2">{{ C.PAYOFF_C }}</span>
