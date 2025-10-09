@@ -23,13 +23,13 @@
             <th>
                 <input type="radio" class="btn-check" name="think_other_player_choice"
                     id="id_think_other_player_choice_A" value="{{ C.CHOICE_LIST.0 }}" autocomplete="off" required>
-                <label class="btn btn-outline-success btn-lg" style="width: 6em;"
+                <label class="btn btn-outline-success btn-lg choicebtn"
                     for="id_think_other_player_choice_A">{{ C.CHOICE_LIST.0 }}</label>
             </th>
             <th>
                 <input type="radio" class="btn-check" name="think_other_player_choice"
                     id="id_think_other_player_choice_B" value="{{ C.CHOICE_LIST.1 }}" autocomplete="off" required>
-                <label class="btn btn-outline-success btn-lg" style="width: 6em;"
+                <label class="btn btn-outline-success btn-lg choicebtn"
                     for="id_think_other_player_choice_B">{{ C.CHOICE_LIST.1 }}</label>
             </th>
         </tr>
@@ -38,7 +38,7 @@
             <th>
                 <input type="radio" class="btn-check" name="individual_choice" id="id_individual_choice_A"
                     value="{{ C.CHOICE_LIST.0 }}" autocomplete="off" required>
-                <label class="btn btn-outline-primary btn-lg" style="width: 6em;"
+                <label class="btn btn-outline-primary btn-lg choicebtn"
                     for="id_individual_choice_A">{{ C.CHOICE_LIST.0 }}</label>
             </th>
             <td id="cell_AA"><u>{{ C.PAYOFF_B }}</u>, {{ C.PAYOFF_B }}</td>
@@ -48,7 +48,7 @@
             <th>
                 <input type="radio" class="btn-check" name="individual_choice" id="id_individual_choice_B"
                     value="{{ C.CHOICE_LIST.1 }}" autocomplete="off" required>
-                <label class="btn btn-outline-primary btn-lg" style="width: 6em;"
+                <label class="btn btn-outline-primary btn-lg choicebtn"
                     for="id_individual_choice_B">{{ C.CHOICE_LIST.1 }}</label>
             </th>
             <td id="cell_BA"><u>{{ C.PAYOFF_A }}</u>, {{ C.PAYOFF_D }}</td>
@@ -76,6 +76,15 @@
     {{ include_sibling 'instructions.html' }}
 </div>
 
+{{ endblock }}
+
+
+{{ block styles }}
+<style>
+    .choicebtn {
+        width: 6em;
+    }
+</style>
 {{ endblock }}
 
 
