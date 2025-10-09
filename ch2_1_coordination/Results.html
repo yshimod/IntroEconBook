@@ -14,6 +14,82 @@
     </ul>
 </div>
 
+<div class="mt-5">
+    <table class="table table-bordered text-center" style="vertical-align: middle;">
+        <tr>
+            <th colspan="2" rowspan="2"></th>
+            <th colspan="2" class="uline-p2">
+                プレイヤー2（あなた{{ if player.id_in_group == 1 }}の相手{{ endif }}）
+            </th>
+        </tr>
+        <tr>
+            <td>
+                <label class="btn btn-lg
+                    {{ if player.id_in_group == 2 }}
+                    {{ if player.individual_choice == C.CHOICE_LIST.0 }}btn-primary{{ else }}btn-outline-primary{{ endif }}
+                    {{ else }}
+                    {{ if player.pair_choice == C.CHOICE_LIST.0 }}btn-primary{{ else }}btn-outline-primary{{ endif }}
+                    {{ endif }} disabled" style="width: 6em;">
+                    映画{{ C.CHOICE_LIST.0 }}
+                </label>
+            </td>
+            <td>
+                <label class="btn btn-lg
+                    {{ if player.id_in_group == 2 }}
+                    {{ if player.individual_choice == C.CHOICE_LIST.1 }}btn-primary{{ else }}btn-outline-primary{{ endif }}
+                    {{ else }}
+                    {{ if player.pair_choice == C.CHOICE_LIST.1 }}btn-primary{{ else }}btn-outline-primary{{ endif }}
+                    {{ endif }} disabled" style="width: 6em;">
+                    映画{{ C.CHOICE_LIST.1 }}
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <th rowspan="2" class="uline-p1">
+                プレイヤー1（あなた{{ if player.id_in_group == 2 }}の相手{{ endif }}）
+            </th>
+            <td>
+                <label class="btn btn-lg
+                    {{ if player.id_in_group == 1 }}
+                    {{ if player.individual_choice == C.CHOICE_LIST.0 }}btn-primary{{ else }}btn-outline-primary{{ endif }}
+                    {{ else }}
+                    {{ if player.pair_choice == C.CHOICE_LIST.0 }}btn-primary{{ else }}btn-outline-primary{{ endif }}
+                    {{ endif }} disabled" style="width: 6em;">
+                    映画{{ C.CHOICE_LIST.0 }}
+                </label>
+            </td>
+            <td>
+                <span class="uline-p1">{{ C.PAYOFF_A }}</span>,
+                <span class="uline-p2">{{ C.PAYOFF_B }}</span>
+            </td>
+            <td>
+                <span class="uline-p1">{{ C.PAYOFF_D }}</span>,
+                <span class="uline-p2">{{ C.PAYOFF_D }}</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label class="btn btn-lg
+                    {{ if player.id_in_group == 1 }}
+                    {{ if player.individual_choice == C.CHOICE_LIST.1 }}btn-primary{{ else }}btn-outline-primary{{ endif }}
+                    {{ else }}
+                    {{ if player.pair_choice == C.CHOICE_LIST.1 }}btn-primary{{ else }}btn-outline-primary{{ endif }}
+                    {{ endif }} disabled" style="width: 6em;">
+                    映画{{ C.CHOICE_LIST.1 }}
+                </label>
+            </td>
+            <td>
+                <span class="uline-p1">{{ C.PAYOFF_C }}</span>,
+                <span class="uline-p2">{{ C.PAYOFF_C }}</span>
+            </td>
+            <td>
+                <span class="uline-p1">{{ C.PAYOFF_B }}</span>,
+                <span class="uline-p2">{{ C.PAYOFF_A }}</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
 <h3 class="mt-5">全体の結果</h3>
 
 <div class="boxed-section">
@@ -28,6 +104,23 @@
     {{ include_sibling 'instructions.html' }}
 </div>
 
+{{ endblock }}
+
+
+{{ block styles }}
+<style>
+    /* {{ if player.id_in_group == 1 }} */
+    .uline-p1 {
+        text-decoration: underline;
+    }
+
+    /* {{ else }} */
+    .uline-p2 {
+        text-decoration: underline;
+    }
+
+    /* {{ endif }} */
+</style>
 {{ endblock }}
 
 
