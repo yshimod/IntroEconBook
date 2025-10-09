@@ -46,19 +46,14 @@ class Player(BasePlayer):
 
     # 相手はどちらを選ぶと思うか
     think_other_player_choice = models.StringField(
-        widget=widgets.RadioSelectHorizontal,
-        label="【質問】あなたの相手はどちらを選ぶと思いますか？",
-        choices=[[v, "映画{}を選ぶと予想する".format(v)] for v in C.CHOICE_LIST],
+        choices=C.CHOICE_LIST,
+        initial="",
     )
 
     # 意思決定の理由
     individual_choice_comment = models.LongStringField(
-        label="【質問】なぜあなたはその選択肢を選んだのか、理由を教えてください。"
-    )
-
-    # 相手の予想のの理由
-    think_other_player_choice_comment = models.LongStringField(
-        label="【質問】なぜあなたは、相手がその選択肢を選ぶと思ったのか、理由を教えてください。"
+        label="",
+        initial="",
     )
 
     # クイズ1
@@ -173,6 +168,7 @@ class Decision(Page):
     form_model = "player"
     form_fields = [
         "individual_choice",
+        "think_other_player_choice",
         "individual_choice_comment",
     ]
 
@@ -188,8 +184,6 @@ class Question(Page):
     form_fields = [
         "q1",
         "q2",
-        "think_other_player_choice",
-        "think_other_player_choice_comment",
     ]
 
 
