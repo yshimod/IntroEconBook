@@ -4,7 +4,6 @@
 
 
 {{ block content }}
-
 <div class="fs-4">
     <p>
         あなた{{ if player.flg_non_input == 1 }}（コンピュータが選択）{{ endif }}は<b>{{ my_decision }}</b>、
@@ -80,7 +79,7 @@
 {{ endblock }}
 
 
-{{ block script }}
+{{ block scripts }}
 {{ include_sibling 'chart.html' }}
 <script>
     document.addEventListener('DOMContentLoaded', function () {
