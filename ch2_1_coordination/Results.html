@@ -58,11 +58,11 @@
                     映画{{ C.CHOICE_LIST.0 }}
                 </label>
             </th>
-            <td>
+            <td id="cell_AA">
                 <span class="uline-p1">{{ C.PAYOFF_A }}</span>,
                 <span class="uline-p2">{{ C.PAYOFF_B }}</span>
             </td>
-            <td>
+            <td id="cell_AB">
                 <span class="uline-p1">{{ C.PAYOFF_D }}</span>,
                 <span class="uline-p2">{{ C.PAYOFF_D }}</span>
             </td>
@@ -78,11 +78,11 @@
                     映画{{ C.CHOICE_LIST.1 }}
                 </label>
             </th>
-            <td>
+            <td id="cell_BA">
                 <span class="uline-p1">{{ C.PAYOFF_C }}</span>,
                 <span class="uline-p2">{{ C.PAYOFF_C }}</span>
             </td>
-            <td>
+            <td id="cell_BB">
                 <span class="uline-p1">{{ C.PAYOFF_B }}</span>,
                 <span class="uline-p2">{{ C.PAYOFF_A }}</span>
             </td>
@@ -131,9 +131,23 @@
 {{ block scripts }}
 {{ include_sibling 'chart.html' }}
 <script>
+    // {{ with p1 = group.get_player_by_id(1) }}{{ with p2 = group.get_player_by_id(2) }}
     document.addEventListener('DOMContentLoaded', function () {
+        const P1_choice = '{{ p1.individual_choice }}';
+        const P2_choice = '{{ p2.individual_choice }}';
+        if (P1_choice === '{{ C.CHOICE_LIST.0 }}' && P2_choice === '{{ C.CHOICE_LIST.0 }}') {
+            document.getElementById('cell_AA').style.backgroundColor = 'yellow';
+        } else if (P1_choice === '{{ C.CHOICE_LIST.0 }}' && P2_choice === '{{ C.CHOICE_LIST.1 }}') {
+            document.getElementById('cell_AB').style.backgroundColor = 'yellow';
+        } else if (P1_choice === '{{ C.CHOICE_LIST.1 }}' && P2_choice === '{{ C.CHOICE_LIST.0 }}') {
+            document.getElementById('cell_BA').style.backgroundColor = 'yellow';
+        } else if (P1_choice === '{{ C.CHOICE_LIST.1 }}' && P2_choice === '{{ C.CHOICE_LIST.1 }}') {
+            document.getElementById('cell_BB').style.backgroundColor = 'yellow';
+        }
+
         drawChart();
         drawChart_pair();
     });
+    // {{ endwith }}{{ endwith }}
 </script>
 {{ endblock }}
