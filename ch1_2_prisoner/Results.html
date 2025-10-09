@@ -24,31 +24,39 @@
         </tr>
         <tr>
             <th>
-                <label
-                    class="btn btn-lg {{ if player.pair_choice == C.CHOICE_LIST.0 }}btn-primary{{ else }}btn-outline-primary{{ endif }} disabled"
-                    style="width: 6em;" id="id_pair_choice_A">{{ C.CHOICE_LIST.0 }}</label>
+                <label class="btn btn-lg
+                    {{ if player.pair_choice == C.CHOICE_LIST.0 }}btn-primary{{ else }}btn-outline-primary{{ endif }}
+                    choicebtn disabled">
+                    {{ C.CHOICE_LIST.0 }}
+                </label>
             </th>
             <th>
-                <label
-                    class="btn btn-lg {{ if player.pair_choice == C.CHOICE_LIST.1 }}btn-primary{{ else }}btn-outline-primary{{ endif }} disabled"
-                    style="width: 6em;" id="id_pair_choice_B">{{ C.CHOICE_LIST.1 }}</label>
+                <label class="btn btn-lg
+                    {{ if player.pair_choice == C.CHOICE_LIST.1 }}btn-primary{{ else }}btn-outline-primary{{ endif }}
+                    choicebtn disabled">
+                    {{ C.CHOICE_LIST.1 }}
+                </label>
             </th>
         </tr>
         <tr>
             <th rowspan="2"><u>あなた</u></th>
             <th>
-                <label
-                    class="btn btn-lg {{ if player.individual_choice == C.CHOICE_LIST.0 }}btn-primary{{ else }}btn-outline-primary{{ endif }} disabled"
-                    style="width: 6em;" id="id_individual_choice_A">{{ C.CHOICE_LIST.0 }}</label>
+                <label class="btn btn-lg
+                    {{ if player.individual_choice == C.CHOICE_LIST.0 }}btn-primary{{ else }}btn-outline-primary{{ endif }}
+                    choicebtn disabled">
+                    {{ C.CHOICE_LIST.0 }}
+                </label>
             </th>
             <td id="cell_AA"><u>{{ C.PAYOFF_B }}</u>, {{ C.PAYOFF_B }}</td>
             <td id="cell_AB"><u>{{ C.PAYOFF_D }}</u>, {{ C.PAYOFF_A }}</td>
         </tr>
         <tr>
             <th>
-                <label
-                    class="btn btn-lg {{ if player.individual_choice == C.CHOICE_LIST.1 }}btn-primary{{ else }}btn-outline-primary{{ endif }} disabled"
-                    style="width: 6em;" id="id_individual_choice_B">{{ C.CHOICE_LIST.1 }}</label>
+                <label class="btn btn-lg
+                    {{ if player.individual_choice == C.CHOICE_LIST.1 }}btn-primary{{ else }}btn-outline-primary{{ endif }}
+                    choicebtn disabled">
+                    {{ C.CHOICE_LIST.1 }}
+                </label>
             </th>
             <td id="cell_BA"><u>{{ C.PAYOFF_A }}</u>, {{ C.PAYOFF_D }}</td>
             <td id="cell_BB"><u>{{ C.PAYOFF_C }}</u>, {{ C.PAYOFF_C }}</td>
@@ -76,6 +84,15 @@
     {{ include_sibling 'instructions.html' }}
 </div>
 
+{{ endblock }}
+
+
+{{ block styles }}
+<style>
+    .choicebtn {
+        width: 6em;
+    }
+</style>
 {{ endblock }}
 
 
