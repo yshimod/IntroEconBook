@@ -218,16 +218,11 @@ class Results(Page):
         return dump_js_vars(sub)
 
 
-class PreResults(Page):
-    pass
-
-
 page_sequence = [
     Introduction,
     Decision,
     Question,
     ResultsWaitPage,
-    PreResults,
     Results,
 ]
 
