@@ -1,5 +1,5 @@
 {{ block title }}
-実験
+実験 {{ if C.NUM_ROUNDS > 1 }}（ラウンド {{ player.round_number }} / {{ C.NUM_ROUNDS }}）{{ endif }}
 {{ endblock }}
 
 

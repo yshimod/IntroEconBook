@@ -7,7 +7,7 @@ doc = """ """
 class C(BaseConstants):
     NAME_IN_URL = "ch2_1_coordination"
     PLAYERS_PER_GROUP = 2
-    NUM_ROUNDS = 1
+    NUM_ROUNDS = 3
 
     PAYOFF_A = cu(5)
     PAYOFF_B = cu(10)
@@ -164,17 +164,23 @@ def dump_js_vars(sub: Subsession):
 
 # PAGES
 class Introduction(Page):
-    # timeout_seconds = 100
-    pass
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.round_number == 1
 
 
 class Decision(Page):
     form_model = "player"
-    form_fields = [
-        "individual_choice",
-        "think_other_player_choice",
-        "individual_choice_comment",
-    ]
+
+    @staticmethod
+    def get_form_fields(player: Player):
+        form_fields = [
+            "individual_choice",
+            "think_other_player_choice",
+        ]
+        if player.round_number == 1:
+            form_fields.append("individual_choice_comment")
+        return form_fields
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
@@ -189,6 +195,10 @@ class Question(Page):
         "q1",
         "q2",
     ]
+
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.round_number == 1
 
 
 class ResultsWaitPage(WaitPage):
