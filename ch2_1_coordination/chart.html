@@ -9,48 +9,6 @@
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/series-label.js"></script>
 <script>
-    function drawChart(js_vars) {
-        Highcharts.chart('highchart', {
-            chart: {
-                type: 'bar'
-            },
-            title: {
-                text: "個人の選択"
-            },
-            subtitle: {
-                text: js_vars.num_participants + "名が実験に参加しました"
-            },
-            xAxis: {
-                categories: ['映画1を選んだ人', '映画2を選んだ人'],
-                title: {
-                    text: null
-                }
-            },
-            yAxis: {
-                min: 0,
-                max: 100,
-                title: {
-                    text: null,
-                },
-                labels: {
-                    overflow: 'justify'
-                }
-            },
-            series: [{
-                name: '割合',
-                data: [
-                    { y: js_vars.prop_A, color: '#ff7f0e' },
-                    { y: js_vars.prop_B, color: '#1f77b4' },
-                ],
-                dataLabels: { enabled: true, format: '{point.y:.2f}%' }
-            }],
-            tooltip: { enabled: false },
-            legend: { enabled: false },
-            credits: { enabled: false },
-            accessibility: { enabled: false }
-        });
-    }
-
     function drawChart_pair(js_vars) {
         Highcharts.chart('highchart2', {
             chart: {

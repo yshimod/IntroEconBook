@@ -28,10 +28,6 @@ class C(BaseConstants):
 
 
 class Subsession(BaseSubsession):
-    num_participants = models.IntegerField(initial=0)
-    num_A = models.IntegerField(initial=0)
-    num_B = models.IntegerField(initial=0)
-
     num_pairs = models.IntegerField(initial=0)
     num_pairs_AA = models.IntegerField(initial=0)
     num_pairs_AB = models.IntegerField(initial=0)
@@ -95,15 +91,6 @@ def creating_session(subsession: Subsession):
 
 
 def summarize_data(subsession: Subsession):
-    list_choices = [
-        p.individual_choice
-        for p in subsession.get_players()
-        if p.field_maybe_none("individual_choice")
-    ]
-    subsession.num_participants = len(list_choices)
-    subsession.num_A = list_choices.count(C.CHOICE_LIST[0])
-    subsession.num_B = list_choices.count(C.CHOICE_LIST[1])
-
     list_grp_results = [
         (
             g.get_player_by_id(1).individual_choice,
@@ -148,14 +135,9 @@ def set_payoff(group: Group):
 
 
 def dump_js_vars(sub: Subsession):
-    prop_A = -1
-    prop_B = -1
-    if sub.num_participants > 0:
-        prop_A = (sub.num_A / sub.num_participants) * 100
-        prop_B = (sub.num_B / sub.num_participants) * 100
-
     prop_pairs_AA = -1
     prop_pairs_AB = -1
+    prop_pairs_BA = -1
     prop_pairs_BB = -1
     if sub.num_pairs > 0:
         prop_pairs_AA = (sub.num_pairs_AA / sub.num_pairs) * 100
@@ -164,9 +146,6 @@ def dump_js_vars(sub: Subsession):
         prop_pairs_BB = (sub.num_pairs_BB / sub.num_pairs) * 100
 
     return dict(
-        num_participants=sub.num_participants,
-        prop_A=prop_A,
-        prop_B=prop_B,
         num_pairs=sub.num_pairs,
         prop_pairs_AA=prop_pairs_AA,
         prop_pairs_AB=prop_pairs_AB,
