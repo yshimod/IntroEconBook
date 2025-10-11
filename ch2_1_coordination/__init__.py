@@ -16,6 +16,12 @@ class C(BaseConstants):
 
     CHOICE_LIST = ["1", "2"]
 
+    PAYOFF_MATRIX = {
+        (CHOICE_LIST[0], CHOICE_LIST[0]): (PAYOFF_A, PAYOFF_B),
+        (CHOICE_LIST[0], CHOICE_LIST[1]): (PAYOFF_D, PAYOFF_D),
+        (CHOICE_LIST[1], CHOICE_LIST[0]): (PAYOFF_C, PAYOFF_C),
+        (CHOICE_LIST[1], CHOICE_LIST[1]): (PAYOFF_B, PAYOFF_A),
+    }
 
 class Subsession(BaseSubsession):
     num_participants = models.IntegerField(initial=0)
@@ -111,12 +117,6 @@ def summarize_data(subsession: Subsession):
 
 
 def set_payoff(group: Group):
-    payoff_matrix = {
-        (C.CHOICE_LIST[0], C.CHOICE_LIST[0]): (C.PAYOFF_A, C.PAYOFF_B),
-        (C.CHOICE_LIST[0], C.CHOICE_LIST[1]): (C.PAYOFF_D, C.PAYOFF_D),
-        (C.CHOICE_LIST[1], C.CHOICE_LIST[0]): (C.PAYOFF_C, C.PAYOFF_C),
-        (C.CHOICE_LIST[1], C.CHOICE_LIST[1]): (C.PAYOFF_B, C.PAYOFF_A),
-    }
     p1: Player = group.get_player_by_id(1)
     p2: Player = group.get_player_by_id(2)
     p1_choice = p1.field_maybe_none("individual_choice")
@@ -128,7 +128,7 @@ def set_payoff(group: Group):
     p2.flg_pair_non_input = p1.flg_non_input
 
     if p1_choice and p2_choice:
-        p1.payoff, p2.payoff = payoff_matrix[(p1_choice, p2_choice)]
+        p1.payoff, p2.payoff = C.PAYOFF_MATRIX[(p1_choice, p2_choice)]
     else:
         p1.payoff = -1
         p2.payoff = -1
