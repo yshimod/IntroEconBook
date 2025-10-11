@@ -271,6 +271,21 @@ page_sequence = [
 
 
 def vars_for_admin_report(subsession: Subsession):
+    list_comment = []
+    if subsession.round_number == 1:
+        list_comment = sorted(
+            [
+                [
+                    p.id_in_group,
+                    p.individual_choice,
+                    p.think_other_player_choice,
+                    p.pair_choice,
+                    p.individual_choice_comment,
+                ]
+                for p in subsession.get_players()
+            ]
+        )
+
     list_perfect_score = []
     prop_perfect_score = -1
     if subsession.round_number == 1:
@@ -282,5 +297,6 @@ def vars_for_admin_report(subsession: Subsession):
 
     return dict(
         js_vars=dump_js_vars(subsession),
+        list_comment=list_comment,
         prop_perfect_score=prop_perfect_score,
     )

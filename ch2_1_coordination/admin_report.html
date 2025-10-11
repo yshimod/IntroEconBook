@@ -6,6 +6,33 @@
     <div id="highchart2"></div>
 </div>
 
+{{ if list_comment }}
+<div class="mt-5 fs-5">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th width="10%">役割</th>
+                <th width="10%">自身</th>
+                <th width="10%">予測</th>
+                <th width="10%">相手</th>
+                <th width="60%">理由</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ for el in list_comment }}
+            <tr>
+                <td>{{ el.0 }}</td>
+                <td>{{ el.1 }}</td>
+                <td>{{ el.2 }}</td>
+                <td>{{ el.3 }}</td>
+                <td>{{ el.4 | escape }}</td>
+            </tr>
+            {{ endfor }}
+        </tbody>
+    </table>
+</div>
+{{ endif }}
+
 {{ if prop_perfect_score != -1 }}
 <div class="boxed-section">
     <ul class="mt-3">
