@@ -40,7 +40,7 @@ class Subsession(BaseSubsession):
 
 
 class Group(BaseGroup):
-    pass
+    sucsess_coordination = models.BooleanField()
 
 
 class Player(BasePlayer):
@@ -141,6 +141,7 @@ def set_payoff(group: Group):
 
     if p1_choice and p2_choice:
         p1.payoff, p2.payoff = C.PAYOFF_MATRIX[(p1_choice, p2_choice)]
+        group.sucsess_coordination = p1_choice == p2_choice
     else:
         p1.payoff = -1
         p2.payoff = -1
@@ -271,6 +272,18 @@ page_sequence = [
 
 
 def vars_for_admin_report(subsession: Subsession):
+    list_sucsess_coordination = []
+    prop_sucsess_coordination = -1
+    list_sucsess_coordination = [
+        int(grp.sucsess_coordination)
+        for grp in subsession.get_groups()
+        if grp.field_maybe_none("sucsess_coordination") is not None
+    ]
+    if list_sucsess_coordination:
+        prop_sucsess_coordination = (
+            100 * sum(list_sucsess_coordination) / len(list_sucsess_coordination)
+        )
+
     list_comment = []
     if subsession.round_number == 1:
         list_comment = sorted(
@@ -297,6 +310,7 @@ def vars_for_admin_report(subsession: Subsession):
 
     return dict(
         js_vars=dump_js_vars(subsession),
+        prop_sucsess_coordination=prop_sucsess_coordination,
         list_comment=list_comment,
         prop_perfect_score=prop_perfect_score,
     )
