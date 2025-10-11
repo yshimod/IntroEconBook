@@ -23,6 +23,10 @@ class C(BaseConstants):
         (CHOICE_LIST[1], CHOICE_LIST[1]): (PAYOFF_B, PAYOFF_A),
     }
 
+    Q1_SENTENCE = "相手が映画1を選んでいたら、あなたは何ポイント獲得しますか？"
+    Q2_SENTENCE = "相手が映画2を選んでいたら、あなたは何ポイント獲得しますか？"
+
+
 class Subsession(BaseSubsession):
     num_participants = models.IntegerField(initial=0)
     num_A = models.IntegerField(initial=0)
@@ -65,16 +69,24 @@ class Player(BasePlayer):
     # クイズ1
     q1 = models.StringField(
         widget=widgets.RadioSelectHorizontal,
-        label="【質問】相手が映画1を選んでいたら、あなたは何ポイント獲得しますか？",
-        choices=[C.PAYOFF_A, C.PAYOFF_B, C.PAYOFF_C, C.PAYOFF_D],
+        label=C.Q1_SENTENCE,
+        choices=[
+            [str(int(v)), str(v)]
+            for v in [C.PAYOFF_A, C.PAYOFF_B, C.PAYOFF_C, C.PAYOFF_D]
+        ],
     )
+    score_q1 = models.BooleanField(initial=False)
 
     # クイズ2
     q2 = models.StringField(
         widget=widgets.RadioSelectHorizontal,
-        label="【質問】相手が映画2を選んでいたら、あなたは何ポイント獲得しますか？",
-        choices=[C.PAYOFF_A, C.PAYOFF_B, C.PAYOFF_C, C.PAYOFF_D],
+        label=C.Q2_SENTENCE,
+        choices=[
+            [str(int(v)), str(v)]
+            for v in [C.PAYOFF_A, C.PAYOFF_B, C.PAYOFF_C, C.PAYOFF_D]
+        ],
     )
+    score_q2 = models.BooleanField(initial=False)
 
 
 # FUNCTIONS
@@ -200,6 +212,29 @@ class Question(Page):
     def is_displayed(player: Player):
         return player.round_number == 1
 
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened):
+        if player.field_maybe_none("individual_choice"):
+            if player.id_in_group == 1:
+                correct_q1, _ = C.PAYOFF_MATRIX[
+                    (player.individual_choice, C.CHOICE_LIST[0])
+                ]
+                correct_q2, _ = C.PAYOFF_MATRIX[
+                    (player.individual_choice, C.CHOICE_LIST[1])
+                ]
+            else:
+                _, correct_q1 = C.PAYOFF_MATRIX[
+                    (C.CHOICE_LIST[0], player.individual_choice)
+                ]
+                _, correct_q2 = C.PAYOFF_MATRIX[
+                    (C.CHOICE_LIST[1], player.individual_choice)
+                ]
+
+            if player.field_maybe_none("q1"):
+                player.score_q1 = player.q1 == str(int(correct_q1))
+            if player.field_maybe_none("q2"):
+                player.score_q2 = player.q2 == str(int(correct_q2))
+
 
 class ResultsWaitPage(WaitPage):
     wait_for_all_groups = True
@@ -236,6 +271,16 @@ page_sequence = [
 
 
 def vars_for_admin_report(subsession: Subsession):
+    list_perfect_score = []
+    prop_perfect_score = -1
+    if subsession.round_number == 1:
+        list_perfect_score = [
+            int(p.score_q1) * int(p.score_q2) for p in subsession.get_players()
+        ]
+        if list_perfect_score:
+            prop_perfect_score = 100 * sum(list_perfect_score) / len(list_perfect_score)
+
     return dict(
         js_vars=dump_js_vars(subsession),
+        prop_perfect_score=prop_perfect_score,
     )
