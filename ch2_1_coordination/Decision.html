@@ -90,6 +90,7 @@
     </table>
 </div>
 
+{{ if player.round_number == 1 }}
 <div class="my-5">
     <label for="id_individual_choice_comment">
         なぜあなたは相手が<span class='text-success fw-bold' id='id_disp_think_other_player_choice'>その選択肢</span>を選ぶと思い，<br>
@@ -99,7 +100,7 @@
     <textarea class="form-control" id="id_individual_choice_comment" name="individual_choice_comment"
         required></textarea>
 </div>
-
+{{ endif }}
 
 {{ next_button }}
 
