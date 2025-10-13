@@ -60,14 +60,14 @@ class Player(BasePlayer):
     # クイズ1
     q1 = models.StringField(
         widget=widgets.RadioSelectHorizontal,
-        label="【質問】相手が映画1を選んでいたら、あなたは何ポイント獲得しますか？",
+        label="【理解度確認クイズ】 相手が映画1を選んでいたら、あなたは何ポイント獲得しますか？",
         choices=[C.PAYOFF_A, C.PAYOFF_B, C.PAYOFF_C, C.PAYOFF_D],
     )
 
     # クイズ2
     q2 = models.StringField(
         widget=widgets.RadioSelectHorizontal,
-        label="【質問】相手が映画2を選んでいたら、あなたは何ポイント獲得しますか？",
+        label="【理解度確認クイズ】 相手が映画2を選んでいたら、あなたは何ポイント獲得しますか？",
         choices=[C.PAYOFF_A, C.PAYOFF_B, C.PAYOFF_C, C.PAYOFF_D],
     )
 
