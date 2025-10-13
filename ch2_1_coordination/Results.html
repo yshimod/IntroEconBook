@@ -11,22 +11,10 @@
         <li>あなたの相手{{ if player.flg_pair_non_input == 1 }}（コンピュータが選択）{{ endif }}は<b>映画{{ opponent_decision }}</b>を選びました。
         </li>
         <li>その結果、あなたが獲得したポイントは <b>{{ player.payoff }}</b>です。</li>
-        {{ if player.round_number == 1 }}
-        <li class="mt-3">
-            【クイズ1】 {{ C.Q1_SENTENCE }}<br>
-            あなたの解答: 「{{ player.field_maybe_none("q1") }}ポイント」
-            → {{ if player.score_q1 }}正解{{ else }}不正解{{ endif }}
-        </li>
-        <li>
-            【クイズ2】 {{ C.Q2_SENTENCE }}<br>
-            あなたの解答: 「{{ player.field_maybe_none("q2") }}ポイント」
-            → {{ if player.score_q2 }}正解{{ else }}不正解{{ endif }}
-        </li>
-        {{ endif }}
     </ul>
 </div>
 
-<div class="mt-5">
+<div class="mt-3">
     <table class="table table-bordered text-center" style="vertical-align: middle;">
         <tr>
             <th colspan="2" rowspan="2"></th>

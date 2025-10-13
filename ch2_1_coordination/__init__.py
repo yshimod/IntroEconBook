@@ -23,8 +23,12 @@ class C(BaseConstants):
         (CHOICE_LIST[1], CHOICE_LIST[1]): (PAYOFF_B, PAYOFF_A),
     }
 
-    Q1_SENTENCE = "相手が映画1を選んでいたら、あなたは何ポイント獲得しますか？"
-    Q2_SENTENCE = "相手が映画2を選んでいたら、あなたは何ポイント獲得しますか？"
+    Q1_SENTENCE = (
+        "【クイズ1】 相手が映画1を選んでいたら、あなたは何ポイント獲得しますか？"
+    )
+    Q2_SENTENCE = (
+        "【クイズ2】 相手が映画2を選んでいたら、あなたは何ポイント獲得しますか？"
+    )
 
 
 class Subsession(BaseSubsession):
@@ -71,6 +75,7 @@ class Player(BasePlayer):
             for v in [C.PAYOFF_A, C.PAYOFF_B, C.PAYOFF_C, C.PAYOFF_D]
         ],
     )
+    correct_q1 = models.StringField()
     score_q1 = models.BooleanField(initial=False)
 
     # クイズ2
@@ -82,6 +87,7 @@ class Player(BasePlayer):
             for v in [C.PAYOFF_A, C.PAYOFF_B, C.PAYOFF_C, C.PAYOFF_D]
         ],
     )
+    correct_q2 = models.StringField()
     score_q2 = models.BooleanField(initial=False)
 
 
@@ -209,11 +215,38 @@ class Question(Page):
                 _, correct_q2 = C.PAYOFF_MATRIX[
                     (C.CHOICE_LIST[1], player.individual_choice)
                 ]
+            player.correct_q1 = str(int(correct_q1))
+            player.correct_q2 = str(int(correct_q2))
 
             if player.field_maybe_none("q1"):
-                player.score_q1 = player.q1 == str(int(correct_q1))
+                player.score_q1 = player.q1 == player.correct_q1
             if player.field_maybe_none("q2"):
-                player.score_q2 = player.q2 == str(int(correct_q2))
+                player.score_q2 = player.q2 == player.correct_q2
+
+
+class Quiz_Feedback(Page):
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.round_number == 1
+
+    @staticmethod
+    def vars_for_template(player):
+        return dict(
+            results=[
+                {
+                    "question": C.Q1_SENTENCE,
+                    "player_answer": player.field_maybe_none("q1"),
+                    "correct_answer": player.field_maybe_none("correct_q1"),
+                    "score": "正解" if player.score_q1 else "不正解",
+                },
+                {
+                    "question": C.Q2_SENTENCE,
+                    "player_answer": player.field_maybe_none("q2"),
+                    "correct_answer": player.field_maybe_none("correct_q2"),
+                    "score": "正解" if player.score_q2 else "不正解",
+                },
+            ]
+        )
 
 
 class ResultsWaitPage(WaitPage):
@@ -245,6 +278,7 @@ page_sequence = [
     Introduction,
     Decision,
     Question,
+    Quiz_Feedback,
     ResultsWaitPage,
     Results,
 ]

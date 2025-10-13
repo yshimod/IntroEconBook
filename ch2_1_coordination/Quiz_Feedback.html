@@ -1,5 +1,5 @@
 {{ block title }}
-理解度確認クイズ
+理解度確認クイズの答え合わせ
 {{ endblock }}
 
 
@@ -8,10 +8,26 @@
     <ul>
         <li>あなたは<u>プレイヤー{{ player.id_in_group }}</u>でした。</li>
         <li>あなた{{ if player.flg_non_input == 1 }}（コンピュータ）{{ endif }}は映画{{ player.individual_choice }}を選びました。</li>
+        {{ for res in results }}
+        <li class="mt-3">
+            {{ res.question }}
+            <ul>
+                <li>
+                    あなたの答え: {{ res.player_answer }}ポイント
+                </li>
+                <li>
+                    正答: {{ res.correct_answer }}ポイント
+                </li>
+                <li>
+                    <span class="fw-bold text-danger">{{ res.score }}</span>
+                </li>
+            </ul>
+        </li>
+        {{ endfor }}
     </ul>
 </div>
 
-<div class="mt-5">
+<div class="mt-3">
     <table class="table table-bordered text-center" style="vertical-align: middle;">
         <tr>
             <th colspan="2" rowspan="2"></th>
@@ -80,10 +96,7 @@
 </div>
 
 <div class="mt-5">
-    {{ formfields }}
-</div>
-
-<div class="mt-5">
+    <p>確認したら，次へ進んでください．</p>
     {{ next_button }}
 </div>
 
