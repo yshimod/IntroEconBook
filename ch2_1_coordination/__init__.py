@@ -18,10 +18,6 @@ class C(BaseConstants):
 
 
 class Subsession(BaseSubsession):
-    num_participants = models.IntegerField(initial=0)
-    num_A = models.IntegerField(initial=0)
-    num_B = models.IntegerField(initial=0)
-
     num_pairs = models.IntegerField(initial=0)
     num_pairs_AA = models.IntegerField(initial=0)
     num_pairs_AB = models.IntegerField(initial=0)
@@ -56,37 +52,28 @@ class Player(BasePlayer):
         label="【質問】なぜあなたはその選択肢を選んだのか、理由を教えてください。"
     )
 
-    # 相手の予想のの理由
+    # 相手の予想の理由
     think_other_player_choice_comment = models.LongStringField(
         label="【質問】なぜあなたは、相手がその選択肢を選ぶと思ったのか、理由を教えてください。"
     )
 
-    # 相手が映画1を選んだ際に、あなたは何ポイント獲得しますか？
+    # クイズ1
     q1 = models.StringField(
         widget=widgets.RadioSelectHorizontal,
-        label="【質問】相手が映画1を選んでいたら、あなたは何ポイント獲得しますか？",
+        label="【理解度確認クイズ】 相手が映画1を選んでいたら、あなたは何ポイント獲得しますか？",
         choices=[C.PAYOFF_A, C.PAYOFF_B, C.PAYOFF_C, C.PAYOFF_D],
     )
 
-    # 相手が映画2を選んだ際に、あなたは何ポイント獲得しますか？
+    # クイズ2
     q2 = models.StringField(
         widget=widgets.RadioSelectHorizontal,
-        label="【質問】相手が映画2を選んでいたら、あなたは何ポイント獲得しますか？",
+        label="【理解度確認クイズ】 相手が映画2を選んでいたら、あなたは何ポイント獲得しますか？",
         choices=[C.PAYOFF_A, C.PAYOFF_B, C.PAYOFF_C, C.PAYOFF_D],
     )
 
 
 # FUNCTIONS
 def summarize_data(subsession: Subsession):
-    list_choices = [
-        p.individual_choice
-        for p in subsession.get_players()
-        if p.field_maybe_none("individual_choice")
-    ]
-    subsession.num_participants = len(list_choices)
-    subsession.num_A = list_choices.count(C.CHOICE_LIST[0])
-    subsession.num_B = list_choices.count(C.CHOICE_LIST[1])
-
     list_grp_results = [
         (
             g.get_player_by_id(1).individual_choice,
@@ -188,14 +175,9 @@ class Results(Page):
     def js_vars(player: Player):
         sub: Subsession = player.subsession
 
-        prop_A = -1
-        prop_B = -1
-        if sub.num_participants > 0:
-            prop_A = (sub.num_A / sub.num_participants) * 100
-            prop_B = (sub.num_B / sub.num_participants) * 100
-
         prop_pairs_AA = -1
         prop_pairs_AB = -1
+        prop_pairs_BA = -1
         prop_pairs_BB = -1
         if sub.num_pairs > 0:
             prop_pairs_AA = (sub.num_pairs_AA / sub.num_pairs) * 100
@@ -204,9 +186,6 @@ class Results(Page):
             prop_pairs_BB = (sub.num_pairs_BB / sub.num_pairs) * 100
 
         return dict(
-            num_participants=sub.num_participants,
-            prop_A=prop_A,
-            prop_B=prop_B,
             num_pairs=sub.num_pairs,
             prop_pairs_AA=prop_pairs_AA,
             prop_pairs_AB=prop_pairs_AB,
