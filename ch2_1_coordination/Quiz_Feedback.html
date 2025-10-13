@@ -1,20 +1,33 @@
 {{ block title }}
-結果 {{ if C.NUM_ROUNDS > 1 }}（ラウンド {{ player.round_number }} / {{ C.NUM_ROUNDS }}）{{ endif }}
+理解度確認クイズの答え合わせ
 {{ endblock }}
 
 
 {{ block content }}
 <div class="fs-4">
     <ul>
-        <li>あなたは<b>プレイヤー{{ player.id_in_group }}</b>でした。</li>
-        <li>あなた{{ if player.flg_non_input == 1 }}（コンピュータが選択）{{ endif }}は<b>映画{{ my_decision }}</b>を選びました。</li>
-        <li>あなたの相手{{ if player.flg_pair_non_input == 1 }}（コンピュータが選択）{{ endif }}は<b>映画{{ opponent_decision }}</b>を選びました。
+        <li>あなたは<u>プレイヤー{{ player.id_in_group }}</u>でした。</li>
+        <li>あなた{{ if player.flg_non_input == 1 }}（コンピュータ）{{ endif }}は映画{{ player.individual_choice }}を選びました。</li>
+        {{ for res in results }}
+        <li class="mt-3">
+            {{ res.question }}
+            <ul>
+                <li>
+                    あなたの答え: {{ res.player_answer }}ポイント
+                </li>
+                <li>
+                    正答: {{ res.correct_answer }}ポイント
+                </li>
+                <li>
+                    <span class="fw-bold text-danger">{{ res.score }}</span>
+                </li>
+            </ul>
         </li>
-        <li>その結果、あなたが獲得したポイントは <b>{{ player.payoff }}</b>です。</li>
+        {{ endfor }}
     </ul>
 </div>
 
-<div class="mt-3 fs-4">
+<div class="mt-5 fs-4">
     <table class="table table-bordered text-center" style="vertical-align: middle;">
         <tr>
             <th colspan="2" rowspan="2"></th>
@@ -27,9 +40,7 @@
                 <label class="btn btn-lg
                     {{ if player.id_in_group == 2 }}
                     {{ if player.individual_choice == C.CHOICE_LIST.0 }}btn-primary{{ else }}btn-outline-primary{{ endif }}
-                    {{ else }}
-                    {{ if player.pair_choice == C.CHOICE_LIST.0 }}btn-primary{{ else }}btn-outline-primary{{ endif }}
-                    {{ endif }} choicebtn disabled">
+                    {{ else }}btn-outline-secondary{{ endif }} choicebtn disabled">
                     映画{{ C.CHOICE_LIST.0 }}
                 </label>
             </th>
@@ -37,9 +48,7 @@
                 <label class="btn btn-lg
                     {{ if player.id_in_group == 2 }}
                     {{ if player.individual_choice == C.CHOICE_LIST.1 }}btn-primary{{ else }}btn-outline-primary{{ endif }}
-                    {{ else }}
-                    {{ if player.pair_choice == C.CHOICE_LIST.1 }}btn-primary{{ else }}btn-outline-primary{{ endif }}
-                    {{ endif }} choicebtn disabled">
+                    {{ else }}btn-outline-secondary{{ endif }} choicebtn disabled">
                     映画{{ C.CHOICE_LIST.1 }}
                 </label>
             </th>
@@ -52,17 +61,15 @@
                 <label class="btn btn-lg
                     {{ if player.id_in_group == 1 }}
                     {{ if player.individual_choice == C.CHOICE_LIST.0 }}btn-primary{{ else }}btn-outline-primary{{ endif }}
-                    {{ else }}
-                    {{ if player.pair_choice == C.CHOICE_LIST.0 }}btn-primary{{ else }}btn-outline-primary{{ endif }}
-                    {{ endif }} choicebtn disabled">
+                    {{ else }}btn-outline-secondary{{ endif }} choicebtn disabled">
                     映画{{ C.CHOICE_LIST.0 }}
                 </label>
             </th>
-            <td id="cell_AA">
+            <td>
                 <span class="uline-p1">{{ C.PAYOFF_A }}</span>,
                 <span class="uline-p2">{{ C.PAYOFF_B }}</span>
             </td>
-            <td id="cell_AB">
+            <td>
                 <span class="uline-p1">{{ C.PAYOFF_D }}</span>,
                 <span class="uline-p2">{{ C.PAYOFF_D }}</span>
             </td>
@@ -72,17 +79,15 @@
                 <label class="btn btn-lg
                     {{ if player.id_in_group == 1 }}
                     {{ if player.individual_choice == C.CHOICE_LIST.1 }}btn-primary{{ else }}btn-outline-primary{{ endif }}
-                    {{ else }}
-                    {{ if player.pair_choice == C.CHOICE_LIST.1 }}btn-primary{{ else }}btn-outline-primary{{ endif }}
-                    {{ endif }} choicebtn disabled">
+                    {{ else }}btn-outline-secondary{{ endif }} choicebtn disabled">
                     映画{{ C.CHOICE_LIST.1 }}
                 </label>
             </th>
-            <td id="cell_BA">
+            <td>
                 <span class="uline-p1">{{ C.PAYOFF_C }}</span>,
                 <span class="uline-p2">{{ C.PAYOFF_C }}</span>
             </td>
-            <td id="cell_BB">
+            <td>
                 <span class="uline-p1">{{ C.PAYOFF_B }}</span>,
                 <span class="uline-p2">{{ C.PAYOFF_A }}</span>
             </td>
@@ -90,11 +95,9 @@
     </table>
 </div>
 
-<h3 class="mt-5">全体の結果</h3>
+<p class="mt-5 fs-4">確認したら，次へ進んでください．</p>
 
-<div class="boxed-section">
-    <div id="highchart2"></div>
-</div>
+{{ next_button }}
 
 <div class="mt-5">
     {{ include_sibling 'instructions.html' }}
@@ -121,28 +124,4 @@
 
     /* {{ endif }} */
 </style>
-{{ endblock }}
-
-
-{{ block scripts }}
-{{ include_sibling 'chart.html' }}
-<script>
-    // {{ with p1 = group.get_player_by_id(1) }}{{ with p2 = group.get_player_by_id(2) }}
-    document.addEventListener('DOMContentLoaded', function () {
-        const P1_choice = '{{ p1.individual_choice }}';
-        const P2_choice = '{{ p2.individual_choice }}';
-        if (P1_choice === '{{ C.CHOICE_LIST.0 }}' && P2_choice === '{{ C.CHOICE_LIST.0 }}') {
-            document.getElementById('cell_AA').style.backgroundColor = 'yellow';
-        } else if (P1_choice === '{{ C.CHOICE_LIST.0 }}' && P2_choice === '{{ C.CHOICE_LIST.1 }}') {
-            document.getElementById('cell_AB').style.backgroundColor = 'yellow';
-        } else if (P1_choice === '{{ C.CHOICE_LIST.1 }}' && P2_choice === '{{ C.CHOICE_LIST.0 }}') {
-            document.getElementById('cell_BA').style.backgroundColor = 'yellow';
-        } else if (P1_choice === '{{ C.CHOICE_LIST.1 }}' && P2_choice === '{{ C.CHOICE_LIST.1 }}') {
-            document.getElementById('cell_BB').style.backgroundColor = 'yellow';
-        }
-
-        drawChart_pair(js_vars);
-    });
-    // {{ endwith }}{{ endwith }}
-</script>
 {{ endblock }}

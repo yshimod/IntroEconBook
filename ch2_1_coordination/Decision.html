@@ -1,68 +1,176 @@
 {{ block title }}
-実験
+実験 {{ if C.NUM_ROUNDS > 1 }}（ラウンド {{ player.round_number }} / {{ C.NUM_ROUNDS }}）{{ endif }}
 {{ endblock }}
+
+
 {{ block content }}
+<div class="fs-4">
+    <ol>
+        <li>あなたは<span class="fw-bold text-danger">プレイヤー{{ player.id_in_group }}</span>になりました。</li>
+        <li>あなたの相手はどちらの選択肢を選ぶと思いますか？<br>
+            <span class="text-success fw-bold">緑色のボタン</span>を押して選択してください．
+        </li>
+        <li>あなた自身の意思決定として<span class="text-primary fw-bold">青色のボタン</span>を押して選択してください．</li>
+    </ol>
+</div>
 
- {% if player.id_in_group == 1 %}
-<font color="red">
-   あなたはプレイヤー1になりました。</font> 映画1か映画2か決めてください。<br>
-   質問に回答したあと、下記のテーブル(<u>左があなたのポイント</u>、右が相手のポイントを表しています)より、ボタンを押して回答してください。</p>
+<div class="mt-5 fs-4">
+    <table class="table table-bordered text-center" style="vertical-align: middle;">
+        <tr>
+            <th colspan="2" rowspan="2"></th>
+            <th colspan="2" class="uline-p2">
+                プレイヤー2（あなた{{ if player.id_in_group == 1 }}の相手{{ endif }}）
+            </th>
+        </tr>
+        <tr>
+            <th>
+                <input type="radio" class="btn-check" id="id_P2_choice_A" value="{{ C.CHOICE_LIST.0 }}"
+                    {{ if player.id_in_group == 2 }} name="individual_choice" {{ else }}
+                    name="think_other_player_choice" {{ endif }} autocomplete="off" required>
+                <label class="btn btn-lg
+                    {{ if player.id_in_group == 2 }}btn-outline-primary{{ else }}btn-outline-success{{ endif }}
+                    choicebtn" for="id_P2_choice_A">
+                    映画{{ C.CHOICE_LIST.0 }}
+                </label>
+            </th>
+            <th>
+                <input type="radio" class="btn-check" id="id_P2_choice_B" value="{{ C.CHOICE_LIST.1 }}"
+                    {{ if player.id_in_group == 2 }} name="individual_choice" {{ else }}
+                    name="think_other_player_choice" {{ endif }} autocomplete="off" required>
+                <label class="btn btn-lg
+                    {{ if player.id_in_group == 2 }}btn-outline-primary{{ else }}btn-outline-success{{ endif }}
+                    choicebtn" for="id_P2_choice_B">
+                    映画{{ C.CHOICE_LIST.1 }}
+                </label>
+            </th>
+        </tr>
+        <tr>
+            <th rowspan="2" class="uline-p1">
+                プレイヤー1<br>（あなた{{ if player.id_in_group == 2 }}の相手{{ endif }}）
+            </th>
+            <th>
+                <input type="radio" class="btn-check" id="id_P1_choice_A" value="{{ C.CHOICE_LIST.0 }}"
+                    {{ if player.id_in_group == 1 }} name="individual_choice" {{ else }}
+                    name="think_other_player_choice" {{ endif }} autocomplete="off" required>
+                <label class="btn btn-lg
+                    {{ if player.id_in_group == 1 }}btn-outline-primary{{ else }}btn-outline-success{{ endif }}
+                    choicebtn" for="id_P1_choice_A">
+                    映画{{ C.CHOICE_LIST.0 }}
+                </label>
+            </th>
+            <td id="cell_AA">
+                <span class="uline-p1">{{ C.PAYOFF_A }}</span>,
+                <span class="uline-p2">{{ C.PAYOFF_B }}</span>
+            </td>
+            <td id="cell_AB">
+                <span class="uline-p1">{{ C.PAYOFF_D }}</span>,
+                <span class="uline-p2">{{ C.PAYOFF_D }}</span>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <input type="radio" class="btn-check" id="id_P1_choice_B" value="{{ C.CHOICE_LIST.1 }}"
+                    {{ if player.id_in_group == 1 }} name="individual_choice" {{ else }}
+                    name="think_other_player_choice" {{ endif }} autocomplete="off" required>
+                <label class="btn btn-lg
+                    {{ if player.id_in_group == 1 }}btn-outline-primary{{ else }}btn-outline-success{{ endif }}
+                    choicebtn" for="id_P1_choice_B">
+                    映画{{ C.CHOICE_LIST.1 }}
+                </label>
+            </th>
+            <td id="cell_BA">
+                <span class="uline-p1">{{ C.PAYOFF_C }}</span>,
+                <span class="uline-p2">{{ C.PAYOFF_C }}</span>
+            </td>
+            <td id="cell_BB">
+                <span class="uline-p1">{{ C.PAYOFF_B }}</span>,
+                <span class="uline-p2">{{ C.PAYOFF_A }}</span>
+            </td>
+        </tr>
+    </table>
+</div>
 
-【質問】あなたがその選択をする理由はなぜですか？<br>{% formfield player.individual_choice_comment %}</p>
-    <div class="form-group required">
-        <table class="table table-bordered text-center" style="width: auto; margin: auto">
-            <tr>
-                <th colspan="2" rowspan="2"></th>
-                <th colspan="2">あなたの相手（プレイヤー2）</th>
-            </tr>
-            <tr>
-                <th>映画1</th>
-                <th>映画2</th>
-            </tr>
-            <tr>
-                <th rowspan="2"><span>あなた（プレイヤー1）</span></th>
-                <td><button name="individual_choice" value="A" class="btn btn-primary btn-large">映画1</button></td>
-                <td><u>{{ C.PAYOFF_A }}</u>, {{ C.PAYOFF_B }}</td>
-                <td><u>{{ C.PAYOFF_D }}</u>, {{ C.PAYOFF_D }}</td>
-            </tr>
-            <tr>
-                <td><button name="individual_choice" value="B" class="btn btn-primary btn-large">映画2</button></td>
-                <td><u>{{ C.PAYOFF_C }}</u>, {{ C.PAYOFF_C }}</td>
-                <td><u>{{ C.PAYOFF_B }}</u>, {{ C.PAYOFF_A }}</td>
-            </tr>
-        </table>
-    </div>
-{% endif %}
+{{ if player.round_number == 1 }}
+<div class="my-5 fs-4">
+    <label for="id_individual_choice_comment">
+        なぜあなたは相手が<span class='text-success fw-bold' id='id_disp_think_other_player_choice'>その選択肢</span>を選ぶと思い，<br>
+        その予想を踏まえて，なぜあなた自身は<span class='text-primary fw-bold' id='id_disp_individual_choice'>その選択肢</span>を選んだのか，<br>
+        理由を教えてください．
+    </label>
+    <textarea class="form-control" id="id_individual_choice_comment" name="individual_choice_comment"
+        required></textarea>
+</div>
+{{ endif }}
 
- {% if player.id_in_group == 2 %}
-<font color="red">
-   あなたはプレイヤー2になりました。</font>映画1か映画2か決めてください。<br>
-   質問に回答したあと、下記のテーブル(左が相手のポイント、<u>右があなたのポイント</u>を表しています)より、ボタンを押して回答してください。</p>
+{{ next_button }}
 
-【質問】あなたがその選択をする理由はなぜですか？<br>{% formfield player.individual_choice_comment %}</p>
-    <div class="form-group required">
-        <table class="table table-bordered text-center" style="width: auto; margin: auto">
-            <tr>
-                <th colspan="2" rowspan="2"></th>
-                <th colspan="2">あなた（プレイヤー2）</th>
-            </tr>
-            <tr>
-                <th><button name="individual_choice" value="A" class="btn btn-primary btn-large">映画1</button></th>
-                <th><button name="individual_choice" value="B" class="btn btn-primary btn-large">映画2</button></th>
-            </tr>
-            <tr>
-                <th rowspan="2"><span>あなたの相手（プレイヤー1）</span></th>
-                <td>映画1</td>
-                <td>{{ C.PAYOFF_A }}, <u>{{ C.PAYOFF_B }}</u></td>
-                <td>{{ C.PAYOFF_D }}, <u>{{ C.PAYOFF_D }}</u></td>
-            </tr>
-            <tr>
-                <td>映画2</td>
-                <td>{{ C.PAYOFF_C }}, <u>{{ C.PAYOFF_C }}</u></td>
-                <td>{{ C.PAYOFF_B }}, <u>{{ C.PAYOFF_A }}</u></td>
-            </tr>
-        </table>
-    </div>
-{% endif %}
 
+<div class="mt-5">
+    {{ include_sibling 'instructions.html' }}
+</div>
+
+{{ endblock }}
+
+
+{{ block styles }}
+<style>
+    .choicebtn {
+        width: 6em;
+    }
+
+    /* {{ if player.id_in_group == 1 }} */
+    .uline-p1 {
+        text-decoration: underline;
+    }
+
+    /* {{ else }} */
+    .uline-p2 {
+        text-decoration: underline;
+    }
+
+    /* {{ endif }} */
+</style>
+{{ endblock }}
+
+
+{{ block scripts }}
+<script>
+    function updateTableHighlight() {
+        document.getElementById('cell_AA').style.backgroundColor = '';
+        document.getElementById('cell_AB').style.backgroundColor = '';
+        document.getElementById('cell_BA').style.backgroundColor = '';
+        document.getElementById('cell_BB').style.backgroundColor = '';
+        const thinkOther = document.querySelector('input[name="think_other_player_choice"]:checked');
+        const individual = document.querySelector('input[name="individual_choice"]:checked');
+
+        const P1_choice_A = document.getElementById('id_P1_choice_A').checked;
+        const P1_choice_B = document.getElementById('id_P1_choice_B').checked;
+        const P2_choice_A = document.getElementById('id_P2_choice_A').checked;
+        const P2_choice_B = document.getElementById('id_P2_choice_B').checked;
+
+        if (thinkOther && individual) {
+            if (P1_choice_A && P2_choice_A) {
+                document.getElementById('cell_AA').style.backgroundColor = 'yellow';
+            } else if (P1_choice_A && P2_choice_B) {
+                document.getElementById('cell_AB').style.backgroundColor = 'yellow';
+            } else if (P1_choice_B && P2_choice_A) {
+                document.getElementById('cell_BA').style.backgroundColor = 'yellow';
+            } else if (P1_choice_B && P2_choice_B) {
+                document.getElementById('cell_BB').style.backgroundColor = 'yellow';
+            }
+
+            document.getElementById('id_disp_think_other_player_choice').textContent = "映画" + thinkOther.value;
+            document.getElementById('id_disp_individual_choice').textContent = "映画" + individual.value;
+        }
+    }
+    document.querySelectorAll('input[name="think_other_player_choice"]').forEach((elem) => {
+        elem.addEventListener('change', updateTableHighlight);
+    });
+    document.querySelectorAll('input[name="individual_choice"]').forEach((elem) => {
+        elem.addEventListener('change', updateTableHighlight);
+    });
+    document.addEventListener('DOMContentLoaded', function () {
+        updateTableHighlight();
+    });
+</script>
 {{ endblock }}

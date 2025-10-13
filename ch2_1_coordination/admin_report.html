@@ -1,0 +1,56 @@
+<div class="boxed-section">
+    <div id="highchart2"></div>
+</div>
+
+<div class="boxed-section">
+    <ul class="mt-3">
+        <li>協調に成功したグループの割合: {{ prop_sucsess_coordination | to2 }}%</li>
+    </ul>
+</div>
+
+{{ if list_comment }}
+<div class="mt-5 fs-5">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th width="10%">役割</th>
+                <th width="10%">自身</th>
+                <th width="10%">予測</th>
+                <th width="10%">相手</th>
+                <th width="60%">理由</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ for el in list_comment }}
+            <tr>
+                <td>{{ el.0 }}</td>
+                <td>{{ el.1 }}</td>
+                <td>{{ el.2 }}</td>
+                <td>{{ el.3 }}</td>
+                <td>{{ el.4 | escape }}</td>
+            </tr>
+            {{ endfor }}
+        </tbody>
+    </table>
+</div>
+{{ endif }}
+
+{{ if prop_perfect_score != -1 }}
+<div class="boxed-section">
+    <ul class="mt-3">
+        <li>クイズに全問正解した人の割合: {{ prop_perfect_score | to2 }}%</li>
+    </ul>
+</div>
+{{ endif }}
+
+<div class="mt-5">
+    {{ include_sibling 'instructions.html' }}
+</div>
+
+{{ include_sibling 'chart.html' }}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const js_vars = JSON.parse(`{{ js_vars | json }}`);
+        drawChart_pair(js_vars);
+    });
+</script>

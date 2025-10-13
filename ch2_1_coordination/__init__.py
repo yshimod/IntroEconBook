@@ -7,184 +7,184 @@ doc = """ """
 class C(BaseConstants):
     NAME_IN_URL = "ch2_1_coordination"
     PLAYERS_PER_GROUP = 2
-    NUM_ROUNDS = 1
-    INSTRUCTIONS_TEMPLATE = "ch2_1_coordination/instructions.html"
+    NUM_ROUNDS = 3
+
     PAYOFF_A = cu(5)
     PAYOFF_B = cu(10)
     PAYOFF_C = cu(3)
     PAYOFF_D = cu(2)
 
-    choice_list = ["A", "B"]
+    CHOICE_LIST = ["1", "2"]
+
+    PAYOFF_MATRIX = {
+        (CHOICE_LIST[0], CHOICE_LIST[0]): (PAYOFF_A, PAYOFF_B),
+        (CHOICE_LIST[0], CHOICE_LIST[1]): (PAYOFF_D, PAYOFF_D),
+        (CHOICE_LIST[1], CHOICE_LIST[0]): (PAYOFF_C, PAYOFF_C),
+        (CHOICE_LIST[1], CHOICE_LIST[1]): (PAYOFF_B, PAYOFF_A),
+    }
+
+    Q1_SENTENCE = (
+        "【クイズ1】 相手が映画1を選んでいたら、あなたは何ポイント獲得しますか？"
+    )
+    Q2_SENTENCE = (
+        "【クイズ2】 相手が映画2を選んでいたら、あなたは何ポイント獲得しますか？"
+    )
 
 
 class Subsession(BaseSubsession):
-    num_participants = models.IntegerField(initial=0)
-    num_A = models.IntegerField(initial=0)
-    num_B = models.IntegerField(initial=0)
-    err_message = models.StringField()
-    pair_num = models.IntegerField(initial=0)
-    pair_num_AA = models.IntegerField(initial=0)
-    pair_num_AB = models.IntegerField(initial=0)
-    pair_num_BA = models.IntegerField(initial=0)
-    pair_num_BB = models.IntegerField(initial=0)
-    pair_err_message = models.StringField()
+    num_pairs = models.IntegerField(initial=0)
+    num_pairs_AA = models.IntegerField(initial=0)
+    num_pairs_AB = models.IntegerField(initial=0)
+    num_pairs_BA = models.IntegerField(initial=0)
+    num_pairs_BB = models.IntegerField(initial=0)
 
 
 class Group(BaseGroup):
-    pass
+    sucsess_coordination = models.BooleanField()
 
 
 class Player(BasePlayer):
-    flg_non_input = models.IntegerField(initial=0)
-    flg_pair_non_input = models.IntegerField(initial=0)
-
+    # 自身の意思決定
     individual_choice = models.StringField(
-        choices=[["A", "A"], ["B", "B"]],
-        doc="""This player's decision""",
-        widget=widgets.RadioSelect,
+        choices=C.CHOICE_LIST,
     )
-    # 相手のグループID
-    pair_id = models.IntegerField(initial=0)
+    flg_non_input = models.IntegerField(initial=0)
+
     # 相手の意思決定
     pair_choice = models.StringField()
+    flg_pair_non_input = models.IntegerField(initial=0)
 
     # 相手はどちらを選ぶと思うか
     think_other_player_choice = models.StringField(
-        widget=widgets.RadioSelectHorizontal,
-        verbose_name="",
-        choices=[
-            ["Aを選ぶと予想する", "映画1を選ぶと予想する"],
-            ["Bを選ぶと予想する", "映画2を選ぶと予想する"],
-        ],
+        choices=C.CHOICE_LIST,
+        initial="",
     )
 
     # 意思決定の理由
-    individual_choice_comment = models.LongStringField(verbose_name="", initial="")
-
-    # 相手の予想のの理由
-    think_other_player_choice_comment = models.LongStringField(
-        verbose_name="", initial=""
+    individual_choice_comment = models.LongStringField(
+        label="",
+        initial="",
     )
 
-    # 相手が映画１を選んだ際に、あなたは何ポイント獲得しますか？
+    # クイズ1
     q1 = models.StringField(
-        # widget=widgets.RadioSelectHorizontal,
-        verbose_name="",
+        widget=widgets.RadioSelectHorizontal,
+        label=C.Q1_SENTENCE,
         choices=[
-            ["5", "5"],
-            ["10", "10"],
-            ["2", "2"],
-            ["3", "3"],
+            [str(int(v)), str(v)]
+            for v in [C.PAYOFF_A, C.PAYOFF_B, C.PAYOFF_C, C.PAYOFF_D]
         ],
     )
+    correct_q1 = models.StringField()
+    score_q1 = models.BooleanField(initial=False)
 
-    # 相手が映画2を選んだ際に、あなたは何ポイント獲得しますか？
+    # クイズ2
     q2 = models.StringField(
-        # widget=widgets.RadioSelectHorizontal,
-        verbose_name="",
+        widget=widgets.RadioSelectHorizontal,
+        label=C.Q2_SENTENCE,
         choices=[
-            ["5", "5"],
-            ["10", "10"],
-            ["2", "2"],
-            ["3", "3"],
+            [str(int(v)), str(v)]
+            for v in [C.PAYOFF_A, C.PAYOFF_B, C.PAYOFF_C, C.PAYOFF_D]
         ],
     )
+    correct_q2 = models.StringField()
+    score_q2 = models.BooleanField(initial=False)
 
 
 # FUNCTIONS
-def keisan(player: Player):
-    sub = player.subsession
-    if player.individual_choice != "":
-        # グラフ用集計
-        sub.num_participants += 1
-        s = player.individual_choice
-        if s == "A":
-            sub.num_A += 1
-        elif s == "B":
-            sub.num_B += 1
-        else:
-            sub.err_message = "エラーあり"
+def creating_session(subsession: Subsession):
+    subsession.group_randomly()
+
+
+def summarize_data(subsession: Subsession):
+    list_grp_results = [
+        (
+            g.get_player_by_id(1).individual_choice,
+            g.get_player_by_id(2).individual_choice,
+        )
+        for g in subsession.get_groups()
+        if g.get_player_by_id(1).field_maybe_none("individual_choice")
+        and g.get_player_by_id(2).field_maybe_none("individual_choice")
+    ]
+    subsession.num_pairs = len(list_grp_results)
+    subsession.num_pairs_AA = list_grp_results.count(
+        (C.CHOICE_LIST[0], C.CHOICE_LIST[0])
+    )
+    subsession.num_pairs_AB = list_grp_results.count(
+        (C.CHOICE_LIST[0], C.CHOICE_LIST[1])
+    )
+    subsession.num_pairs_BA = list_grp_results.count(
+        (C.CHOICE_LIST[1], C.CHOICE_LIST[0])
+    )
+    subsession.num_pairs_BB = list_grp_results.count(
+        (C.CHOICE_LIST[1], C.CHOICE_LIST[1])
+    )
+
+
+def set_payoff(group: Group):
+    p1: Player = group.get_player_by_id(1)
+    p2: Player = group.get_player_by_id(2)
+    p1_choice = p1.field_maybe_none("individual_choice")
+    p2_choice = p2.field_maybe_none("individual_choice")
+
+    p1.pair_choice = p2_choice
+    p2.pair_choice = p1_choice
+    p1.flg_pair_non_input = p2.flg_non_input
+    p2.flg_pair_non_input = p1.flg_non_input
+
+    if p1_choice and p2_choice:
+        p1.payoff, p2.payoff = C.PAYOFF_MATRIX[(p1_choice, p2_choice)]
+        group.sucsess_coordination = p1_choice == p2_choice
     else:
-        player.flg_non_input = 1
-        player.individual_choice = random.choice(C.choice_list)
+        p1.payoff = -1
+        p2.payoff = -1
 
 
-def keisans(subsession: Subsession):
-    for p in subsession.get_players():
-        keisan(p)
+def dump_js_vars(sub: Subsession):
+    prop_pairs_AA = -1
+    prop_pairs_AB = -1
+    prop_pairs_BA = -1
+    prop_pairs_BB = -1
+    if sub.num_pairs > 0:
+        prop_pairs_AA = (sub.num_pairs_AA / sub.num_pairs) * 100
+        prop_pairs_AB = (sub.num_pairs_AB / sub.num_pairs) * 100
+        prop_pairs_BA = (sub.num_pairs_BA / sub.num_pairs) * 100
+        prop_pairs_BB = (sub.num_pairs_BB / sub.num_pairs) * 100
+
+    return dict(
+        num_pairs=sub.num_pairs,
+        prop_pairs_AA=prop_pairs_AA,
+        prop_pairs_AB=prop_pairs_AB,
+        prop_pairs_BA=prop_pairs_BA,
+        prop_pairs_BB=prop_pairs_BB,
+    )
 
 
-def set_graph(subsession: Subsession):
-    for p in subsession.get_players():
-        graph_pair(p)
-
-
-def set_payoffs(group: Group):
-    for p in group.get_players():
-        set_payoff(p)
-
-
-def other_player(player: Player):
-    return player.get_others_in_group()[0]
-
-
-def graph_pair(player: Player):
-    sub = player.subsession
-    sub.pair_num += 1
-    # グラフ用集計
-    s = player.individual_choice
-    sp = player.pair_choice
-    if (s == "A") and (sp == "A"):
-        sub.pair_num_AA += 1
-    elif (s == "A") and (sp == "B"):
-        sub.pair_num_AB += 1
-    elif (s == "B") and (sp == "A"):
-        sub.pair_num_BA += 1
-    elif (s == "B") and (sp == "B"):
-        sub.pair_num_BB += 1
-    else:
-        sub.pair_err_message = "エラーあり"
-
-
-def set_payoff(player: Player):
-    payoff_matrix_p1 = {
-        ("A", "A"): C.PAYOFF_A,
-        ("A", "B"): C.PAYOFF_D,
-        ("B", "A"): C.PAYOFF_C,
-        ("B", "B"): C.PAYOFF_B,
-    }
-    payoff_matrix_p2 = {
-        ("A", "A"): C.PAYOFF_B,
-        ("A", "B"): C.PAYOFF_D,
-        ("B", "A"): C.PAYOFF_C,
-        ("B", "B"): C.PAYOFF_A,
-    }
-    other = other_player(player)
-    player.pair_choice = other.individual_choice
-    player.pair_id = other.id_in_group
-    if other.flg_non_input == 1:
-        player.flg_pair_non_input = 1
-
-    print(player.individual_choice, other.individual_choice)
-    if player.id_in_group == 1:
-        player.payoff = payoff_matrix_p1[
-            (player.individual_choice, other.individual_choice)
-        ]
-    else:
-        player.payoff = payoff_matrix_p2[
-            (other.individual_choice, player.individual_choice)
-        ]
-    print(player.id_in_group, player.payoff)
-
-
-# PAGES-----
+# PAGES
 class Introduction(Page):
-    timeout_seconds = 100
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.round_number == 1
 
 
 class Decision(Page):
     form_model = "player"
-    form_fields = ["individual_choice", "individual_choice_comment"]
+
+    @staticmethod
+    def get_form_fields(player: Player):
+        form_fields = [
+            "individual_choice",
+            "think_other_player_choice",
+        ]
+        if player.round_number == 1:
+            form_fields.append("individual_choice_comment")
+        return form_fields
+
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened):
+        if timeout_happened:
+            player.flg_non_input = 1
+            player.individual_choice = random.choice(C.CHOICE_LIST)
 
 
 class Question(Page):
@@ -192,107 +192,138 @@ class Question(Page):
     form_fields = [
         "q1",
         "q2",
-        "think_other_player_choice",
-        "think_other_player_choice_comment",
     ]
 
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.round_number == 1
 
-class keisanWaitPage(WaitPage):
-    wait_for_all_groups = True
-    after_all_players_arrive = keisans
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened):
+        if player.field_maybe_none("individual_choice"):
+            if player.id_in_group == 1:
+                correct_q1, _ = C.PAYOFF_MATRIX[
+                    (player.individual_choice, C.CHOICE_LIST[0])
+                ]
+                correct_q2, _ = C.PAYOFF_MATRIX[
+                    (player.individual_choice, C.CHOICE_LIST[1])
+                ]
+            else:
+                _, correct_q1 = C.PAYOFF_MATRIX[
+                    (C.CHOICE_LIST[0], player.individual_choice)
+                ]
+                _, correct_q2 = C.PAYOFF_MATRIX[
+                    (C.CHOICE_LIST[1], player.individual_choice)
+                ]
+            player.correct_q1 = str(int(correct_q1))
+            player.correct_q2 = str(int(correct_q2))
+
+            if player.field_maybe_none("q1"):
+                player.score_q1 = player.q1 == player.correct_q1
+            if player.field_maybe_none("q2"):
+                player.score_q2 = player.q2 == player.correct_q2
 
 
-class GraphWaitPage(WaitPage):
-    wait_for_all_groups = True
-    after_all_players_arrive = set_graph
+class Quiz_Feedback(Page):
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.round_number == 1
+
+    @staticmethod
+    def vars_for_template(player):
+        return dict(
+            results=[
+                {
+                    "question": C.Q1_SENTENCE,
+                    "player_answer": player.field_maybe_none("q1"),
+                    "correct_answer": player.field_maybe_none("correct_q1"),
+                    "score": "正解" if player.score_q1 else "不正解",
+                },
+                {
+                    "question": C.Q2_SENTENCE,
+                    "player_answer": player.field_maybe_none("q2"),
+                    "correct_answer": player.field_maybe_none("correct_q2"),
+                    "score": "正解" if player.score_q2 else "不正解",
+                },
+            ]
+        )
 
 
 class ResultsWaitPage(WaitPage):
-    after_all_players_arrive = set_payoffs
+    wait_for_all_groups = True
+
+    @staticmethod
+    def after_all_players_arrive(subsession: Subsession):
+        summarize_data(subsession)
+        for grp in subsession.get_groups():
+            set_payoff(grp)
 
 
 class Results(Page):
     @staticmethod
     def vars_for_template(player: Player):
-        opponent = other_player(player)
-
-        if player.individual_choice == "A":
-            disp_my_decision = "映画1"
-        else:
-            disp_my_decision = "映画2"
-
-        if opponent.individual_choice == "A":
-            disp_opponent_decision = "映画1"
-        else:
-            disp_opponent_decision = "映画2"
-
-        print(disp_my_decision)
+        opponent: Player = player.get_others_in_group()[0]
         return dict(
-            opponent=opponent,
-            same_choice=player.individual_choice == opponent.individual_choice,
-            # my_decision=player.field_display('individual_choice'),
-            my_decision=disp_my_decision,
-            opponent_decision=disp_opponent_decision,
-            # opponent_decision=opponent.field_display('individual_choice'),
+            my_decision=player.field_maybe_none("individual_choice"),
+            opponent_decision=opponent.field_maybe_none("individual_choice"),
         )
 
-    # グラフ描画用
     @staticmethod
     def js_vars(player: Player):
-        print("js_vars")
-        sub = player.subsession
-        # 割合に計算
-        if sub.num_A > 0:
-            prop_num_A = round((sub.num_A / sub.num_participants) * 100, 2)
-        else:
-            prop_num_A = 0
-        if sub.num_B > 0:
-            prop_num_B = round((sub.num_B / sub.num_participants) * 100, 2)
-        else:
-            prop_num_B = 0
-
-        print("ここから追加")
-        # 割合に計算s
-        if sub.pair_num_AA > 0:
-            prop_pair_num_AA = round((sub.pair_num_AA / sub.pair_num) * 100, 2)
-        else:
-            prop_pair_num_AA = 0
-        if sub.pair_num_AB > 0:
-            prop_pair_num_AB = round((sub.pair_num_AB / sub.pair_num) * 100, 2)
-        else:
-            prop_pair_num_AB = 0
-        if sub.pair_num_BA > 0:
-            prop_pair_num_BA = round((sub.pair_num_BA / sub.pair_num) * 100, 2)
-        else:
-            prop_pair_num_BA = 0
-        if sub.pair_num_BB > 0:
-            prop_pair_num_BB = round((sub.pair_num_BB / sub.pair_num) * 100, 2)
-        else:
-            prop_pair_num_BB = 0
-
-        return dict(
-            num_participants=sub.num_participants,
-            num_A=prop_num_A,
-            num_B=prop_num_B,
-            num_pairs=sub.pair_num,
-            num_AA=prop_pair_num_AA,
-            num_AB=prop_pair_num_AB,
-            num_BA=prop_pair_num_BA,
-            num_BB=prop_pair_num_BB,
-        )
-
-
-class PreResults(Page):
-    pass
+        sub: Subsession = player.subsession
+        return dump_js_vars(sub)
 
 
 page_sequence = [
     Introduction,
     Decision,
     Question,
-    keisanWaitPage,
+    Quiz_Feedback,
     ResultsWaitPage,
-    GraphWaitPage,
-    PreResults,
     Results,
 ]
+
+
+def vars_for_admin_report(subsession: Subsession):
+    list_sucsess_coordination = []
+    prop_sucsess_coordination = -1
+    list_sucsess_coordination = [
+        int(grp.sucsess_coordination)
+        for grp in subsession.get_groups()
+        if grp.field_maybe_none("sucsess_coordination") is not None
+    ]
+    if list_sucsess_coordination:
+        prop_sucsess_coordination = (
+            100 * sum(list_sucsess_coordination) / len(list_sucsess_coordination)
+        )
+
+    list_comment = []
+    if subsession.round_number == 1:
+        list_comment = sorted(
+            [
+                [
+                    p.id_in_group,
+                    p.individual_choice,
+                    p.think_other_player_choice,
+                    p.pair_choice,
+                    p.individual_choice_comment,
+                ]
+                for p in subsession.get_players()
+            ]
+        )
+
+    list_perfect_score = []
+    prop_perfect_score = -1
+    if subsession.round_number == 1:
+        list_perfect_score = [
+            int(p.score_q1) * int(p.score_q2) for p in subsession.get_players()
+        ]
+        if list_perfect_score:
+            prop_perfect_score = 100 * sum(list_perfect_score) / len(list_perfect_score)
+
+    return dict(
+        js_vars=dump_js_vars(subsession),
+        prop_sucsess_coordination=prop_sucsess_coordination,
+        list_comment=list_comment,
+        prop_perfect_score=prop_perfect_score,
+    )
