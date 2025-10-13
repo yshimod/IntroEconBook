@@ -17,10 +17,6 @@
 <h3 class="mt-5">全体の結果</h3>
 
 <div class="boxed-section">
-    <div id="highchart"></div>
-</div>
-
-<div class="boxed-section">
     <div id="highchart2"></div>
 </div>
 
@@ -35,7 +31,6 @@
 {{ include_sibling 'chart.html' }}
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        drawChart();
         drawChart_pair();
     });
 </script>
