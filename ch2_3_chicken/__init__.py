@@ -14,7 +14,7 @@ class C(BaseConstants):
     PAYOFF_C = cu(10)
     PAYOFF_D = cu(30)
 
-    choice_list = ["A", "B"]
+    CHOICE_LIST = ["A", "B"]
     CHOICE_LABEL_1 = "キャンパスA"
     CHOICE_LABEL_2 = "キャンパスB"
 
@@ -41,9 +41,7 @@ class Player(BasePlayer):
     flg_pair_non_input = models.IntegerField(initial=0)
 
     individual_choice = models.StringField(
-        choices=[["A", "A"], ["B", "B"]],
-        doc="""This player's decision""",
-        widget=widgets.RadioSelect,
+        choices=C.CHOICE_LIST,
     )
     # 相手のグループID
     pair_id = models.IntegerField(initial=0)
@@ -51,8 +49,10 @@ class Player(BasePlayer):
     pair_choice = models.StringField()
 
     q1 = models.StringField(
-        # widget=widgets.RadioSelectHorizontal,
-        verbose_name="",
+        widget=widgets.RadioSelectHorizontal,
+        label="相手が{}を選んでいたら、あなたは何ポイント獲得しますか？".format(
+            C.CHOICE_LABEL_1
+        ),
         choices=[
             ["-10", "-10"],
             ["30", "30"],
@@ -62,8 +62,10 @@ class Player(BasePlayer):
     )
 
     q2 = models.StringField(
-        # widget=widgets.RadioSelectHorizontal,
-        verbose_name="",
+        widget=widgets.RadioSelectHorizontal,
+        label="相手が{}を選んでいたら、あなたは何ポイント獲得しますか？".format(
+            C.CHOICE_LABEL_2
+        ),
         choices=[
             ["-10", "-10"],
             ["30", "30"],
@@ -74,21 +76,21 @@ class Player(BasePlayer):
 
     # 相手の予想のの理由
     think_other_player_choice_comment = models.LongStringField(
-        verbose_name="", initial=""
+        label="【質問】相手がその選択をすると思った理由はなぜですか？",
+        initial="",
     )
 
     # 相手はどちらを選ぶと思うか
     think_other_player_choice = models.StringField(
         widget=widgets.RadioSelectHorizontal,
-        verbose_name="",
-        choices=[
-            ["Aを選ぶと予想する", "Aを選ぶと予想する"],
-            ["Bを選ぶと予想する", "Bを選ぶと予想する"],
-        ],
+        label="【質問】あなたの相手はどちらを選ぶと思いますか？",
+        choices=[[v, "キャンパス{}を選ぶと予想する".format(v)] for v in C.CHOICE_LIST],
     )
 
     # 意思決定の理由
-    individual_choice_comment = models.LongStringField(verbose_name="", initial="")
+    individual_choice_comment = models.LongStringField(
+        label="【質問】なぜあなたはその選択肢を選んだのか、理由を教えてください。"
+    )
 
 
 # FUNCTIONS
@@ -106,7 +108,7 @@ def keisan(player: Player):
             sub.err_message = "エラーあり"
     else:
         player.flg_non_input = 1
-        player.individual_choice = random.choice(C.choice_list)
+        player.individual_choice = random.choice(C.CHOICE_LIST)
 
 
 def keisans(subsession: Subsession):

@@ -1,14 +1,16 @@
+<style>
+    .boxed-section {
+        border: 2px solid #000;
+        padding: 10px;
+        margin: 10px 0;
+    }
+</style>
+
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/series-label.js"></script>
-
-<div id="highchart"></div>
-<div id="highchart2"></div>
-
 <script>
     function drawChart() {
         disp_title = js_vars.num_participants + "名が実験に参加しました。"
-        //alert(disp_title)
-        //if (series.length!=0){
         Highcharts.chart('highchart', {
             chart: {
                 type: 'bar'
@@ -20,7 +22,6 @@
                 text: ''
             },
             xAxis: {
-                //categories: ['Aが1つ', 'Aが2つ', 'Aが3つ', 'Aが4つ', 'Aが5つ'],
                 categories: ['Aを選んだ人', 'Bを選んだ人'],
                 title: {
                     text: null
@@ -64,7 +65,6 @@
             },
             series: [{
                 name: '%',
-                //data: [js_vars.num_A, js_vars.num_B]
                 data: [
                     { y: js_vars.num_A, color: 'orange' },
                     { y: js_vars.num_B, color: 'green' },
@@ -75,8 +75,6 @@
     //}
     function drawChart_pair() {
         disp_title = "（コンピュータを含む）" + js_vars.num_pairs + "名が実験に参加しました。"
-        //alert(disp_title)
-        //if (series.length!=0){
         Highcharts.chart('highchart2', {
             chart: {
                 type: 'bar'
@@ -140,5 +138,4 @@
             }]
         });
     }
-    //}
 </script>
