@@ -9,6 +9,9 @@
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/series-label.js"></script>
 <script>
+    const choice_label_A = "{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}";
+    const choice_label_B = "{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.1 }}";
+
     function drawChart_pair(domid) {
         Highcharts.chart(domid, {
             chart: {
@@ -21,7 +24,12 @@
                 text: js_vars.num_pairs + "組が実験に参加しました"
             },
             xAxis: {
-                categories: ['映画1 映画1', '映画1 映画2', '映画2 映画1', '映画2 映画2'],
+                categories: [
+                    choice_label_A + ", " + choice_label_A,
+                    choice_label_A + ", " + choice_label_B,
+                    choice_label_B + ", " + choice_label_A,
+                    choice_label_B + ", " + choice_label_B
+                ],
                 title: {
                     text: null
                 }

@@ -9,6 +9,9 @@
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/series-label.js"></script>
 <script>
+    const choice_label_A = "{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}";
+    const choice_label_B = "{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.1 }}";
+
     function drawChart(domid) {
         Highcharts.chart(domid, {
             chart: {
@@ -21,7 +24,7 @@
                 text: js_vars.num_participants + "名が実験に参加しました"
             },
             xAxis: {
-                categories: ['Aを選んだ人', 'Bを選んだ人'],
+                categories: [choice_label_A + 'を選んだ人', choice_label_B + 'を選んだ人'],
                 title: {
                     text: null
                 }
@@ -63,7 +66,11 @@
                 text: js_vars.num_pairs + "組が実験に参加しました"
             },
             xAxis: {
-                categories: ['AA', 'AB or BA', 'BB'],
+                categories: [
+                    choice_label_A + ", " + choice_label_A,
+                    choice_label_A + ", " + choice_label_B,
+                    choice_label_B + ", " + choice_label_B
+                ],
                 title: {
                     text: null
                 }
