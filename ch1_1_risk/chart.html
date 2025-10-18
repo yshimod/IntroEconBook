@@ -9,13 +9,13 @@
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/series-label.js"></script>
 <script>
-    function drawChart1(num_participants, list_prop_A, domname = 'highchart', titlestr = '質問1～5における選択肢Aを選んだ個数の割合') {
-        Highcharts.chart(domname, {
+    function drawChart1(domid, num_participants, list_prop_A) {
+        Highcharts.chart(domid, {
             chart: {
                 type: 'bar'
             },
             title: {
-                text: titlestr
+                text: '質問1～5における選択肢Aを選んだ個数の割合'
             },
             subtitle: {
                 text: num_participants + '名が実験に参加しました'
@@ -39,7 +39,6 @@
             series: [{
                 name: '割合',
                 data: list_prop_A,
-                color: '#1f77b4',
                 dataLabels: { enabled: true, format: '{point.y:.2f}%' }
             }],
             tooltip: { enabled: false },
@@ -50,8 +49,8 @@
     }
 
 
-    function drawChart2(num_participants, prop_A, domname, titlestr) {
-        Highcharts.chart(domname, {
+    function drawChart2(domid, num_participants, prop_A, titlestr) {
+        Highcharts.chart(domid, {
             chart: {
                 type: 'bar'
             },
