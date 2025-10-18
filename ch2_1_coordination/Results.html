@@ -7,8 +7,9 @@
 <div>
     <ul>
         <li>あなたは<b>プレイヤー{{ player.id_in_group }}</b>でした。</li>
-        <li>あなた{{ if player.flg_non_input == 1 }}（コンピュータが選択）{{ endif }}は<b>映画{{ my_decision }}</b>を選びました。</li>
-        <li>あなたの相手{{ if player.flg_pair_non_input == 1 }}（コンピュータが選択）{{ endif }}は<b>映画{{ opponent_decision }}</b>を選びました。
+        <li>あなた{{ if player.flg_non_input == 1 }}（コンピュータが選択）{{ endif }}は<b>{{ C.CHOICE_LABEL }}{{ my_decision }}</b>を選びました。
+        </li>
+        <li>あなたの相手{{ if player.flg_pair_non_input == 1 }}（コンピュータが選択）{{ endif }}は<b>{{ C.CHOICE_LABEL }}{{ opponent_decision }}</b>を選びました。
         </li>
         <li>その結果、あなたが獲得したポイントは <b>{{ player.payoff }}</b>です。</li>
     </ul>

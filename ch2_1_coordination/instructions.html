@@ -9,16 +9,16 @@
             <p>あなたは、プレイヤー1またはプレイヤー2になります。</p>
             <p>ポイントは下記の表の通りです。ここでは、プレイヤー1のポイントに<u>下線</u>が引いてあります。</p>
             <p>
-                プレイヤー1が「映画1」を選び、プレイヤー2も「映画1」を選ぶと、プレイヤー1は{{ C.PAYOFF_A }}、プレイヤー2は{{ C.PAYOFF_B }}を獲得します。
+                プレイヤー1が「{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}」を選び、プレイヤー2も「{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}」を選ぶと、プレイヤー1は{{ C.PAYOFF_A }}、プレイヤー2は{{ C.PAYOFF_B }}を獲得します。
             </p>
             <p>
-                プレイヤー1が「映画1」を選び、プレイヤー2が「映画2」を選ぶと、プレイヤー1は{{ C.PAYOFF_D }}、プレイヤー2は{{ C.PAYOFF_D }}を獲得します。
+                プレイヤー1が「{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}」を選び、プレイヤー2が「{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.1 }}」を選ぶと、プレイヤー1は{{ C.PAYOFF_D }}、プレイヤー2は{{ C.PAYOFF_D }}を獲得します。
             </p>
             <p>
-                プレイヤー1が「映画2」を選び、プレイヤー2が「映画1」を選ぶと、プレイヤー1は{{ C.PAYOFF_C }}、プレイヤー2は{{ C.PAYOFF_C }}を獲得します。
+                プレイヤー1が「{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.1 }}」を選び、プレイヤー2が「{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}」を選ぶと、プレイヤー1は{{ C.PAYOFF_C }}、プレイヤー2は{{ C.PAYOFF_C }}を獲得します。
             </p>
             <p>
-                プレイヤー1が「映画2」を選び、プレイヤー2も「映画2」を選ぶと、プレイヤー1は{{ C.PAYOFF_B }}、プレイヤー2は{{ C.PAYOFF_A }}を獲得します。
+                プレイヤー1が「{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.1 }}」を選び、プレイヤー2も「{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.1 }}」を選ぶと、プレイヤー1は{{ C.PAYOFF_B }}、プレイヤー2は{{ C.PAYOFF_A }}を獲得します。
             </p>
 
             <table class='table table-bordered text-center my-5' style='vertical-align: middle;'>
@@ -27,17 +27,17 @@
                     <th colspan="2">プレイヤー2</th>
                 </tr>
                 <tr>
-                    <th>映画1</th>
-                    <th>映画2</th>
+                    <th>{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}</th>
+                    <th>{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.1 }}</th>
                 </tr>
                 <tr>
                     <th rowspan="2"><u>プレイヤー1</u></th>
-                    <th>映画1</th>
+                    <th>{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}</th>
                     <td><u>{{ C.PAYOFF_A }}</u>, {{ C.PAYOFF_B }}</td>
                     <td><u>{{ C.PAYOFF_D }}</u>, {{ C.PAYOFF_D }}</td>
                 </tr>
                 <tr>
-                    <th>映画2</th>
+                    <th>{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.1 }}</th>
                     <td><u>{{ C.PAYOFF_C }}</u>, {{ C.PAYOFF_C }}</td>
                     <td><u>{{ C.PAYOFF_B }}</u>, {{ C.PAYOFF_A }}</td>
                 </tr>
