@@ -10,12 +10,12 @@
         <th colspan="2" class="uline-p2">プレイヤー2</th>
     </tr>
     <tr>
-        <th>映画1</th>
-        <th>映画2</th>
+        <th>{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}</th>
+        <th>{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.1 }}</th>
     </tr>
     <tr>
         <th rowspan="2" class="uline-p1">プレイヤー1</th>
-        <th>映画1</th>
+        <th>{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}</th>
         <td>
             <span class="uline-p1">{{ C.PAYOFF_A }}</span>,
             <span class="uline-p2">{{ C.PAYOFF_B }}</span>
@@ -26,7 +26,7 @@
         </td>
     </tr>
     <tr>
-        <th>映画2</th>
+        <th>{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.1 }}</th>
         <td>
             <span class="uline-p1">{{ C.PAYOFF_C }}</span>,
             <span class="uline-p2">{{ C.PAYOFF_C }}</span>
@@ -41,7 +41,8 @@
 <div class="mt-4">
     <ul>
         <li>あなたは<u>プレイヤー{{ player.id_in_group }}</u>でした。</li>
-        <li>あなた{{ if player.flg_non_input == 1 }}（コンピュータ）{{ endif }}は映画{{ player.individual_choice }}を選びました。</li>
+        <li>あなた{{ if player.flg_non_input == 1 }}（コンピュータ）{{ endif }}は{{ C.CHOICE_LABEL }}{{ player.individual_choice }}を選びました。
+        </li>
     </ul>
 </div>
 
@@ -49,7 +50,6 @@
 <div class="mt-4">
     {{ formfields }}
 </div>
-
 
 {{ next_button }}
 
