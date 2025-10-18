@@ -18,7 +18,7 @@
                 text: "ペアの選択の組み合わせ"
             },
             subtitle: {
-                text: null
+                text: js_vars.num_pairs + "名が実験に参加しました"
             },
             xAxis: {
                 categories: ['映画1 映画1', '映画1 映画2', '映画2 映画1', '映画2 映画2'],
@@ -44,6 +44,7 @@
                     js_vars.prop_pairs_BA,
                     js_vars.prop_pairs_BB
                 ],
+                color: '#1f77b4',
                 dataLabels: { enabled: true, format: '{point.y:.2f}%' }
             }],
             tooltip: { enabled: false },
