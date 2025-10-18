@@ -7,7 +7,8 @@
 <div class="fs-4">
     <ul>
         <li>あなたは<u>プレイヤー{{ player.id_in_group }}</u>でした。</li>
-        <li>あなた{{ if player.flg_non_input == 1 }}（コンピュータ）{{ endif }}は映画{{ player.individual_choice }}を選びました。</li>
+        <li>あなた{{ if player.flg_non_input == 1 }}（コンピュータ）{{ endif }}は{{ C.CHOICE_LABEL }}{{ player.individual_choice }}を選びました。
+        </li>
     </ul>
 </div>
 
@@ -25,7 +26,7 @@
                     {{ if player.id_in_group == 2 }}
                     {{ if player.individual_choice == C.CHOICE_LIST.0 }}btn-primary{{ else }}btn-outline-primary{{ endif }}
                     {{ else }}btn-outline-secondary{{ endif }} choicebtn disabled">
-                    映画{{ C.CHOICE_LIST.0 }}
+                    {{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}
                 </label>
             </th>
             <th>
@@ -33,7 +34,7 @@
                     {{ if player.id_in_group == 2 }}
                     {{ if player.individual_choice == C.CHOICE_LIST.1 }}btn-primary{{ else }}btn-outline-primary{{ endif }}
                     {{ else }}btn-outline-secondary{{ endif }} choicebtn disabled">
-                    映画{{ C.CHOICE_LIST.1 }}
+                    {{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.1 }}
                 </label>
             </th>
         </tr>
@@ -46,7 +47,7 @@
                     {{ if player.id_in_group == 1 }}
                     {{ if player.individual_choice == C.CHOICE_LIST.0 }}btn-primary{{ else }}btn-outline-primary{{ endif }}
                     {{ else }}btn-outline-secondary{{ endif }} choicebtn disabled">
-                    映画{{ C.CHOICE_LIST.0 }}
+                    {{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}
                 </label>
             </th>
             <td>
@@ -64,7 +65,7 @@
                     {{ if player.id_in_group == 1 }}
                     {{ if player.individual_choice == C.CHOICE_LIST.1 }}btn-primary{{ else }}btn-outline-primary{{ endif }}
                     {{ else }}btn-outline-secondary{{ endif }} choicebtn disabled">
-                    映画{{ C.CHOICE_LIST.1 }}
+                    {{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.1 }}
                 </label>
             </th>
             <td>

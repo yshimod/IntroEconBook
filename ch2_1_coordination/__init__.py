@@ -15,6 +15,7 @@ class C(BaseConstants):
     PAYOFF_D = cu(2)
 
     CHOICE_LIST = ["1", "2"]
+    CHOICE_LABEL = "映画"
 
     PAYOFF_MATRIX = {
         (CHOICE_LIST[0], CHOICE_LIST[0]): (PAYOFF_A, PAYOFF_B),

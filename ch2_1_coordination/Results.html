@@ -7,8 +7,9 @@
 <div class="fs-4">
     <ul>
         <li>あなたは<b>プレイヤー{{ player.id_in_group }}</b>でした。</li>
-        <li>あなた{{ if player.flg_non_input == 1 }}（コンピュータが選択）{{ endif }}は<b>映画{{ my_decision }}</b>を選びました。</li>
-        <li>あなたの相手{{ if player.flg_pair_non_input == 1 }}（コンピュータが選択）{{ endif }}は<b>映画{{ opponent_decision }}</b>を選びました。
+        <li>あなた{{ if player.flg_non_input == 1 }}（コンピュータが選択）{{ endif }}は<b>{{ C.CHOICE_LABEL }}{{ my_decision }}</b>を選びました。
+        </li>
+        <li>あなたの相手{{ if player.flg_pair_non_input == 1 }}（コンピュータが選択）{{ endif }}は<b>{{ C.CHOICE_LABEL }}{{ opponent_decision }}</b>を選びました。
         </li>
         <li>その結果、あなたが獲得したポイントは <b>{{ player.payoff }}</b>です。</li>
     </ul>
@@ -30,7 +31,7 @@
                     {{ else }}
                     {{ if player.pair_choice == C.CHOICE_LIST.0 }}btn-primary{{ else }}btn-outline-primary{{ endif }}
                     {{ endif }} choicebtn disabled">
-                    映画{{ C.CHOICE_LIST.0 }}
+                    {{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}
                 </label>
             </th>
             <th>
@@ -40,7 +41,7 @@
                     {{ else }}
                     {{ if player.pair_choice == C.CHOICE_LIST.1 }}btn-primary{{ else }}btn-outline-primary{{ endif }}
                     {{ endif }} choicebtn disabled">
-                    映画{{ C.CHOICE_LIST.1 }}
+                    {{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.1 }}
                 </label>
             </th>
         </tr>
@@ -55,7 +56,7 @@
                     {{ else }}
                     {{ if player.pair_choice == C.CHOICE_LIST.0 }}btn-primary{{ else }}btn-outline-primary{{ endif }}
                     {{ endif }} choicebtn disabled">
-                    映画{{ C.CHOICE_LIST.0 }}
+                    {{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}
                 </label>
             </th>
             <td id="cell_AA">
@@ -75,7 +76,7 @@
                     {{ else }}
                     {{ if player.pair_choice == C.CHOICE_LIST.1 }}btn-primary{{ else }}btn-outline-primary{{ endif }}
                     {{ endif }} choicebtn disabled">
-                    映画{{ C.CHOICE_LIST.1 }}
+                    {{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.1 }}
                 </label>
             </th>
             <td id="cell_BA">
@@ -141,7 +142,7 @@
             document.getElementById('cell_BB').style.backgroundColor = 'yellow';
         }
 
-        drawChart_pair(js_vars);
+        drawChart_pair("highchart2", js_vars);
     });
     // {{ endwith }}{{ endwith }}
 </script>
