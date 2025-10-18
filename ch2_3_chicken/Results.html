@@ -1,29 +1,42 @@
 {{ block title }}
-結果：あなたと相手の意思決定の結果です。
+結果
 {{ endblock }}
 
 
 {{ block content }}
+<div>
+    <ul>
+        <li>あなた{{ if player.flg_non_input == 1 }}（コンピュータが選択）{{ endif }}は<b>{{ C.CHOICE_LABEL }}{{ my_decision }}</b>を選びました。
+        </li>
+        <li>あなたの相手{{ if player.flg_pair_non_input == 1 }}（コンピュータが選択）{{ endif }}は<b>{{ C.CHOICE_LABEL }}{{ opponent_decision }}</b>を選びました。
+        </li>
+        <li>その結果、あなたが獲得したポイントは <b>{{ player.payoff }}</b>です。</li>
+    </ul>
+</div>
 
-<p>
-    あなた{{ if player.flg_non_input == 1 }}(コンピュータが選びました){{ endif }}は{{ my_decision }}
-    、あなたの相手{{ if player.flg_pair_non_input == 1 }}(コンピュータが選びました){{ endif }}は {{ opponent_decision }}を選びました。
-</p>
+<h3 class="mt-5">全体の結果</h3>
 
-<p>
-    その結果、あなたのポイントは {{ player.payoff }}です。
-</p>
+<div class="boxed-section">
+    <div id="highchart"></div>
+</div>
+
+<div class="boxed-section">
+    <div id="highchart2"></div>
+</div>
+
+<div class="mt-5">
+    {{ include_sibling 'instructions.html' }}
+</div>
+
+{{ endblock }}
 
 
-{{ include C.INSTRUCTIONS_TEMPLATE }}
-
-<p>全ての参加者の結果</p>
-{{ include 'ch2_3_chicken/chart.html' }}
+{{ block script }}
+{{ include_sibling 'chart.html' }}
 <script>
-    drawChart();// グラフ描画
-    drawChart_pair();// グラフ描画
+    document.addEventListener('DOMContentLoaded', function () {
+        drawChart("highchart");
+        drawChart_pair("highchart2");
+    });
 </script>
-
-
-
 {{ endblock }}
