@@ -15,6 +15,7 @@ class C(BaseConstants):
     PAYOFF_D = cu(2)
 
     CHOICE_LIST = ["1", "2"]
+    CHOICE_LABEL = "映画"
 
 
 class Subsession(BaseSubsession):
@@ -44,7 +45,9 @@ class Player(BasePlayer):
     think_other_player_choice = models.StringField(
         widget=widgets.RadioSelectHorizontal,
         label="【質問】あなたの相手はどちらを選ぶと思いますか？",
-        choices=[[v, "映画{}を選ぶと予想する".format(v)] for v in C.CHOICE_LIST],
+        choices=[
+            [v, "{}{}を選ぶと予想する".format(C.CHOICE_LABEL, v)] for v in C.CHOICE_LIST
+        ],
     )
 
     # 意思決定の理由
@@ -60,14 +63,18 @@ class Player(BasePlayer):
     # クイズ1
     q1 = models.StringField(
         widget=widgets.RadioSelectHorizontal,
-        label="【理解度確認クイズ】 相手が映画1を選んでいたら、あなたは何ポイント獲得しますか？",
+        label="【理解度確認クイズ】 相手が{}{}を選んでいたら、あなたは何ポイント獲得しますか？".format(
+            C.CHOICE_LABEL, C.CHOICE_LIST[0]
+        ),
         choices=[C.PAYOFF_A, C.PAYOFF_B, C.PAYOFF_C, C.PAYOFF_D],
     )
 
     # クイズ2
     q2 = models.StringField(
         widget=widgets.RadioSelectHorizontal,
-        label="【理解度確認クイズ】 相手が映画2を選んでいたら、あなたは何ポイント獲得しますか？",
+        label="【理解度確認クイズ】 相手が{}{}を選んでいたら、あなたは何ポイント獲得しますか？".format(
+            C.CHOICE_LABEL, C.CHOICE_LIST[1]
+        ),
         choices=[C.PAYOFF_A, C.PAYOFF_B, C.PAYOFF_C, C.PAYOFF_D],
     )
 
