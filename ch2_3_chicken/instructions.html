@@ -8,16 +8,16 @@
             <p>あなたとあなたの相手の意思決定により、あなたのポイントが決まります。</p>
             <p>ポイントは下記の表の通りです。あなたのポイントは<u>下線</u>が引いてあります。</p>
             <p>
-                あなたが「{{C.CHOICE_LABEL_1}}」を選び、相手も「{{C.CHOICE_LABEL_1}}」を選ぶと、あなたも相手も{{ C.PAYOFF_B }}を獲得します。
+                あなたが「{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}」を選び、相手も「{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}」を選ぶと、あなたも相手も{{ C.PAYOFF_B }}を獲得します。
             </p>
             <p>
-                あなたが「{{C.CHOICE_LABEL_1}}」を選び、相手が「{{C.CHOICE_LABEL_2}}」を選ぶと、あなたは{{ C.PAYOFF_D }}、あなたの相手は{{ C.PAYOFF_A }}を獲得します。
+                あなたが「{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}」を選び、相手が「{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.1 }}」を選ぶと、あなたは{{ C.PAYOFF_D }}、あなたの相手は{{ C.PAYOFF_A }}を獲得します。
             </p>
             <p>
-                あなたが「{{C.CHOICE_LABEL_2}}」を選び、相手が「{{C.CHOICE_LABEL_1}}」を選ぶと、あなたは{{ C.PAYOFF_A }}、あなたの相手は{{ C.PAYOFF_D }}を獲得します。
+                あなたが「{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.1 }}」を選び、相手が「{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}」を選ぶと、あなたは{{ C.PAYOFF_A }}、あなたの相手は{{ C.PAYOFF_D }}を獲得します。
             </p>
             <p>
-                あなたが「{{C.CHOICE_LABEL_2}}」を選び、相手も「{{C.CHOICE_LABEL_2}}」を選ぶと、あなたも相手も{{ C.PAYOFF_C }}を獲得します。
+                あなたが「{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.1 }}」を選び、相手も「{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.1 }}」を選ぶと、あなたも相手も{{ C.PAYOFF_C }}を獲得します。
             </p>
 
             <table class='table table-bordered text-center my-5' style='vertical-align: middle;'>
@@ -26,17 +26,17 @@
                     <th colspan="2">あなたの相手</th>
                 </tr>
                 <tr>
-                    <th>{{C.CHOICE_LABEL_1}}</th>
-                    <th>{{C.CHOICE_LABEL_2}}</th>
+                    <th>{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}</th>
+                    <th>{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.1 }}</th>
                 </tr>
                 <tr>
                     <th rowspan="2"><u>あなた</u></th>
-                    <th>{{C.CHOICE_LABEL_1}}</th>
+                    <th>{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}</th>
                     <td><u>{{ C.PAYOFF_B }}</u>, {{ C.PAYOFF_B }}</td>
                     <td><u>{{ C.PAYOFF_D }}</u>, {{ C.PAYOFF_A }}</td>
                 </tr>
                 <tr>
-                    <th>{{C.CHOICE_LABEL_2}}</th>
+                    <th>{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.1 }}</th>
                     <td><u>{{ C.PAYOFF_A }}</u>, {{ C.PAYOFF_D }}</td>
                     <td><u>{{ C.PAYOFF_C }}</u>, {{ C.PAYOFF_C }}</td>
                 </tr>

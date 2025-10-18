@@ -66,15 +66,15 @@
             series: [{
                 name: '%',
                 data: [
-                    { y: js_vars.num_A, color: 'orange' },
-                    { y: js_vars.num_B, color: 'green' },
+                    { y: js_vars.prop_A, color: 'orange' },
+                    { y: js_vars.prop_B, color: 'green' },
                 ]
             }]
         });
     }
     //}
     function drawChart_pair() {
-        disp_title = "（コンピュータを含む）" + js_vars.num_pairs + "名が実験に参加しました。"
+        disp_title = "（コンピュータを含む）" + js_vars.num_pairs + "組が実験に参加しました。"
         Highcharts.chart('highchart2', {
             chart: {
                 type: 'bar'
@@ -130,10 +130,9 @@
             series: [{
                 name: '%',
                 data: [
-                    { y: js_vars.num_AA, color: '#87cefa' },
-                    { y: js_vars.num_AB, color: '#87cefa' },
-                    { y: js_vars.num_BA, color: '#87cefa' },
-                    { y: js_vars.num_BB, color: '#87cefa' },
+                    { y: js_vars.prop_pairs_AA, color: '#87cefa' },
+                    { y: js_vars.prop_pairs_AB, color: '#87cefa' },
+                    { y: js_vars.prop_pairs_BB, color: '#87cefa' },
                 ]
             }]
         });

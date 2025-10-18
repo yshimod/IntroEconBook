@@ -5,7 +5,7 @@
 
 {{ block content }}
 <div>
-    <p>あなた自身の意思決定として、下の表の{{C.CHOICE_LABEL_1}}と{{C.CHOICE_LABEL_2}}のいずれかを選んでください。</p>
+    <p>あなた自身の意思決定として、下の表の{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}と{{ C.CHOICE_LIST.1 }}のいずれかを選んでください。</p>
 </div>
 
 <div class="mt-4">
@@ -15,8 +15,8 @@
             <th colspan="2">あなたの相手</th>
         </tr>
         <tr>
-            <th>{{C.CHOICE_LABEL_1}}</th>
-            <th>{{C.CHOICE_LABEL_2}}</th>
+            <th>{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}</th>
+            <th>{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.1 }}</th>
         </tr>
         <tr>
             <th rowspan="2">
@@ -26,7 +26,7 @@
                 <input type="radio" class="btn-check" name="individual_choice" id="id_individual_choice_A"
                     value="{{ C.CHOICE_LIST.0 }}" autocomplete="off" required>
                 <label class="btn btn-lg btn-outline-primary" style="width: 8em;" for="id_individual_choice_A">
-                    {{ C.CHOICE_LABEL_1 }}
+                    {{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}
                 </label>
             </td>
             <td>
@@ -43,11 +43,11 @@
                 <input type="radio" class="btn-check" name="individual_choice" id="id_individual_choice_B"
                     value="{{ C.CHOICE_LIST.1 }}" autocomplete="off" required>
                 <label class="btn btn-lg btn-outline-primary" style="width: 8em;" for="id_individual_choice_B">
-                    {{ C.CHOICE_LABEL_2 }}
+                    {{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.1 }}
                 </label>
             </td>
             <td>
-                <u>{{C.PAYOFF_A}}</u>,
+                <u>{{ C.PAYOFF_A }}</u>,
                 {{ C.PAYOFF_D }}
             </td>
             <td>

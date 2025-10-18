@@ -15,21 +15,18 @@ class C(BaseConstants):
     PAYOFF_D = cu(30)
 
     CHOICE_LIST = ["A", "B"]
-    CHOICE_LABEL_1 = "キャンパスA"
-    CHOICE_LABEL_2 = "キャンパスB"
+    CHOICE_LABEL = "キャンパス"
 
 
 class Subsession(BaseSubsession):
     num_participants = models.IntegerField(initial=0)
     num_A = models.IntegerField(initial=0)
     num_B = models.IntegerField(initial=0)
-    err_message = models.StringField()
-    pair_num = models.IntegerField(initial=0)
-    pair_num_AA = models.IntegerField(initial=0)
-    pair_num_AB = models.IntegerField(initial=0)
-    pair_num_BA = models.IntegerField(initial=0)
-    pair_num_BB = models.IntegerField(initial=0)
-    pair_err_message = models.StringField()
+
+    num_pairs = models.IntegerField(initial=0)
+    num_pairs_AA = models.IntegerField(initial=0)
+    num_pairs_AB = models.IntegerField(initial=0)
+    num_pairs_BB = models.IntegerField(initial=0)
 
 
 class Group(BaseGroup):
@@ -37,54 +34,23 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer):
-    flg_non_input = models.IntegerField(initial=0)
-    flg_pair_non_input = models.IntegerField(initial=0)
-
+    # 自身の意思決定
     individual_choice = models.StringField(
         choices=C.CHOICE_LIST,
     )
-    # 相手のグループID
-    pair_id = models.IntegerField(initial=0)
+    flg_non_input = models.IntegerField(initial=0)
+
     # 相手の意思決定
     pair_choice = models.StringField()
-
-    q1 = models.StringField(
-        widget=widgets.RadioSelectHorizontal,
-        label="相手が{}を選んでいたら、あなたは何ポイント獲得しますか？".format(
-            C.CHOICE_LABEL_1
-        ),
-        choices=[
-            ["-10", "-10"],
-            ["30", "30"],
-            ["20", "20"],
-            ["10", "10"],
-        ],
-    )
-
-    q2 = models.StringField(
-        widget=widgets.RadioSelectHorizontal,
-        label="相手が{}を選んでいたら、あなたは何ポイント獲得しますか？".format(
-            C.CHOICE_LABEL_2
-        ),
-        choices=[
-            ["-10", "-10"],
-            ["30", "30"],
-            ["20", "20"],
-            ["10", "10"],
-        ],
-    )
-
-    # 相手の予想のの理由
-    think_other_player_choice_comment = models.LongStringField(
-        label="【質問】相手がその選択をすると思った理由はなぜですか？",
-        initial="",
-    )
+    flg_pair_non_input = models.IntegerField(initial=0)
 
     # 相手はどちらを選ぶと思うか
     think_other_player_choice = models.StringField(
         widget=widgets.RadioSelectHorizontal,
         label="【質問】あなたの相手はどちらを選ぶと思いますか？",
-        choices=[[v, "キャンパス{}を選ぶと予想する".format(v)] for v in C.CHOICE_LIST],
+        choices=[
+            [v, "{}{}を選ぶと予想する".format(C.CHOICE_LABEL, v)] for v in C.CHOICE_LIST
+        ],
     )
 
     # 意思決定の理由
@@ -92,85 +58,101 @@ class Player(BasePlayer):
         label="【質問】なぜあなたはその選択肢を選んだのか、理由を教えてください。"
     )
 
+    # 相手の予想の理由
+    think_other_player_choice_comment = models.LongStringField(
+        label="【質問】なぜあなたは、相手がその選択肢を選ぶと思ったのか、理由を教えてください。"
+    )
+
+    # クイズ1
+    q1 = models.StringField(
+        widget=widgets.RadioSelectHorizontal,
+        label="【理解度確認クイズ】 相手が{}{}を選んでいたら、あなたは何ポイント獲得しますか？".format(
+            C.CHOICE_LABEL, C.CHOICE_LIST[0]
+        ),
+        choices=[C.PAYOFF_B, C.PAYOFF_D, C.PAYOFF_A, C.PAYOFF_C],
+    )
+
+    # クイズ2
+    q2 = models.StringField(
+        widget=widgets.RadioSelectHorizontal,
+        label="【理解度確認クイズ】 相手が{}{}を選んでいたら、あなたは何ポイント獲得しますか？".format(
+            C.CHOICE_LABEL, C.CHOICE_LIST[1]
+        ),
+        choices=[C.PAYOFF_B, C.PAYOFF_D, C.PAYOFF_A, C.PAYOFF_C],
+    )
+
 
 # FUNCTIONS
-def keisan(player: Player):
-    sub = player.subsession
-    if player.individual_choice != "":
-        # グラフ用集計
-        sub.num_participants += 1
-        s = player.individual_choice
-        if s == "A":
-            sub.num_A += 1
-        elif s == "B":
-            sub.num_B += 1
-        else:
-            sub.err_message = "エラーあり"
-    else:
-        player.flg_non_input = 1
-        player.individual_choice = random.choice(C.CHOICE_LIST)
+def summarize_data(subsession: Subsession):
+    list_choices = [
+        p.individual_choice
+        for p in subsession.get_players()
+        if p.field_maybe_none("individual_choice")
+    ]
+    subsession.num_participants = len(list_choices)
+    subsession.num_A = list_choices.count(C.CHOICE_LIST[0])
+    subsession.num_B = list_choices.count(C.CHOICE_LIST[1])
 
-
-def keisans(subsession: Subsession):
-    for p in subsession.get_players():
-        keisan(p)
-
-
-def set_payoffs(group: Group):
-    for p in group.get_players():
-        set_payoff(p)
-
-
-def set_graph(subsession: Subsession):
-    for p in subsession.get_players():
-        graph_pair(p)
-
-
-def other_player(player: Player):
-    return player.get_others_in_group()[0]
-
-
-def graph_pair(player: Player):
-    sub = player.subsession
-    sub.pair_num += 1
-    # グラフ用集計
-    s = player.individual_choice
-    sp = player.pair_choice
-    if (s == "A") and (sp == "A"):
-        sub.pair_num_AA += 1
-    elif (s == "A") and (sp == "B"):
-        sub.pair_num_AB += 1
-    elif (s == "B") and (sp == "A"):
-        sub.pair_num_BA += 1
-    elif (s == "B") and (sp == "B"):
-        sub.pair_num_BB += 1
-    else:
-        sub.pair_err_message = "エラーあり"
+    list_grp_results = [
+        (
+            g.get_player_by_id(1).individual_choice,
+            g.get_player_by_id(2).individual_choice,
+        )
+        for g in subsession.get_groups()
+        if g.get_player_by_id(1).field_maybe_none("individual_choice")
+        and g.get_player_by_id(2).field_maybe_none("individual_choice")
+    ]
+    subsession.num_pairs = len(list_grp_results)
+    subsession.num_pairs_AA = list_grp_results.count(
+        (C.CHOICE_LIST[0], C.CHOICE_LIST[0])
+    )
+    subsession.num_pairs_BB = list_grp_results.count(
+        (C.CHOICE_LIST[1], C.CHOICE_LIST[1])
+    )
+    subsession.num_pairs_AB = subsession.num_pairs - (
+        subsession.num_pairs_AA + subsession.num_pairs_BB
+    )
 
 
 def set_payoff(player: Player):
     payoff_matrix = {
-        ("A", "A"): C.PAYOFF_B,
-        ("A", "B"): C.PAYOFF_D,
-        ("B", "A"): C.PAYOFF_A,
-        ("B", "B"): C.PAYOFF_C,
+        (C.CHOICE_LIST[0], C.CHOICE_LIST[0]): C.PAYOFF_B,
+        (C.CHOICE_LIST[0], C.CHOICE_LIST[1]): C.PAYOFF_D,
+        (C.CHOICE_LIST[1], C.CHOICE_LIST[0]): C.PAYOFF_A,
+        (C.CHOICE_LIST[1], C.CHOICE_LIST[1]): C.PAYOFF_C,
     }
-    other = other_player(player)
-    player.pair_choice = other.individual_choice
-    player.pair_id = other.id_in_group
-    if other.flg_non_input == 1:
-        player.flg_pair_non_input = 1
-    player.payoff = payoff_matrix[(player.individual_choice, other.individual_choice)]
+    opponent: Player = player.get_others_in_group()[0]
+
+    p_choice = player.field_maybe_none("individual_choice")
+    o_choice = opponent.field_maybe_none("individual_choice")
+
+    player.pair_choice = o_choice
+    player.flg_pair_non_input = opponent.flg_non_input
+
+    if p_choice and o_choice:
+        player.payoff = payoff_matrix[(p_choice, o_choice)]
+    else:
+        player.payoff = -1
 
 
-# PAGES-----
+# PAGES
 class Introduction(Page):
-    timeout_seconds = 100
+    # timeout_seconds = 100
+    pass
 
 
 class Decision(Page):
     form_model = "player"
-    form_fields = ["individual_choice", "individual_choice_comment"]
+    form_fields = [
+        "individual_choice",
+        "individual_choice_comment",
+    ]
+
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened):
+        if timeout_happened:
+            player.flg_non_input = 1
+            player.individual_choice = random.choice(C.CHOICE_LIST)
 
 
 class Question(Page):
@@ -183,74 +165,51 @@ class Question(Page):
     ]
 
 
-class keisanWaitPage(WaitPage):
-    wait_for_all_groups = True
-    after_all_players_arrive = keisans
-
-
 class ResultsWaitPage(WaitPage):
-    after_all_players_arrive = set_payoffs
-
-
-class GraphWaitPage(WaitPage):
     wait_for_all_groups = True
-    after_all_players_arrive = set_graph
+
+    @staticmethod
+    def after_all_players_arrive(subsession: Subsession):
+        summarize_data(subsession)
+        for p in subsession.get_players():
+            set_payoff(p)
 
 
 class Results(Page):
     @staticmethod
     def vars_for_template(player: Player):
-        opponent = other_player(player)
+        opponent: Player = player.get_others_in_group()[0]
         return dict(
-            opponent=opponent,
-            same_choice=player.individual_choice == opponent.individual_choice,
-            my_decision=player.field_display("individual_choice"),
-            opponent_decision=opponent.field_display("individual_choice"),
+            my_decision=player.field_maybe_none("individual_choice"),
+            opponent_decision=opponent.field_maybe_none("individual_choice"),
         )
 
-    # グラフ描画用
     @staticmethod
     def js_vars(player: Player):
-        print("js_vars")
-        sub = player.subsession
-        # 割合に計算
-        if sub.num_A > 0:
-            prop_num_A = round((sub.num_A / sub.num_participants) * 100, 2)
-        else:
-            prop_num_A = 0
-        if sub.num_B > 0:
-            prop_num_B = round((sub.num_B / sub.num_participants) * 100, 2)
-        else:
-            prop_num_B = 0
+        sub: Subsession = player.subsession
 
-        print("ここから追加")
-        # 割合に計算s
-        if sub.pair_num_AA > 0:
-            prop_pair_num_AA = round((sub.pair_num_AA / sub.pair_num) * 100, 2)
-        else:
-            prop_pair_num_AA = 0
-        if sub.pair_num_AB > 0:
-            prop_pair_num_AB = round((sub.pair_num_AB / sub.pair_num) * 100, 2)
-        else:
-            prop_pair_num_AB = 0
-        if sub.pair_num_BA > 0:
-            prop_pair_num_BA = round((sub.pair_num_BA / sub.pair_num) * 100, 2)
-        else:
-            prop_pair_num_BA = 0
-        if sub.pair_num_BB > 0:
-            prop_pair_num_BB = round((sub.pair_num_BB / sub.pair_num) * 100, 2)
-        else:
-            prop_pair_num_BB = 0
+        prop_A = -1
+        prop_B = -1
+        if sub.num_participants > 0:
+            prop_A = (sub.num_A / sub.num_participants) * 100
+            prop_B = (sub.num_B / sub.num_participants) * 100
+
+        prop_pairs_AA = -1
+        prop_pairs_AB = -1
+        prop_pairs_BB = -1
+        if sub.num_pairs > 0:
+            prop_pairs_AA = (sub.num_pairs_AA / sub.num_pairs) * 100
+            prop_pairs_AB = (sub.num_pairs_AB / sub.num_pairs) * 100
+            prop_pairs_BB = (sub.num_pairs_BB / sub.num_pairs) * 100
 
         return dict(
             num_participants=sub.num_participants,
-            num_A=prop_num_A,
-            num_B=prop_num_B,
-            num_pairs=sub.pair_num,
-            num_AA=prop_pair_num_AA,
-            num_AB=prop_pair_num_AB,
-            num_BA=prop_pair_num_BA,
-            num_BB=prop_pair_num_BB,
+            prop_A=prop_A,
+            prop_B=prop_B,
+            num_pairs=sub.num_pairs,
+            prop_pairs_AA=prop_pairs_AA,
+            prop_pairs_AB=prop_pairs_AB,
+            prop_pairs_BB=prop_pairs_BB,
         )
 
 
@@ -262,9 +221,7 @@ page_sequence = [
     Introduction,
     Decision,
     Question,
-    keisanWaitPage,
     ResultsWaitPage,
-    GraphWaitPage,
     PreResults,
     Results,
 ]

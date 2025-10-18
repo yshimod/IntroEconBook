@@ -10,12 +10,12 @@
         <th colspan="2">あなたの相手</th>
     </tr>
     <tr>
-        <th>{{C.CHOICE_LABEL_1}}</th>
-        <th>{{C.CHOICE_LABEL_2}}</th>
+        <th>{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}</th>
+        <th>{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.1 }}</th>
     </tr>
     <tr>
         <th rowspan="2"><u>あなた</u></th>
-        <th>{{C.CHOICE_LABEL_1}}</th>
+        <th>{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}</th>
         <td>
             <u>{{ C.PAYOFF_B }}</u>,
             {{ C.PAYOFF_B }}
@@ -26,7 +26,7 @@
         </td>
     </tr>
     <tr>
-        <th>{{C.CHOICE_LABEL_2}}</th>
+        <th>{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.1 }}</th>
         <td>
             <u>{{ C.PAYOFF_A }}</u>,
             {{ C.PAYOFF_D }}
