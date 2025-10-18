@@ -10,16 +10,15 @@
 <script src="https://code.highcharts.com/modules/series-label.js"></script>
 <script>
     function drawChart() {
-        disp_title = js_vars.num_participants + "名が実験に参加しました。"
         Highcharts.chart('highchart', {
             chart: {
                 type: 'bar'
             },
             title: {
-                text: disp_title
+                text: "個人の選択"
             },
             subtitle: {
-                text: ''
+                text: js_vars.num_participants + "名が実験に参加しました"
             },
             xAxis: {
                 categories: ['Aを選んだ人', 'Bを選んだ人'],
@@ -31,62 +30,40 @@
                 min: 0,
                 max: 100,
                 title: {
-                    text: '',
-                    align: 'high'
+                    text: null,
                 },
                 labels: {
                     overflow: 'justify'
                 }
             },
-            tooltip: {
-                valueSuffix: ' %'
-            },
-            plotOptions: {
-                bar: {
-                    dataLabels: {
-                        enabled: true
-                    }
-                }
-            },
-            legend: {
-                layout: 'vertical',
-                align: 'right',
-                verticalAlign: 'top',
-                x: -40,
-                y: 80,
-                floating: true,
-                borderWidth: 1,
-                backgroundColor:
-                    Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF',
-                shadow: true
-            },
-            credits: {
-                enabled: false
-            },
             series: [{
-                name: '%',
+                name: '割合',
                 data: [
-                    { y: js_vars.prop_A, color: 'orange' },
-                    { y: js_vars.prop_B, color: 'green' },
-                ]
-            }]
+                    { y: js_vars.prop_A, color: '#ff7f0e' },
+                    { y: js_vars.prop_B, color: '#1f77b4' },
+                ],
+                dataLabels: { enabled: true, format: '{point.y:.2f}%' }
+            }],
+            tooltip: { enabled: false },
+            legend: { enabled: false },
+            credits: { enabled: false },
+            accessibility: { enabled: false }
         });
     }
-    //}
+
     function drawChart_pair() {
-        disp_title = "（コンピュータを含む）" + js_vars.num_pairs + "組が実験に参加しました。"
         Highcharts.chart('highchart2', {
             chart: {
                 type: 'bar'
             },
             title: {
-                text: disp_title
+                text: "ペアの選択の組み合わせ"
             },
             subtitle: {
-                text: ''
+                text: js_vars.num_pairs + "名が実験に参加しました"
             },
             xAxis: {
-                categories: ['AA', 'AB', 'BA', 'BB'],
+                categories: ['AA', 'AB or BA', 'BB'],
                 title: {
                     text: null
                 }
@@ -95,46 +72,26 @@
                 min: 0,
                 max: 100,
                 title: {
-                    text: '',
-                    align: 'high'
+                    text: null,
                 },
                 labels: {
                     overflow: 'justify'
                 }
             },
-            tooltip: {
-                valueSuffix: '%'
-            },
-            plotOptions: {
-                bar: {
-                    dataLabels: {
-                        enabled: true
-                    }
-                }
-            },
-            legend: {
-                layout: 'vertical',
-                align: 'right',
-                verticalAlign: 'top',
-                x: -40,
-                y: 80,
-                floating: true,
-                borderWidth: 1,
-                backgroundColor:
-                    Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF',
-                shadow: true
-            },
-            credits: {
-                enabled: false
-            },
             series: [{
-                name: '%',
+                name: '割合',
                 data: [
-                    { y: js_vars.prop_pairs_AA, color: '#87cefa' },
-                    { y: js_vars.prop_pairs_AB, color: '#87cefa' },
-                    { y: js_vars.prop_pairs_BB, color: '#87cefa' },
-                ]
-            }]
+                    js_vars.prop_pairs_AA,
+                    js_vars.prop_pairs_AB,
+                    js_vars.prop_pairs_BB
+                ],
+                color: '#1f77b4',
+                dataLabels: { enabled: true, format: '{point.y:.2f}%' }
+            }],
+            tooltip: { enabled: false },
+            legend: { enabled: false },
+            credits: { enabled: false },
+            accessibility: { enabled: false }
         });
     }
 </script>
