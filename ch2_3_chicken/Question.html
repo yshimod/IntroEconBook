@@ -40,7 +40,8 @@
 
 <div class="mt-4">
     <ul>
-        <li>あなた{{ if player.flg_non_input == 1 }}（コンピュータ）{{ endif }}はキャンパス{{ player.individual_choice }}を選びました。</li>
+        <li>あなた{{ if player.flg_non_input == 1 }}（コンピュータ）{{ endif }}は{{ C.CHOICE_LABEL }}{{ player.individual_choice }}を選びました。
+        </li>
     </ul>
 </div>
 
