@@ -112,11 +112,11 @@
             document.getElementById('cell_BB').style.backgroundColor = 'yellow';
         }
 
-        drawChart(js_vars);
-        drawChart_pair(js_vars);
+        drawChart("highchart", js_vars);
+        drawChart_pair("highchart2", js_vars);
 
         // {{ if player.round_number > 1 }}
-        drawChart_series(js_vars);
+        drawChart_series("highchart3", js_vars);
         // {{ endif }}
     });
 </script>

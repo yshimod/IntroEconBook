@@ -45,11 +45,11 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const js_vars = JSON.parse(`{{ js_vars | json }}`);
-        drawChart(js_vars);
-        drawChart_pair(js_vars);
+        drawChart("highchart", js_vars);
+        drawChart_pair("highchart2", js_vars);
 
         // {{ if show_series }}
-        drawChart_series(js_vars);
+        drawChart_series("highchart3", js_vars);
         // {{ endif }}
     });
 </script>

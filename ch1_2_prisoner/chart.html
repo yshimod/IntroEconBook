@@ -9,8 +9,8 @@
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/series-label.js"></script>
 <script>
-    function drawChart(js_vars) {
-        Highcharts.chart('highchart', {
+    function drawChart(domid, js_vars) {
+        Highcharts.chart(domid, {
             chart: {
                 type: 'bar'
             },
@@ -51,8 +51,8 @@
         });
     }
 
-    function drawChart_pair(js_vars) {
-        Highcharts.chart('highchart2', {
+    function drawChart_pair(domid, js_vars) {
+        Highcharts.chart(domid, {
             chart: {
                 type: 'bar'
             },
@@ -60,7 +60,7 @@
                 text: 'ペアの選択の組み合わせ'
             },
             subtitle: {
-                text: null
+                text: js_vars.num_pairs + "組が実験に参加しました"
             },
             xAxis: {
                 categories: ['AA', 'AB or BA', 'BB'],
@@ -94,8 +94,8 @@
         });
     }
 
-    function drawChart_series(js_vars) {
-        Highcharts.chart('highchart3', {
+    function drawChart_series(domid, js_vars) {
+        Highcharts.chart(domid, {
             chart: {
                 type: 'line'
             },
