@@ -327,3 +327,26 @@ def vars_for_admin_report(subsession: Subsession):
         list_comment=list_comment,
         prop_perfect_score=prop_perfect_score,
     )
+
+
+def custom_export(players: list[Player]):
+    yield [
+        "session.code",
+        "id_in_subsession",
+        "round_number",
+        "group.id_in_subsession",
+        "id_in_group",
+        "individual_choice",
+        "pair_choice",
+    ]
+
+    for p in players:
+        yield [
+            p.session.code,
+            p.id_in_subsession,
+            p.round_number,
+            p.group.id_in_subsession,
+            p.id_in_group,
+            p.individual_choice,
+            p.pair_choice,
+        ]
