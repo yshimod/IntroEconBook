@@ -199,8 +199,7 @@ class Results(Page):
 
     @staticmethod
     def js_vars(player: Player):
-        sub: Subsession = player.subsession
-        return dump_js_vars(sub)
+        return dump_js_vars(player.subsession)
 
 
 page_sequence = [
