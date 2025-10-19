@@ -1,4 +1,12 @@
 <div class="boxed-section">
+    <div id="highchart"></div>
+</div>
+
+<div class="boxed-section">
+    <div id="highchart1"></div>
+</div>
+
+<div class="boxed-section">
     <div id="highchart2"></div>
 </div>
 
@@ -51,6 +59,16 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const js_vars = JSON.parse(`{{ js_vars | json }}`);
-        drawChart_pair(js_vars);
+        drawChart_series(
+            "highchart",
+            js_vars.list_prop_B_p1,
+            "プレイヤー1が" + "{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.1 }}" + "を選んだ割合"
+        );
+        drawChart_series(
+            "highchart1",
+            js_vars.list_prop_A_p2,
+            "プレイヤー2が" + "{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}" + "を選んだ割合"
+        );
+        drawChart_pair("highchart2", js_vars);
     });
 </script>

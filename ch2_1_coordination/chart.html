@@ -12,6 +12,47 @@
     const choice_label_A = "{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}";
     const choice_label_B = "{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.1 }}";
 
+    function drawChart_series(domid, data, title_text) {
+        const round_nums = [...Array(data.length).keys()].map(i => i + 1);
+
+        Highcharts.chart(domid, {
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: title_text
+            },
+            subtitle: {
+                text: null
+            },
+            xAxis: {
+                categories: round_nums,
+                title: {
+                    text: "ラウンド"
+                }
+            },
+            yAxis: {
+                min: 0,
+                max: 100,
+                title: {
+                    text: null,
+                },
+                labels: {
+                    overflow: 'justify'
+                }
+            },
+            series: [{
+                name: '割合',
+                data: data,
+                dataLabels: { enabled: true, format: '{point.y:.2f}%' }
+            }],
+            tooltip: { enabled: false },
+            legend: { enabled: false },
+            credits: { enabled: false },
+            accessibility: { enabled: false }
+        });
+    }
+
     function drawChart_pair(domid, js_vars) {
         Highcharts.chart(domid, {
             chart: {
