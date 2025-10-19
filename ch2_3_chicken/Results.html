@@ -1,10 +1,10 @@
 {{ block title }}
-結果
+結果 {{ if C.NUM_ROUNDS > 1 }}（ラウンド {{ player.round_number }} / {{ C.NUM_ROUNDS }}）{{ endif }}
 {{ endblock }}
 
 
 {{ block content }}
-<div>
+<div class="fs-4">
     <ul>
         <li>あなた{{ if player.flg_non_input == 1 }}（コンピュータが選択）{{ endif }}は<b>{{ C.CHOICE_LABEL }}{{ my_decision }}</b>を選びました。
         </li>
@@ -12,6 +12,68 @@
         </li>
         <li>その結果、あなたが獲得したポイントは <b>{{ player.payoff }}</b>です。</li>
     </ul>
+</div>
+
+<div class="mt-3 fs-4">
+    <table class='table table-bordered text-center' style='vertical-align: middle;'>
+        <tr>
+            <th colspan="2" rowspan="2"></th>
+            <th colspan="2">あなたの相手</th>
+        </tr>
+        <tr>
+            <th>
+                <label class="btn btn-lg
+                    {{ if player.pair_choice == C.CHOICE_LIST.0 }}btn-primary{{ else }}btn-outline-primary{{ endif }}
+                    choicebtn disabled">
+                    {{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}
+                </label>
+            </th>
+            <th>
+                <label class="btn btn-lg
+                    {{ if player.pair_choice == C.CHOICE_LIST.1 }}btn-primary{{ else }}btn-outline-primary{{ endif }}
+                    choicebtn disabled">
+                    {{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.1 }}
+                </label>
+            </th>
+        </tr>
+        <tr>
+            <th rowspan="2">
+                <u>あなた</u>
+            </th>
+            <th>
+                <label class="btn btn-lg
+                    {{ if player.individual_choice == C.CHOICE_LIST.0 }}btn-primary{{ else }}btn-outline-primary{{ endif }}
+                    choicebtn disabled">
+                    {{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}
+                </label>
+            </th>
+            <td id="cell_AA">
+                <u>{{ C.PAYOFF_B }}</u>,
+                {{ C.PAYOFF_B }}
+            </td>
+            <td id="cell_AB">
+                <u>{{ C.PAYOFF_D }}</u>,
+                {{ C.PAYOFF_A }}
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <label class="btn btn-lg
+                    {{ if player.individual_choice == C.CHOICE_LIST.1 }}btn-primary{{ else }}btn-outline-primary{{ endif }}
+                    choicebtn disabled">
+                    {{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.1 }}
+                </label>
+            </th>
+            <td id="cell_BA">
+                <u>{{ C.PAYOFF_A }}</u>,
+                {{ C.PAYOFF_D }}
+            </td>
+            <td id="cell_BB">
+                <u>{{ C.PAYOFF_C }}</u>,
+                {{ C.PAYOFF_C }}
+            </td>
+        </tr>
+    </table>
 </div>
 
 <h3 class="mt-5">全体の結果</h3>
@@ -31,12 +93,33 @@
 {{ endblock }}
 
 
-{{ block script }}
+{{ block styles }}
+<style>
+    .choicebtn {
+        width: 8em;
+    }
+</style>
+{{ endblock }}
+
+
+{{ block scripts }}
 {{ include_sibling 'chart.html' }}
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        drawChart("highchart");
-        drawChart_pair("highchart2");
+        const P1_choice = '{{ player.individual_choice }}';
+        const P2_choice = '{{ player.pair_choice }}';
+        if (P1_choice === '{{ C.CHOICE_LIST.0 }}' && P2_choice === '{{ C.CHOICE_LIST.0 }}') {
+            document.getElementById('cell_AA').style.backgroundColor = 'yellow';
+        } else if (P1_choice === '{{ C.CHOICE_LIST.0 }}' && P2_choice === '{{ C.CHOICE_LIST.1 }}') {
+            document.getElementById('cell_AB').style.backgroundColor = 'yellow';
+        } else if (P1_choice === '{{ C.CHOICE_LIST.1 }}' && P2_choice === '{{ C.CHOICE_LIST.0 }}') {
+            document.getElementById('cell_BA').style.backgroundColor = 'yellow';
+        } else if (P1_choice === '{{ C.CHOICE_LIST.1 }}' && P2_choice === '{{ C.CHOICE_LIST.1 }}') {
+            document.getElementById('cell_BB').style.backgroundColor = 'yellow';
+        }
+
+        drawChart("highchart", js_vars);
+        drawChart_pair("highchart2", js_vars);
     });
 </script>
 {{ endblock }}

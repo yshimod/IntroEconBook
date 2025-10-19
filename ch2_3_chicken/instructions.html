@@ -1,10 +1,11 @@
 <div class="card bg-light m-3">
     <div class="card-body">
-        <h3>
+        <h3 class="my-3">
             実験説明
         </h3>
 
         <div>
+            <p>あなたの相手はランダムに決定されます。</p>
             <p>あなたとあなたの相手の意思決定により、あなたのポイントが決まります。</p>
             <p>ポイントは下記の表の通りです。あなたのポイントに<u>下線</u>が引いてあります。</p>
             <p>
@@ -30,7 +31,9 @@
                     <th>{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.1 }}</th>
                 </tr>
                 <tr>
-                    <th rowspan="2"><u>あなた</u></th>
+                    <th rowspan="2">
+                        <u>あなた</u>
+                    </th>
                     <th>{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}</th>
                     <td><u>{{ C.PAYOFF_B }}</u>, {{ C.PAYOFF_B }}</td>
                     <td><u>{{ C.PAYOFF_D }}</u>, {{ C.PAYOFF_A }}</td>

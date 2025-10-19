@@ -12,7 +12,7 @@
     const choice_label_A = "{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}";
     const choice_label_B = "{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.1 }}";
 
-    function drawChart(domid) {
+    function drawChart(domid, js_vars) {
         Highcharts.chart(domid, {
             chart: {
                 type: 'bar'
@@ -54,7 +54,7 @@
         });
     }
 
-    function drawChart_pair(domid) {
+    function drawChart_pair(domid, js_vars) {
         Highcharts.chart(domid, {
             chart: {
                 type: 'bar'

@@ -17,6 +17,20 @@ class C(BaseConstants):
     CHOICE_LIST = ["A", "B"]
     CHOICE_LABEL = "キャンパス"
 
+    PAYOFF_MATRIX = {
+        (CHOICE_LIST[0], CHOICE_LIST[0]): PAYOFF_B,
+        (CHOICE_LIST[0], CHOICE_LIST[1]): PAYOFF_D,
+        (CHOICE_LIST[1], CHOICE_LIST[0]): PAYOFF_A,
+        (CHOICE_LIST[1], CHOICE_LIST[1]): PAYOFF_C,
+    }
+
+    Q1_SENTENCE = (
+        "【クイズ1】 相手がキャンパスAを選んでいたら、あなたは何ポイント獲得しますか？"
+    )
+    Q2_SENTENCE = (
+        "【クイズ2】 相手がキャンパスBを選んでいたら、あなたは何ポイント獲得しますか？"
+    )
+
 
 class Subsession(BaseSubsession):
     num_participants = models.IntegerField(initial=0)
@@ -46,43 +60,46 @@ class Player(BasePlayer):
 
     # 相手はどちらを選ぶと思うか
     think_other_player_choice = models.StringField(
-        widget=widgets.RadioSelectHorizontal,
-        label="【質問】あなたの相手はどちらを選ぶと思いますか？",
-        choices=[
-            [v, "{}{}を選ぶと予想する".format(C.CHOICE_LABEL, v)] for v in C.CHOICE_LIST
-        ],
+        choices=C.CHOICE_LIST,
+        initial="",
     )
 
     # 意思決定の理由
     individual_choice_comment = models.LongStringField(
-        label="【質問】なぜあなたはその選択肢を選んだのか、理由を教えてください。"
-    )
-
-    # 相手の予想の理由
-    think_other_player_choice_comment = models.LongStringField(
-        label="【質問】なぜあなたは、相手がその選択肢を選ぶと思ったのか、理由を教えてください。"
+        label="",
+        initial="",
     )
 
     # クイズ1
     q1 = models.StringField(
         widget=widgets.RadioSelectHorizontal,
-        label="【理解度確認クイズ】 相手が{}{}を選んでいたら、あなたは何ポイント獲得しますか？".format(
-            C.CHOICE_LABEL, C.CHOICE_LIST[0]
-        ),
-        choices=[C.PAYOFF_B, C.PAYOFF_D, C.PAYOFF_A, C.PAYOFF_C],
+        label=C.Q1_SENTENCE,
+        choices=[
+            [str(int(v)), str(v)]
+            for v in [C.PAYOFF_B, C.PAYOFF_D, C.PAYOFF_A, C.PAYOFF_C]
+        ],
     )
+    correct_q1 = models.StringField()
+    score_q1 = models.BooleanField(initial=False)
 
     # クイズ2
     q2 = models.StringField(
         widget=widgets.RadioSelectHorizontal,
-        label="【理解度確認クイズ】 相手が{}{}を選んでいたら、あなたは何ポイント獲得しますか？".format(
-            C.CHOICE_LABEL, C.CHOICE_LIST[1]
-        ),
-        choices=[C.PAYOFF_B, C.PAYOFF_D, C.PAYOFF_A, C.PAYOFF_C],
+        label=C.Q2_SENTENCE,
+        choices=[
+            [str(int(v)), str(v)]
+            for v in [C.PAYOFF_B, C.PAYOFF_D, C.PAYOFF_A, C.PAYOFF_C]
+        ],
     )
+    correct_q2 = models.StringField()
+    score_q2 = models.BooleanField(initial=False)
 
 
 # FUNCTIONS
+def creating_session(subsession: Subsession):
+    subsession.group_randomly()
+
+
 def summarize_data(subsession: Subsession):
     list_choices = [
         p.individual_choice
@@ -115,12 +132,6 @@ def summarize_data(subsession: Subsession):
 
 
 def set_payoff(player: Player):
-    payoff_matrix = {
-        (C.CHOICE_LIST[0], C.CHOICE_LIST[0]): C.PAYOFF_B,
-        (C.CHOICE_LIST[0], C.CHOICE_LIST[1]): C.PAYOFF_D,
-        (C.CHOICE_LIST[1], C.CHOICE_LIST[0]): C.PAYOFF_A,
-        (C.CHOICE_LIST[1], C.CHOICE_LIST[1]): C.PAYOFF_C,
-    }
     opponent: Player = player.get_others_in_group()[0]
 
     p_choice = player.field_maybe_none("individual_choice")
@@ -130,23 +141,56 @@ def set_payoff(player: Player):
     player.flg_pair_non_input = opponent.flg_non_input
 
     if p_choice and o_choice:
-        player.payoff = payoff_matrix[(p_choice, o_choice)]
+        player.payoff = C.PAYOFF_MATRIX[(p_choice, o_choice)]
     else:
         player.payoff = -1
 
 
+def dump_js_vars(sub: Subsession):
+    prop_A = -1
+    prop_B = -1
+    if sub.num_participants > 0:
+        prop_A = (sub.num_A / sub.num_participants) * 100
+        prop_B = (sub.num_B / sub.num_participants) * 100
+
+    prop_pairs_AA = -1
+    prop_pairs_AB = -1
+    prop_pairs_BB = -1
+    if sub.num_pairs > 0:
+        prop_pairs_AA = (sub.num_pairs_AA / sub.num_pairs) * 100
+        prop_pairs_AB = (sub.num_pairs_AB / sub.num_pairs) * 100
+        prop_pairs_BB = (sub.num_pairs_BB / sub.num_pairs) * 100
+
+    return dict(
+        num_participants=sub.num_participants,
+        prop_A=prop_A,
+        prop_B=prop_B,
+        num_pairs=sub.num_pairs,
+        prop_pairs_AA=prop_pairs_AA,
+        prop_pairs_AB=prop_pairs_AB,
+        prop_pairs_BB=prop_pairs_BB,
+    )
+
+
 # PAGES
 class Introduction(Page):
-    # timeout_seconds = 100
-    pass
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.round_number == 1
 
 
 class Decision(Page):
     form_model = "player"
-    form_fields = [
-        "individual_choice",
-        "individual_choice_comment",
-    ]
+
+    @staticmethod
+    def get_form_fields(player: Player):
+        form_fields = [
+            "individual_choice",
+            "think_other_player_choice",
+        ]
+        if player.round_number == 1:
+            form_fields.append("individual_choice_comment")
+        return form_fields
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
@@ -160,9 +204,50 @@ class Question(Page):
     form_fields = [
         "q1",
         "q2",
-        "think_other_player_choice",
-        "think_other_player_choice_comment",
     ]
+
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.round_number == 1
+
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened):
+        if player.field_maybe_none("individual_choice"):
+            correct_q1 = C.PAYOFF_MATRIX[(player.individual_choice, C.CHOICE_LIST[0])]
+            correct_q2 = C.PAYOFF_MATRIX[(player.individual_choice, C.CHOICE_LIST[1])]
+
+            player.correct_q1 = str(int(correct_q1))
+            player.correct_q2 = str(int(correct_q2))
+
+            if player.field_maybe_none("q1"):
+                player.score_q1 = player.q1 == player.correct_q1
+            if player.field_maybe_none("q2"):
+                player.score_q2 = player.q2 == player.correct_q2
+
+
+class Quiz_Feedback(Page):
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.round_number == 1
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(
+            results=[
+                {
+                    "question": C.Q1_SENTENCE,
+                    "player_answer": player.field_maybe_none("q1"),
+                    "correct_answer": player.field_maybe_none("correct_q1"),
+                    "score": "正解" if player.score_q1 else "不正解",
+                },
+                {
+                    "question": C.Q2_SENTENCE,
+                    "player_answer": player.field_maybe_none("q2"),
+                    "correct_answer": player.field_maybe_none("correct_q2"),
+                    "score": "正解" if player.score_q2 else "不正解",
+                },
+            ]
+        )
 
 
 class ResultsWaitPage(WaitPage):
@@ -186,42 +271,45 @@ class Results(Page):
 
     @staticmethod
     def js_vars(player: Player):
-        sub: Subsession = player.subsession
-
-        prop_A = -1
-        prop_B = -1
-        if sub.num_participants > 0:
-            prop_A = (sub.num_A / sub.num_participants) * 100
-            prop_B = (sub.num_B / sub.num_participants) * 100
-
-        prop_pairs_AA = -1
-        prop_pairs_AB = -1
-        prop_pairs_BB = -1
-        if sub.num_pairs > 0:
-            prop_pairs_AA = (sub.num_pairs_AA / sub.num_pairs) * 100
-            prop_pairs_AB = (sub.num_pairs_AB / sub.num_pairs) * 100
-            prop_pairs_BB = (sub.num_pairs_BB / sub.num_pairs) * 100
-
-        return dict(
-            num_participants=sub.num_participants,
-            prop_A=prop_A,
-            prop_B=prop_B,
-            num_pairs=sub.num_pairs,
-            prop_pairs_AA=prop_pairs_AA,
-            prop_pairs_AB=prop_pairs_AB,
-            prop_pairs_BB=prop_pairs_BB,
-        )
-
-
-class PreResults(Page):
-    pass
+        return dump_js_vars(player.subsession)
 
 
 page_sequence = [
     Introduction,
     Decision,
     Question,
+    Quiz_Feedback,
     ResultsWaitPage,
-    PreResults,
     Results,
 ]
+
+
+def vars_for_admin_report(subsession: Subsession):
+    list_comment = []
+    if subsession.round_number == 1:
+        list_comment = sorted(
+            [
+                [
+                    p.individual_choice,
+                    p.think_other_player_choice,
+                    p.pair_choice,
+                    p.individual_choice_comment,
+                ]
+                for p in subsession.get_players()
+            ]
+        )
+
+    list_perfect_score = []
+    prop_perfect_score = -1
+    if subsession.round_number == 1:
+        list_perfect_score = [
+            int(p.score_q1) * int(p.score_q2) for p in subsession.get_players()
+        ]
+        if list_perfect_score:
+            prop_perfect_score = 100 * sum(list_perfect_score) / len(list_perfect_score)
+
+    return dict(
+        js_vars=dump_js_vars(subsession),
+        list_comment=list_comment,
+        prop_perfect_score=prop_perfect_score,
+    )
