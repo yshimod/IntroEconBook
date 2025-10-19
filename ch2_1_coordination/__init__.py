@@ -33,6 +33,11 @@ class C(BaseConstants):
 
 
 class Subsession(BaseSubsession):
+    num_p1 = models.IntegerField(initial=0)
+    num_p2 = models.IntegerField(initial=0)
+    num_B_p1 = models.IntegerField(initial=0)
+    num_A_p2 = models.IntegerField(initial=0)
+
     num_pairs = models.IntegerField(initial=0)
     num_pairs_AA = models.IntegerField(initial=0)
     num_pairs_AB = models.IntegerField(initial=0)
@@ -98,6 +103,22 @@ def creating_session(subsession: Subsession):
 
 
 def summarize_data(subsession: Subsession):
+    list_p1_choices = [
+        p.individual_choice
+        for p in subsession.get_players()
+        if p.id_in_group == 1 and p.field_maybe_none("individual_choice")
+    ]
+    subsession.num_p1 = len(list_p1_choices)
+    subsession.num_B_p1 = list_p1_choices.count(C.CHOICE_LIST[0])
+
+    list_p2_choices = [
+        p.individual_choice
+        for p in subsession.get_players()
+        if p.id_in_group == 2 and p.field_maybe_none("individual_choice")
+    ]
+    subsession.num_p2 = len(list_p2_choices)
+    subsession.num_A_p2 = list_p2_choices.count(C.CHOICE_LIST[0])
+
     list_grp_results = [
         (
             g.get_player_by_id(1).individual_choice,
@@ -142,6 +163,15 @@ def set_payoff(group: Group):
 
 
 def dump_js_vars(sub: Subsession):
+    list_prop_B_p1 = [-1] * sub.round_number
+    list_prop_A_p2 = [-1] * sub.round_number
+    for t in range(1, sub.round_number + 1):
+        sub_t: Subsession = sub.in_round(t)
+        if sub_t.num_p1 > 0:
+            list_prop_B_p1[t - 1] = (sub_t.num_B_p1 / sub_t.num_p1) * 100
+        if sub_t.num_p2 > 0:
+            list_prop_A_p2[t - 1] = (sub_t.num_A_p2 / sub_t.num_p2) * 100
+
     prop_pairs_AA = -1
     prop_pairs_AB = -1
     prop_pairs_BA = -1
@@ -153,6 +183,8 @@ def dump_js_vars(sub: Subsession):
         prop_pairs_BB = (sub.num_pairs_BB / sub.num_pairs) * 100
 
     return dict(
+        list_prop_B_p1=list_prop_B_p1,
+        list_prop_A_p2=list_prop_A_p2,
         num_pairs=sub.num_pairs,
         prop_pairs_AA=prop_pairs_AA,
         prop_pairs_AB=prop_pairs_AB,
