@@ -231,7 +231,7 @@ class Quiz_Feedback(Page):
         return player.round_number == 1
 
     @staticmethod
-    def vars_for_template(player):
+    def vars_for_template(player: Player):
         return dict(
             results=[
                 {
