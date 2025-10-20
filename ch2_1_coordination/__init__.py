@@ -169,6 +169,10 @@ class ResultsWaitPage(WaitPage):
             set_payoff(grp)
 
 
+class PreResults(Page):
+    pass
+
+
 class Results(Page):
     @staticmethod
     def vars_for_template(player: Player):
@@ -199,10 +203,6 @@ class Results(Page):
             prop_pairs_BA=prop_pairs_BA,
             prop_pairs_BB=prop_pairs_BB,
         )
-
-
-class PreResults(Page):
-    pass
 
 
 page_sequence = [
