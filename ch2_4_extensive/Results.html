@@ -1,25 +1,25 @@
 {{ block title }}
-結果：あなたと相手の意思決定の結果です。
+結果
 {{ endblock }}
 
 
 {{ block content }}
-{{ if player.id_in_group == 1 }}あなたはプレイヤー1でした。{{ endif }}
-{{ if player.id_in_group == 2 }}あなたはプレイヤー2でした。{{ endif }}
+<div>
+    <ul>
+        <li>あなたはプレイヤー{{ player.id_in_group }}でした。</li>
+        <li>プレイヤー1{{ if group.flg_non_input_p1 == 1 }}（コンピュータが選択）{{ endif }}は<b>{{ C.CHOICE_LABEL }}{{ my_decision }}</b>を選びました。
+        </li>
+        <li>プレイヤー2{{ if group.flg_non_input_p2 == 1 }}（コンピュータが選択）{{ endif }}は<b>{{ C.CHOICE_LABEL }}{{ opponent_decision }}</b>を選びました。
+        </li>
+        <li>その結果、あなたが獲得したポイントは <b>{{ player.payoff }}</b>です。</li>
+    </ul>
+</div>
 
-<p>
-    プレイヤー1{{ if group.flg_non_input_p1 == 1 }}(コンピュータが選びました){{ endif }}はキャンパス{{ my_decision }}
-    、プレイヤー2{{ if group.flg_non_input_p2 == 1 }}(コンピュータが選びました){{ endif }}は キャンパス{{ opponent_decision }}を選びました。
-</p>
-
-<p>
-    その結果、あなたのポイントは {{ player.payoff }}です。
-</p>
+<h3 class="mt-5">全体の結果</h3>
+{{ endblock }}
 
 
-{{ include C.INSTRUCTIONS_TEMPLATE }}
-
-<p>全ての参加者の結果</p>
+{{ block scripts }}
 {{ include 'ch2_4_extensive/chart.html' }}
 <script>
     drawChart_p1();// グラフ描画
