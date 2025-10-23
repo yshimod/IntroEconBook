@@ -19,14 +19,6 @@ class C(BaseConstants):
 
 
 class Subsession(BaseSubsession):
-    num_participants_p1 = models.IntegerField(initial=0)
-    num_A_p1 = models.IntegerField(initial=0)
-    num_B_p1 = models.IntegerField(initial=0)
-
-    num_participants_p2 = models.IntegerField(initial=0)
-    num_A_p2 = models.IntegerField(initial=0)
-    num_B_p2 = models.IntegerField(initial=0)
-
     num_pairs = models.IntegerField(initial=0)
     num_pairs_AA = models.IntegerField(initial=0)
     num_pairs_AB = models.IntegerField(initial=0)
@@ -60,24 +52,6 @@ class Player(BasePlayer):
 
 # FUNCTIONS
 def summarize_data(subsession: Subsession):
-    list_p1_choices = [
-        g.p1_decision
-        for g in subsession.get_groups()
-        if g.field_maybe_none("p1_decision")
-    ]
-    subsession.num_participants_p1 = len(list_p1_choices)
-    subsession.num_A_p1 = list_p1_choices.count(C.CHOICE_LIST[0])
-    subsession.num_B_p1 = list_p1_choices.count(C.CHOICE_LIST[1])
-
-    list_p2_choices = [
-        g.p2_decision
-        for g in subsession.get_groups()
-        if g.field_maybe_none("p2_decision")
-    ]
-    subsession.num_participants_p2 = len(list_p2_choices)
-    subsession.num_A_p2 = list_p2_choices.count(C.CHOICE_LIST[0])
-    subsession.num_B_p2 = list_p2_choices.count(C.CHOICE_LIST[1])
-
     list_grp_results = [
         (
             g.p1_decision,
@@ -196,41 +170,12 @@ class Results(Page):
     @staticmethod
     def js_vars(player: Player):
         sub: Subsession = player.subsession
-
-        prop_A_p1 = -1
-        prop_B_p1 = -1
-        if sub.num_participants_p1 > 0:
-            prop_A_p1 = (sub.num_A_p1 / sub.num_participants_p1) * 100
-            prop_B_p1 = (sub.num_B_p1 / sub.num_participants_p1) * 100
-
-        prop_A_p2 = -1
-        prop_B_p2 = -1
-        if sub.num_participants_p2 > 0:
-            prop_A_p2 = (sub.num_A_p2 / sub.num_participants_p2) * 100
-            prop_B_p2 = (sub.num_B_p2 / sub.num_participants_p2) * 100
-
-        prop_pairs_AA = -1
-        prop_pairs_AB = -1
-        prop_pairs_BA = -1
-        prop_pairs_BB = -1
-        if sub.num_pairs > 0:
-            prop_pairs_AA = (sub.num_pairs_AA / sub.num_pairs) * 100
-            prop_pairs_AB = (sub.num_pairs_AB / sub.num_pairs) * 100
-            prop_pairs_BA = (sub.num_pairs_BA / sub.num_pairs) * 100
-            prop_pairs_BB = (sub.num_pairs_BB / sub.num_pairs) * 100
-
         return dict(
-            num_participants_P1=sub.num_participants_p1,
-            prop_A_p1=prop_A_p1,
-            prop_B_p1=prop_B_p1,
-            num_participants_P2=sub.num_participants_p2,
-            prop_A_p2=prop_A_p2,
-            prop_B_p2=prop_B_p2,
             num_pairs=sub.num_pairs,
-            prop_pairs_AA=prop_pairs_AA,
-            prop_pairs_AB=prop_pairs_AB,
-            prop_pairs_BA=prop_pairs_BA,
-            prop_pairs_BB=prop_pairs_BB,
+            num_pairs_AA=sub.num_pairs_AA,
+            num_pairs_AB=sub.num_pairs_AB,
+            num_pairs_BA=sub.num_pairs_BA,
+            num_pairs_BB=sub.num_pairs_BB,
         )
 
 

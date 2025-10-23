@@ -16,17 +16,30 @@
 </div>
 
 <h3 class="mt-5">全体の結果</h3>
+
+<div class="boxed-section">
+    <div id="highchart" style="width:600px; height:600px;"></div>
+</div>
+
+<div class="boxed-section">
+    <div id="highchart2"></div>
+</div>
+
+{#
+<div class="mt-5">
+    {{ include_sibling 'instructions.html' }}
+</div>
+#}
+
 {{ endblock }}
 
 
 {{ block scripts }}
-{{ include 'ch2_4_extensive/chart.html' }}
+{{ include_sibling 'chart.html' }}
 <script>
-    drawChart_p1();// グラフ描画
-    drawChart_p2();// グラフ描画
-    drawChart_pair();// グラフ描画
+    document.addEventListener('DOMContentLoaded', function () {
+        drawChartMosaic("highchart");
+        drawChart_pair("highchart2");
+    });
 </script>
-
-
-
 {{ endblock }}
