@@ -160,14 +160,6 @@ class PreResults(Page):
 
 class Results(Page):
     @staticmethod
-    def vars_for_template(player: Player):
-        group: Group = player.group
-        return dict(
-            my_decision=group.p1_decision,
-            opponent_decision=group.p2_decision,
-        )
-
-    @staticmethod
     def js_vars(player: Player):
         sub: Subsession = player.subsession
         return dict(

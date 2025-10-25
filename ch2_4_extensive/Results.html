@@ -6,10 +6,18 @@
 {{ block content }}
 <div>
     <ul>
-        <li>あなたはプレイヤー{{ player.id_in_group }}でした。</li>
-        <li>プレイヤー1{{ if group.flg_non_input_p1 == 1 }}（コンピュータが選択）{{ endif }}は<b>{{ C.CHOICE_LABEL }}{{ my_decision }}</b>を選びました。
+        <li>あなたは<b>プレイヤー{{ player.id_in_group }}</b>でした。</li>
+        <li>
+            プレイヤー1
+            {{ if group.flg_non_input_p1 == 1 }}（コンピュータが選択）{{ endif }}
+            {{ if player.id_in_group == 1 }}（あなた）{{ endif }}
+            は<b>{{ C.CHOICE_LABEL }}{{ group.p1_decision }}</b>を選びました。
         </li>
-        <li>プレイヤー2{{ if group.flg_non_input_p2 == 1 }}（コンピュータが選択）{{ endif }}は<b>{{ C.CHOICE_LABEL }}{{ opponent_decision }}</b>を選びました。
+        <li>
+            プレイヤー2
+            {{ if group.flg_non_input_p2 == 1 }}（コンピュータが選択）{{ endif }}
+            {{ if player.id_in_group == 2 }}（あなた）{{ endif }}
+            は<b>{{ C.CHOICE_LABEL }}{{ group.p2_decision }}</b>を選びました。
         </li>
         <li>その結果、あなたが獲得したポイントは <b>{{ player.payoff }}</b>です。</li>
     </ul>
