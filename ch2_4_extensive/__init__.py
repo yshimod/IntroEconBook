@@ -180,7 +180,7 @@ class Results(Page):
 
 
 page_sequence = [
-    # Introduction,
+    Introduction,
     First_mover,
     WaitForFirstMover,
     Second_mover,
