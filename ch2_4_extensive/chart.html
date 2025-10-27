@@ -12,7 +12,7 @@
     const choice_label_A = "{{ C.CHOICE_LIST.0 }}";
     const choice_label_B = "{{ C.CHOICE_LIST.1 }}";
 
-    function drawChartMosaic(domid) {
+    function drawChartMosaic(domid, js_vars) {
         Highcharts.chart(domid, {
             title: { text: '個人の選択（モザイクプロット）' },
             subtitle: {
@@ -74,7 +74,7 @@
         });
     }
 
-    function drawChart_pair(domid) {
+    function drawChart_pair(domid, js_vars) {
         const total = js_vars.num_pairs_AA + js_vars.num_pairs_AB + js_vars.num_pairs_BA + js_vars.num_pairs_BB;
         const prop_AA = (js_vars.num_pairs_AA / total * 100);
         const prop_AB = (js_vars.num_pairs_AB / total * 100);
