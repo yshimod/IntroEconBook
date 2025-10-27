@@ -211,3 +211,24 @@ def vars_for_admin_report(subsession: Subsession):
         js_vars=dump_js_vars(subsession),
         list_comment=list_comment,
     )
+
+
+def custom_export(players: list[Player]):
+    yield [
+        "session.code",
+        "round_number",
+        "id_in_subsession",
+        "p1_decision",
+        "p2_decision",
+    ]
+
+    for p in players:
+        if p.id_in_group == 1:
+            g: Group = p.group
+            yield [
+                p.session.code,
+                p.round_number,
+                g.id_in_subsession,
+                g.p1_decision,
+                g.p2_decision,
+            ]
