@@ -100,6 +100,16 @@ def set_payoff(group: Group):
         p2.payoff = -1
 
 
+def dump_js_vars(sub: Subsession):
+    return dict(
+        num_pairs=sub.num_pairs,
+        num_pairs_AA=sub.num_pairs_AA,
+        num_pairs_AB=sub.num_pairs_AB,
+        num_pairs_BA=sub.num_pairs_BA,
+        num_pairs_BB=sub.num_pairs_BB,
+    )
+
+
 # PAGES
 class Introduction(Page):
     @staticmethod
@@ -168,14 +178,7 @@ class ResultsWaitPage(WaitPage):
 class Results(Page):
     @staticmethod
     def js_vars(player: Player):
-        sub: Subsession = player.subsession
-        return dict(
-            num_pairs=sub.num_pairs,
-            num_pairs_AA=sub.num_pairs_AA,
-            num_pairs_AB=sub.num_pairs_AB,
-            num_pairs_BA=sub.num_pairs_BA,
-            num_pairs_BB=sub.num_pairs_BB,
-        )
+        return dump_js_vars(player.subsession)
 
 
 page_sequence = [
@@ -186,3 +189,25 @@ page_sequence = [
     ResultsWaitPage,
     Results,
 ]
+
+
+def vars_for_admin_report(subsession: Subsession):
+    list_comment = []
+    if subsession.round_number == 1:
+        list_comment = sorted(
+            [
+                [
+                    g.p1_decision,
+                    g.individual_choice_comment_p1,
+                    g.p2_decision,
+                    g.individual_choice_comment_p2,
+                ]
+                for g in subsession.get_groups()
+            ],
+            key=lambda x: (x[0], x[2]),
+        )
+
+    return dict(
+        js_vars=dump_js_vars(subsession),
+        list_comment=list_comment,
+    )
