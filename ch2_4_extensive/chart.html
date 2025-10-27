@@ -1,211 +1,131 @@
+<style>
+    .boxed-section {
+        border: 2px solid #000;
+        padding: 10px;
+        margin: 10px 0;
+    }
+</style>
+
 <script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/modules/series-label.js"></script>
-
-<div id="highchart_p1"></div>
-<div id="highchart_p2"></div>
-<div id="highchart2"></div>
-
+<script src="https://code.highcharts.com/modules/treemap.js"></script>
 <script>
-    function drawChart_p1() {
-        disp_title = "（プレイヤー1）" + js_vars.num_participants_P1 + "名が実験に参加しました。"
-        //alert(disp_title)
-        //if (series.length!=0){
-            Highcharts.chart('highchart_p1', {
-                chart: {
-                type: 'bar'
-                },
-                title: {
-                    text: disp_title
-                },
-                subtitle: {
-                    text: ''
-                },
-                xAxis: {
-                    //categories: ['Aが1つ', 'Aが2つ', 'Aが3つ', 'Aが4つ', 'Aが5つ'],
-                    categories: ['Aを選んだ人','Bを選んだ人'],
-                    title: {
-                        text: null
-                    }
-                },
-                yAxis: {
-                    min: 0,
-                    max: 100,
-                    title: {
-                        text: '',
-                        align: 'high'
-                    },
-                    labels: {
-                        overflow: 'justify'
-                    }
-                },
-                tooltip: {
-                    valueSuffix: ' %'
-                },
-                plotOptions: {
-                    bar: {
+    const choice_label_A = "{{ C.CHOICE_LIST.0 }}";
+    const choice_label_B = "{{ C.CHOICE_LIST.1 }}";
+
+    function drawChartMosaic(domid, js_vars) {
+        Highcharts.chart(domid, {
+            title: { text: 'ペアの選択の組み合わせ（モザイクプロット）' },
+            subtitle: {
+                text: js_vars.num_pairs + "組が実験に参加しました"
+            },
+            series: [{
+                type: 'treemap',
+                layoutAlgorithm: 'sliceAndDice',
+                levelIsConstant: false,
+                levels: [
+                    {
+                        level: 1,    // First mover
+                        layoutAlgorithm: 'sliceAndDice',
+                        layoutStartingDirection: 'vertical',
                         dataLabels: {
-                            enabled: true
+                            enabled: true,
+                            align: 'center',
+                            verticalAlign: 'top',
+                            style: { fontSize: '20px' },
+                            formatter: function () {
+                                const total = js_vars.num_pairs_AA + js_vars.num_pairs_AB + js_vars.num_pairs_BA + js_vars.num_pairs_BB;
+                                const percent = (this.point.value / total * 100).toFixed(2);
+                                return this.point.name + '<br>' + percent + '%';
+                            }
+                        }
+                    },
+                    {
+                        level: 2,    // Second mover
+                        layoutAlgorithm: 'sliceAndDice',
+                        layoutStartingDirection: 'horizontal',
+                        dataLabels: {
+                            enabled: true,
+                            align: 'center',
+                            verticalAlign: 'bottom',
+                            style: { fontSize: '16px' },
+                            formatter: function () {
+                                const parentValue = this.series.chart.get(this.point.parent).value;
+                                const percent = (this.point.value / parentValue * 100).toFixed(2);
+                                return this.point.name + '<br>' + percent + '%';
+                            }
                         }
                     }
-                },
-                legend: {
-                    layout: 'vertical',
-                    align: 'right',
-                    verticalAlign: 'top',
-                    x: -40,
-                    y: 80,
-                    floating: true,
-                    borderWidth: 1,
-                    backgroundColor:
-                        Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF',
-                    shadow: true
-                },
-                credits: {
-                    enabled: false
-                },
-                series: [{
-                    name: '%',
-                    data: [
-                      {y: js_vars.num_A_p1, color: 'orange'},
-                      {y: js_vars.num_B_p1, color: 'green'},
-                    ]
-                }]
-            });
-        }
-    //}
-    function drawChart_p2() {
-        disp_title = "（プレイヤー2）" + js_vars.num_participants_P2 + "名が実験に参加しました。"
-        //alert(disp_title)
-        //if (series.length!=0){
-            Highcharts.chart('highchart_p2', {
-                chart: {
+                ],
+                data: [
+                    // First mover
+                    { id: 'a', name: '先手: ' + choice_label_A, value: js_vars.num_pairs_AA + js_vars.num_pairs_AB, sortIndex: 1 },
+                    { id: 'b', name: '先手: ' + choice_label_B, value: js_vars.num_pairs_BA + js_vars.num_pairs_BB, sortIndex: 2 },
+                    // Second mover
+                    { parent: 'a', name: '後手: ' + choice_label_A, value: js_vars.num_pairs_AA, color: '#1f77b4', sortIndex: 3 },
+                    { parent: 'a', name: '後手: ' + choice_label_B, value: js_vars.num_pairs_AB, color: '#ff7f0e', sortIndex: 4 },
+                    { parent: 'b', name: '後手: ' + choice_label_A, value: js_vars.num_pairs_BA, color: '#17becf', sortIndex: 3 },
+                    { parent: 'b', name: '後手: ' + choice_label_B, value: js_vars.num_pairs_BB, color: '#d62728', sortIndex: 4 }
+                ],
+            }],
+            tooltip: { enabled: false },
+            legend: { enabled: false },
+            credits: { enabled: false },
+            accessibility: { enabled: false }
+        });
+    }
+
+    function drawChart_pair(domid, js_vars) {
+        const total = js_vars.num_pairs_AA + js_vars.num_pairs_AB + js_vars.num_pairs_BA + js_vars.num_pairs_BB;
+        const prop_AA = (js_vars.num_pairs_AA / total * 100);
+        const prop_AB = (js_vars.num_pairs_AB / total * 100);
+        const prop_BA = (js_vars.num_pairs_BA / total * 100);
+        const prop_BB = (js_vars.num_pairs_BB / total * 100);
+
+        Highcharts.chart(domid, {
+            chart: {
                 type: 'bar'
-                },
+            },
+            title: {
+                text: "ペアの選択の組み合わせ"
+            },
+            subtitle: {
+                text: js_vars.num_pairs + "組が実験に参加しました"
+            },
+            xAxis: {
+                categories: [
+                    choice_label_A + " → " + choice_label_A,
+                    choice_label_A + " → " + choice_label_B,
+                    choice_label_B + " → " + choice_label_A,
+                    choice_label_B + " → " + choice_label_B
+                ],
                 title: {
-                    text: disp_title
-                },
-                subtitle: {
-                    text: ''
-                },
-                xAxis: {
-                    //categories: ['Aが1つ', 'Aが2つ', 'Aが3つ', 'Aが4つ', 'Aが5つ'],
-                    categories: ['Aを選んだ人','Bを選んだ人'],
-                    title: {
-                        text: null
-                    }
-                },
-                yAxis: {
-                    min: 0,
-                    max: 100,
-                    title: {
-                        text: '',
-                        align: 'high'
-                    },
-                    labels: {
-                        overflow: 'justify'
-                    }
-                },
-                tooltip: {
-                    valueSuffix: ' %'
-                },
-                plotOptions: {
-                    bar: {
-                        dataLabels: {
-                            enabled: true
-                        }
-                    }
-                },
-                legend: {
-                    layout: 'vertical',
-                    align: 'right',
-                    verticalAlign: 'top',
-                    x: -40,
-                    y: 80,
-                    floating: true,
-                    borderWidth: 1,
-                    backgroundColor:
-                        Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF',
-                    shadow: true
-                },
-                credits: {
-                    enabled: false
-                },
-                series: [{
-                    name: '%',
-                    data: [
-                      {y: js_vars.num_A_p2, color: 'orange'},
-                      {y: js_vars.num_B_p2, color: 'green'},
-                    ]
-                }]
-            });
-        }
-    //}
-    function drawChart_pair() {
-        disp_title = "（コンピュータを含む）" + js_vars.num_pairs + "名が実験に参加しました。"
-        //alert(disp_title)
-        //if (series.length!=0){
-            Highcharts.chart('highchart2', {
-                chart: {
-                type: 'bar'
-                },
+                    text: null
+                }
+            },
+            yAxis: {
+                min: 0,
+                max: 100,
                 title: {
-                    text: disp_title
+                    text: null,
                 },
-                subtitle: {
-                    text: ''
-                },
-                xAxis: {
-                    categories: ['AA','AB','BA','BB'],
-                    title: {
-                        text: null
-                    }
-                },
-                yAxis: {
-                    min: 0,
-                    max: 100,
-                    title: {
-                        text: '',
-                        align: 'high'
-                    },
-                    labels: {
-                        overflow: 'justify'
-                    }
-                },
-                tooltip: {
-                    valueSuffix: '%'
-                },
-                plotOptions: {
-                    bar: {
-                        dataLabels: {
-                            enabled: true
-                        }
-                    }
-                },
-                legend: {
-                    layout: 'vertical',
-                    align: 'right',
-                    verticalAlign: 'top',
-                    x: -40,
-                    y: 80,
-                    floating: true,
-                    borderWidth: 1,
-                    backgroundColor:
-                        Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF',
-                    shadow: true
-                },
-                credits: {
-                    enabled: false
-                },
-                series: [{
-                    name: '%',
-                    data: [
-                      {y: js_vars.num_AA, color: '#87cefa'},
-                      {y: js_vars.num_AB, color: '#87cefa'},
-                      {y: js_vars.num_BA, color: '#87cefa'},
-                      {y: js_vars.num_BB, color: '#87cefa'},
-                    ]
-                }]
-            });
-        }
-    //}
+                labels: {
+                    overflow: 'justify'
+                }
+            },
+            series: [{
+                name: '割合',
+                data: [
+                    prop_AA,
+                    prop_AB,
+                    prop_BA,
+                    prop_BB
+                ],
+                dataLabels: { enabled: true, format: '{point.y:.2f}%' }
+            }],
+            tooltip: { enabled: false },
+            legend: { enabled: false },
+            credits: { enabled: false },
+            accessibility: { enabled: false }
+        });
+    }
 </script>

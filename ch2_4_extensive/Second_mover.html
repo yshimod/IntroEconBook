@@ -1,46 +1,132 @@
 {{ block title }}
-    実験：あなたはプレイヤー2（後手）になりました。
+実験 {{ if C.NUM_ROUNDS > 1 }}（ラウンド {{ player.round_number }} / {{ C.NUM_ROUNDS }}）{{ endif }}
 {{ endblock }}
+
+
 {{ block content }}
-    {% if group.p1_decision == "A" %}
-        <p> <font color="red">プレイヤー1（先手）は、[{{C.CHOICE_LABEL_1}}]を選びました。</font></p>
-        <p> あなたが、[{{ C.CHOICE_LABEL_1 }}]に出店すれば、プレイヤー１は{{ C.PAYOFF_B }}、あなたは{{ C.PAYOFF_B }}もらうことができます。</p>
-        <p> あなたが、[{{ C.CHOICE_LABEL_2 }}]に出店すれば、プレイヤー１は{{ C.PAYOFF_D }}、あなたは{{ C.PAYOFF_A }}もらうことができます。</p>
-    {% endif %}
-    {% if group.p1_decision == "B" %}
-        <p> <font color="red">プレイヤー1（先手）は、[{{C.CHOICE_LABEL_2}}]を選びました。</font></p>
-        <p> あなたが、[{{ C.CHOICE_LABEL_1 }}]に出店すれば、プレイヤー１は{{ C.PAYOFF_A }}、あなたは{{ C.PAYOFF_D }}もらうことができます。</p>
-        <p> あなたが、[{{ C.CHOICE_LABEL_2 }}]に出店すれば、プレイヤー１は{{ C.PAYOFF_C }}、あなたは{{ C.PAYOFF_C }}もらうことができます。</p>
-    {% endif %}
-   <table class='table table-bordered text-center'
-           style='width: auto; margin: auto'>
+<div class="fs-4">
+    <p>あなたは<span class="fw-bold text-danger">プレイヤー2（後手）</span>になりました。</p>
+    <p>相手（プレイヤー1，先手）は<span class="fw-bold text-danger">{{ group.p1_decision }}</span>を選びました。</p>
+    <p>あなた自身の意思決定として、下の表の{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}と{{ C.CHOICE_LIST.1 }}のいずれかを選んでください。</p>
+</div>
+
+<div class="mt-5 fs-4">
+    <table class="table table-bordered text-center" style="vertical-align: middle;">
         <tr>
-            <th colspan=2 rowspan=2></th>
-            <th colspan=2><u>プレイヤー2（あなた）</u></th>
+            <th colspan="2" rowspan="2"></th>
+            <th colspan="2"><u>プレイヤー2（後手，あなた）</u></th>
         </tr>
         <tr>
-            <th>{{ C.CHOICE_LABEL_1 }}</th>
-            <th>{{ C.CHOICE_LABEL_2 }}</th>
+            <th>
+                <input type="radio" class="btn-check" name="p2_decision" id="id_p2_decision_A"
+                    value="{{ C.CHOICE_LIST.0 }}" autocomplete="off" required>
+                <label class="btn btn-lg
+                    btn-outline-primary choicebtn" for="id_p2_decision_A">
+                    {{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}
+                </label>
+            </th>
+            <th>
+                <input type="radio" class="btn-check" name="p2_decision" id="id_p2_decision_B"
+                    value="{{ C.CHOICE_LIST.1 }}" autocomplete="off" required>
+                <label class="btn btn-lg
+                    btn-outline-primary choicebtn" for="id_p2_decision_B">
+                    {{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.1 }}
+                </label>
+            </th>
         </tr>
         <tr>
-            <th rowspan=2><span style="transform: rotate(-90deg);">プレイヤー1</span></th>
-            <th>{{ C.CHOICE_LABEL_1 }}</th>
-            <td>{{ C.PAYOFF_B }}, <u>{{ C.PAYOFF_B }}</u></td>
-            <td>{{ C.PAYOFF_D }}, <u>{{ C.PAYOFF_A }}</u></td>
+            <th rowspan="2">プレイヤー1<br>（先手）</th>
+            <th>
+                <label class="btn btn-lg
+                    {{ if group.p1_decision == C.CHOICE_LIST.0 }} btn-secondary{{ else }}btn-outline-secondary{{ endif }}
+                    choicebtn disabled">
+                    {{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}
+                </label>
+            </th>
+            <td id="cell_AA">
+                {{ C.PAYOFF_B }},
+                <u>{{ C.PAYOFF_B }}</u>
+            </td>
+            <td id="cell_AB">
+                {{ C.PAYOFF_D }},
+                <u>{{ C.PAYOFF_A }}</u>
+            </td>
         </tr>
         <tr>
-            <th>{{ C.CHOICE_LABEL_2 }}</th>
-            <td>{{ C.PAYOFF_A }}, <u>{{ C.PAYOFF_D }}</u></td>
-            <td>{{ C.PAYOFF_C }}, <u>{{ C.PAYOFF_C }}</u></td>
+            <th>
+                <label class="btn btn-lg
+                    {{ if group.p1_decision == C.CHOICE_LIST.1 }} btn-secondary{{ else }}btn-outline-secondary{{ endif }}
+                    choicebtn disabled">
+                    {{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.1 }}
+                </label>
+            </th>
+            <td id="cell_BA">
+                {{ C.PAYOFF_A }},
+                <u>{{ C.PAYOFF_D }}</u>
+            </td>
+            <td id="cell_BB">
+                {{ C.PAYOFF_C }},
+                <u>{{ C.PAYOFF_C }}</u>
+            </td>
         </tr>
     </table>
-    <br>
-    <p>※入力がなければ、コンピュータによりランダムに決定されます。</p>
+</div>
 
-【質問1】 あなたは [{{ C.CHOICE_LABEL_1 }}]または[{{ C.CHOICE_LABEL_2 }}]のどちらに出店しますか。
-<br>{% formfield group.p2_decision %}</p>
-【質問2】その選択をした理由を教えてください。
-<br>{% formfield group.p2_individual_choice_comment %}</p>
-    {{ next_button }}
+{{ if player.round_number == 1 }}
+<div class="my-5 fs-4">
+    {{ formfield "individual_choice_comment_p2" }}
+</div>
+{{ endif }}
 
+{{ next_button }}
+
+
+<div class="mt-5">
+    {{ include_sibling 'instructions.html' }}
+</div>
+
+{{ endblock }}
+
+
+{{ block styles }}
+<style>
+    .choicebtn {
+        width: 8em;
+    }
+</style>
+{{ endblock }}
+
+
+{{ block scripts }}
+<script>
+    const P1_choice = "{{ group.p1_decision }}";
+
+    function updateTableHighlight() {
+        document.getElementById('cell_AA').style.backgroundColor = '';
+        document.getElementById('cell_AB').style.backgroundColor = '';
+        document.getElementById('cell_BA').style.backgroundColor = '';
+        document.getElementById('cell_BB').style.backgroundColor = '';
+        const individual = document.querySelector('input[name="p2_decision"]:checked');
+        const P2_choice_A = document.getElementById('id_p2_decision_A').checked;
+        const P2_choice_B = document.getElementById('id_p2_decision_B').checked;
+
+        if (individual) {
+            if (P1_choice === "{{ C.CHOICE_LIST.0 }}" && P2_choice_A) {
+                document.getElementById('cell_AA').style.backgroundColor = 'yellow';
+            } else if (P1_choice === "{{ C.CHOICE_LIST.0 }}" && P2_choice_B) {
+                document.getElementById('cell_AB').style.backgroundColor = 'yellow';
+            } else if (P1_choice === "{{ C.CHOICE_LIST.1 }}" && P2_choice_A) {
+                document.getElementById('cell_BA').style.backgroundColor = 'yellow';
+            } else if (P1_choice === "{{ C.CHOICE_LIST.1 }}" && P2_choice_B) {
+                document.getElementById('cell_BB').style.backgroundColor = 'yellow';
+            }
+        }
+    }
+    document.querySelectorAll('input[name="p2_decision"]').forEach((elem) => {
+        elem.addEventListener('change', updateTableHighlight);
+    });
+    document.addEventListener('DOMContentLoaded', function () {
+        updateTableHighlight();
+    });
+</script>
 {{ endblock }}

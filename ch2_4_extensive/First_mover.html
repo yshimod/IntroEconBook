@@ -1,43 +1,92 @@
 {{ block title }}
-    実験：あなたはプレイヤー1（先手）になりました。
+実験 {{ if C.NUM_ROUNDS > 1 }}（ラウンド {{ player.round_number }} / {{ C.NUM_ROUNDS }}）{{ endif }}
 {{ endblock }}
-{{ block content }}
-    <p>あなたは、プレイヤー２より先に、[{{ C.CHOICE_LABEL_1 }}], [{{ C.CHOICE_LABEL_2 }}]のどちらに出店するかという戦略をとることができます。</p>
-    <p>あなたが[{{ C.CHOICE_LABEL_1 }}]を選び、相手も[{{ C.CHOICE_LABEL_1 }}]を選ぶと、あなたも相手も{{ C.PAYOFF_B }}です。</p>
-    <p>あなたが[{{ C.CHOICE_LABEL_1 }}]を選び、相手は[{{ C.CHOICE_LABEL_2 }}]を選ぶと、あなたは{{ C.PAYOFF_D }}、あなたの相手は{{ C.PAYOFF_A }}です。</p>
-    <p>あなたが[{{ C.CHOICE_LABEL_2 }}]を選び、相手は[{{ C.CHOICE_LABEL_1 }}]を選ぶと、あなたは{{ C.PAYOFF_A }}、あなたの相手は{{ C.PAYOFF_D }}です。</p>
-    <p>あなたが[{{ C.CHOICE_LABEL_2 }}]を選び、相手も[{{ C.CHOICE_LABEL_2 }}]を選ぶと、あなたも相手も{{ C.PAYOFF_C }}です。</p>
 
-    <table class='table table-bordered text-center'
-           style='width: auto; margin: auto'>
+
+{{ block content }}
+<div class="fs-4">
+    <p>あなたは<span class="fw-bold text-danger">プレイヤー1（先手）</span>になりました。</p>
+    <p>あなた自身の意思決定として、下の表の{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}と{{ C.CHOICE_LIST.1 }}のいずれかを選んでください。</p>
+</div>
+
+<div class="mt-5 fs-4">
+    <table class="table table-bordered text-center" style="vertical-align: middle;">
         <tr>
-            <th colspan=2 rowspan=2></th>
-            <th colspan=2>プレイヤー2</th>
+            <th colspan="2" rowspan="2"></th>
+            <th colspan="2">プレイヤー2（後手）</th>
         </tr>
         <tr>
-            <th>{{ C.CHOICE_LABEL_1 }}</th>
-            <th>{{ C.CHOICE_LABEL_2 }}</th>
+            <th>
+                <label class="btn btn-lg btn-outline-secondary choicebtn disabled">
+                    {{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}
+                </label>
+            </th>
+            <th>
+                <label class="btn btn-lg btn-outline-secondary choicebtn disabled">
+                    {{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.1 }}
+                </label>
+            </th>
         </tr>
         <tr>
-            <th rowspan=2><span style="transform: rotate(-90deg);"><u>プレイヤー1（あなた）</u></span></th>
-            <th>{{ C.CHOICE_LABEL_1 }}</th>
-            <td><u>{{ C.PAYOFF_B }}</u>, {{ C.PAYOFF_B }}</td>
-            <td><u>{{ C.PAYOFF_D }}</u>, {{ C.PAYOFF_A }}</td>
+            <th rowspan="2"><u>プレイヤー1<br>（先手，あなた）</u></th>
+            <th>
+                <input type="radio" class="btn-check" name="p1_decision" id="id_p1_decision_A"
+                    value="{{ C.CHOICE_LIST.0 }}" autocomplete="off" required>
+                <label class="btn btn-lg
+                    btn-outline-primary choicebtn" for="id_p1_decision_A">
+                    {{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}
+                </label>
+            </th>
+            <td>
+                <u>{{ C.PAYOFF_B }}</u>,
+                {{ C.PAYOFF_B }}
+            </td>
+            <td>
+                <u>{{ C.PAYOFF_D }}</u>,
+                {{ C.PAYOFF_A }}
+            </td>
         </tr>
         <tr>
-            <th>{{ C.CHOICE_LABEL_2 }}</th>
-            <td><u>{{ C.PAYOFF_A }}</u>, {{ C.PAYOFF_D }}</td>
-            <td><u>{{ C.PAYOFF_C }}</u>, {{ C.PAYOFF_C }}</td>
+            <th>
+                <input type="radio" class="btn-check" name="p1_decision" id="id_p1_decision_B"
+                    value="{{ C.CHOICE_LIST.1 }}" autocomplete="off" required>
+                <label class="btn btn-lg
+                    btn-outline-primary choicebtn" for="id_p1_decision_B">
+                    {{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.1 }}
+                </label>
+            </th>
+            <td>
+                <u>{{ C.PAYOFF_A }}</u>,
+                {{ C.PAYOFF_D }}
+            </td>
+            <td>
+                <u>{{ C.PAYOFF_C }}</u>,
+                {{ C.PAYOFF_C }}
+            </td>
         </tr>
     </table>
-    <br>
-    <p>※入力がなければ、コンピュータによりランダムに決定されます。</p>
+</div>
 
-【質問1】あなたは [{{ C.CHOICE_LABEL_1 }}]または[{{ C.CHOICE_LABEL_2 }}]のどちらに出店しますか。
-<br>{% formfield group.p1_decision %}</p>
-【質問2】その選択をした理由を教えてください。
-<br>{% formfield group.p1_individual_choice_comment %}</p>
+{{ if player.round_number == 1 }}
+<div class="my-5 fs-4">
+    {{ formfield "individual_choice_comment_p1" }}
+</div>
+{{ endif }}
 
-    {{ next_button }}
+{{ next_button }}
 
+
+<div class="mt-5">
+    {{ include_sibling 'instructions.html' }}
+</div>
+
+{{ endblock }}
+
+
+{{ block styles }}
+<style>
+    .choicebtn {
+        width: 8em;
+    }
+</style>
 {{ endblock }}

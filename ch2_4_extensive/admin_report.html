@@ -1,0 +1,46 @@
+<div class="boxed-section" style="text-align: center;">
+    <div id="highchart" style="width:600px; height:600px; display: inline-block;"></div>
+</div>
+
+<div class="boxed-section">
+    <div id="highchart2"></div>
+</div>
+
+{{ if list_comment }}
+<div class="mt-5 fs-5">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th width="10%">先手</th>
+                <th width="40%">理由</th>
+                <th width="10%">後手</th>
+                <th width="40%">理由</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ for el in list_comment }}
+            <tr>
+                <td>{{ el.0 }}</td>
+                <td>{{ el.1 | escape }}</td>
+                <td>{{ el.2 }}</td>
+                <td>{{ el.3 | escape }}</td>
+            </tr>
+            {{ endfor }}
+        </tbody>
+    </table>
+</div>
+{{ endif }}
+
+
+<div class="mt-5">
+    {{ include_sibling 'instructions.html' }}
+</div>
+
+{{ include_sibling 'chart.html' }}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const js_vars = JSON.parse(`{{ js_vars | json }}`);
+        drawChartMosaic("highchart", js_vars);
+        drawChart_pair("highchart2", js_vars);
+    });
+</script>
