@@ -18,7 +18,7 @@
             </th>
         </tr>
         <tr>
-            <td>
+            <th>
                 {{ if player.id_in_group == 2 }}
                 <input type="radio" class="btn-check" name="individual_choice" id="id_individual_choice_A"
                     value="{{ C.CHOICE_LIST.0 }}" autocomplete="off" required>
@@ -28,8 +28,8 @@
                     style="width: 6em;" {{ if player.id_in_group == 2 }}for="id_individual_choice_A" {{ endif }}>
                     {{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}
                 </label>
-            </td>
-            <td>
+            </th>
+            <th>
                 {{ if player.id_in_group == 2 }}
                 <input type="radio" class="btn-check" name="individual_choice" id="id_individual_choice_B"
                     value="{{ C.CHOICE_LIST.1 }}" autocomplete="off" required>
@@ -39,13 +39,13 @@
                     style="width: 6em;" {{ if player.id_in_group == 2 }}for="id_individual_choice_B" {{ endif }}>
                     {{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.1 }}
                 </label>
-            </td>
+            </th>
         </tr>
         <tr>
             <th rowspan="2" class="uline-p1">
                 プレイヤー1（あなた{{ if player.id_in_group == 2 }}の相手{{ endif }}）
             </th>
-            <td>
+            <th>
                 {{ if player.id_in_group == 1 }}
                 <input type="radio" class="btn-check" name="individual_choice" id="id_individual_choice_A"
                     value="{{ C.CHOICE_LIST.0 }}" autocomplete="off" required>
@@ -55,7 +55,7 @@
                     style="width: 6em;" {{ if player.id_in_group == 1 }}for="id_individual_choice_A" {{ endif }}>
                     {{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}
                 </label>
-            </td>
+            </th>
             <td>
                 <span class="uline-p1">{{ C.PAYOFF_A }}</span>,
                 <span class="uline-p2">{{ C.PAYOFF_B }}</span>
@@ -66,7 +66,7 @@
             </td>
         </tr>
         <tr>
-            <td>
+            <th>
                 {{ if player.id_in_group == 1 }}
                 <input type="radio" class="btn-check" name="individual_choice" id="id_individual_choice_B"
                     value="{{ C.CHOICE_LIST.1 }}" autocomplete="off" required>
@@ -76,7 +76,7 @@
                     style="width: 6em;" {{ if player.id_in_group == 1 }}for="id_individual_choice_B" {{ endif }}>
                     {{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.1 }}
                 </label>
-            </td>
+            </th>
             <td>
                 <span class="uline-p1">{{ C.PAYOFF_C }}</span>,
                 <span class="uline-p2">{{ C.PAYOFF_C }}</span>
