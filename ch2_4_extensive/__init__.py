@@ -154,10 +154,6 @@ class ResultsWaitPage(WaitPage):
             set_payoff(g)
 
 
-class PreResults(Page):
-    pass
-
-
 class Results(Page):
     @staticmethod
     def js_vars(player: Player):
@@ -177,6 +173,5 @@ page_sequence = [
     WaitForFirstMover,
     Second_mover,
     ResultsWaitPage,
-    PreResults,
     Results,
 ]
