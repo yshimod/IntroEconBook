@@ -34,14 +34,28 @@
             <th colspan="2">あなたの相手</th>
         </tr>
         <tr>
-            <th>{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}</th>
-            <th>{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.1 }}</th>
+            <th>
+                <label class="btn btn-lg btn-outline-secondary choicebtn disabled">
+                    {{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}
+                </label>
+            </th>
+            <th>
+                <label class="btn btn-lg btn-outline-secondary choicebtn disabled">
+                    {{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.1 }}
+                </label>
+            </th>
         </tr>
         <tr>
             <th rowspan="2">
                 <u>あなた</u>
             </th>
-            <th>{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}</th>
+            <th>
+                <label class="btn btn-lg
+                    {{ if player.individual_choice == C.CHOICE_LIST.0 }} btn-primary{{ else }}btn-outline-primary{{ endif }}
+                    choicebtn disabled">
+                    {{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}
+                </label>
+            </th>
             <td>
                 <u>{{ C.PAYOFF_B }}</u>,
                 {{ C.PAYOFF_B }}
@@ -52,7 +66,13 @@
             </td>
         </tr>
         <tr>
-            <th>{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.1 }}</th>
+            <th>
+                <label class="btn btn-lg
+                    {{ if player.individual_choice == C.CHOICE_LIST.1 }} btn-primary{{ else }}btn-outline-primary{{ endif }}
+                    choicebtn disabled">
+                    {{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.1 }}
+                </label>
+            </th>
             <td>
                 <u>{{ C.PAYOFF_A }}</u>,
                 {{ C.PAYOFF_D }}
