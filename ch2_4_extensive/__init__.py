@@ -7,7 +7,7 @@ doc = """ """
 class C(BaseConstants):
     NAME_IN_URL = "ch2_4_extensive"
     PLAYERS_PER_GROUP = 2
-    NUM_ROUNDS = 1
+    NUM_ROUNDS = 4
 
     PAYOFF_A = cu(20)
     PAYOFF_B = cu(-10)
@@ -51,6 +51,10 @@ class Player(BasePlayer):
 
 
 # FUNCTIONS
+def creating_session(subsession: Subsession):
+    subsession.group_randomly()
+
+
 def summarize_data(subsession: Subsession):
     list_grp_results = [
         (
@@ -98,16 +102,20 @@ def set_payoff(group: Group):
 
 # PAGES
 class Introduction(Page):
-    # timeout_seconds = 100
-    pass
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.round_number == 1
 
 
 class First_mover(Page):
     form_model = "group"
-    form_fields = [
-        "p1_decision",
-        "individual_choice_comment_p1",
-    ]
+
+    @staticmethod
+    def get_form_fields(group: Group):
+        form_fields = ["p1_decision"]
+        if group.round_number == 1:
+            form_fields.append("individual_choice_comment_p1")
+        return form_fields
 
     @staticmethod
     def is_displayed(player: Player):
@@ -127,10 +135,13 @@ class WaitForFirstMover(WaitPage):
 
 class Second_mover(Page):
     form_model = "group"
-    form_fields = [
-        "p2_decision",
-        "individual_choice_comment_p2",
-    ]
+
+    @staticmethod
+    def get_form_fields(group: Group):
+        form_fields = ["p2_decision"]
+        if group.round_number == 1:
+            form_fields.append("individual_choice_comment_p2")
+        return form_fields
 
     @staticmethod
     def is_displayed(player: Player):

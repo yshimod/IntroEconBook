@@ -72,9 +72,11 @@
     </table>
 </div>
 
+{{ if player.round_number == 1 }}
 <div class="my-5 fs-4">
     {{ formfield "individual_choice_comment_p2" }}
 </div>
+{{ endif }}
 
 {{ next_button }}
 

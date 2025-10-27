@@ -7,7 +7,7 @@ doc = """ """
 class C(BaseConstants):
     NAME_IN_URL = "ch2_3_chicken"
     PLAYERS_PER_GROUP = 2
-    NUM_ROUNDS = 1
+    NUM_ROUNDS = 2
 
     PAYOFF_A = cu(20)
     PAYOFF_B = cu(-10)
