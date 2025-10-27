@@ -14,9 +14,9 @@
 
     function drawChartMosaic(domid) {
         Highcharts.chart(domid, {
-            title: { text: '個人の選択（モザイクプロット）' },
+            title: { text: 'ペアの選択の組み合わせ（モザイクプロット）' },
             subtitle: {
-                text: js_vars.num_pairs * 2 + "名が実験に参加しました"
+                text: js_vars.num_pairs + "組が実験に参加しました"
             },
             series: [{
                 type: 'treemap',
