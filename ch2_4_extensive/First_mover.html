@@ -1,33 +1,42 @@
 {{ block title }}
-実験
+実験 {{ if C.NUM_ROUNDS > 1 }}（ラウンド {{ player.round_number }} / {{ C.NUM_ROUNDS }}）{{ endif }}
 {{ endblock }}
 
 
 {{ block content }}
-<div>
+<div class="fs-4">
     <p>あなたは<span class="fw-bold text-danger">プレイヤー1（先手）</span>になりました。</p>
     <p>あなた自身の意思決定として、下の表の{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}と{{ C.CHOICE_LIST.1 }}のいずれかを選んでください。</p>
 </div>
 
-<div class="mt-4">
+<div class="mt-5 fs-4">
     <table class="table table-bordered text-center" style="vertical-align: middle;">
         <tr>
             <th colspan="2" rowspan="2"></th>
             <th colspan="2">プレイヤー2（後手）</th>
         </tr>
         <tr>
-            <th>{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}</th>
-            <th>{{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.1 }}</th>
+            <th>
+                <label class="btn btn-lg btn-outline-secondary choicebtn disabled">
+                    {{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}
+                </label>
+            </th>
+            <th>
+                <label class="btn btn-lg btn-outline-secondary choicebtn disabled">
+                    {{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.1 }}
+                </label>
+            </th>
         </tr>
         <tr>
             <th rowspan="2"><u>プレイヤー1<br>（先手，あなた）</u></th>
-            <td>
+            <th>
                 <input type="radio" class="btn-check" name="p1_decision" id="id_p1_decision_A"
                     value="{{ C.CHOICE_LIST.0 }}" autocomplete="off" required>
-                <label class="btn btn-lg btn-outline-primary" style="width: 8em;" for="id_p1_decision_A">
+                <label class="btn btn-lg
+                    btn-outline-primary choicebtn" for="id_p1_decision_A">
                     {{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.0 }}
                 </label>
-            </td>
+            </th>
             <td>
                 <u>{{ C.PAYOFF_B }}</u>,
                 {{ C.PAYOFF_B }}
@@ -38,13 +47,14 @@
             </td>
         </tr>
         <tr>
-            <td>
+            <th>
                 <input type="radio" class="btn-check" name="p1_decision" id="id_p1_decision_B"
                     value="{{ C.CHOICE_LIST.1 }}" autocomplete="off" required>
-                <label class="btn btn-lg btn-outline-primary" style="width: 8em;" for="id_p1_decision_B">
+                <label class="btn btn-lg
+                    btn-outline-primary choicebtn" for="id_p1_decision_B">
                     {{ C.CHOICE_LABEL }}{{ C.CHOICE_LIST.1 }}
                 </label>
-            </td>
+            </th>
             <td>
                 <u>{{ C.PAYOFF_A }}</u>,
                 {{ C.PAYOFF_D }}
@@ -57,12 +67,24 @@
     </table>
 </div>
 
-
-<div class="mt-4">
+<div class="my-5 fs-4">
     {{ formfield "individual_choice_comment_p1" }}
 </div>
 
-
 {{ next_button }}
 
+
+<div class="mt-5">
+    {{ include_sibling 'instructions.html' }}
+</div>
+
+{{ endblock }}
+
+
+{{ block styles }}
+<style>
+    .choicebtn {
+        width: 8em;
+    }
+</style>
 {{ endblock }}
