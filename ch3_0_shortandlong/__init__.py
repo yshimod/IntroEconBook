@@ -62,9 +62,10 @@ def keisans_1(subsession: Subsession):
         keisan_1(p)
 
 
-# PAGES ------------------------------------------
+# PAGES
 class Introduction(Page):
-    timeout_seconds = 100
+    # timeout_seconds = 100
+    pass
 
 
 class Decision_1(Page):
