@@ -31,9 +31,7 @@ class Player(BasePlayer):
             [C.CHOICE_LIST[0], C.CHOICE_LABEL_1],
             [C.CHOICE_LIST[1], C.CHOICE_LABEL_2],
         ],
-        label="【質問1】あなたが企業の担当者だとすると、[{}][{}]どちらを選びますか？".format(
-            C.CHOICE_LABEL_1, C.CHOICE_LABEL_2
-        ),
+        label="【質問1】あなたが企業の担当者だとすると、どちらの選択肢を選びますか？",
         widget=widgets.RadioSelectHorizontal,
     )
     flg_non_input = models.IntegerField(initial=0)
