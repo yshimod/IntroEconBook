@@ -13,10 +13,10 @@ class C(BaseConstants):
 
     INSTRUCTIONS_TEMPLATE = "ch3_3_repeated_infinite/instructions.html"
 
-    PAYOFF_A = cu(40)
-    PAYOFF_B = cu(25)
-    PAYOFF_C = cu(50)
-    PAYOFF_D = cu(12)
+    PAYOFF_A = cu(2)
+    PAYOFF_B = cu(1)
+    PAYOFF_C = cu(3)
+    PAYOFF_D = cu(0)
 
     CHOICE_LABEL_1 = "A"
     CHOICE_LABEL_2 = "B"
