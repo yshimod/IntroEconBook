@@ -69,7 +69,7 @@ class Introduction(Page):
 
 
 class Decision(Page):
-    timeout_seconds = 180
+    # timeout_seconds = 180
     form_model = "player"
     form_fields = ["individual_choice_1", "individual_choice_comment_1"]
 
