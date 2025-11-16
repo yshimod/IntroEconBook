@@ -56,6 +56,20 @@ def summarize_data(subsession: Subsession):
     subsession.num_B = list_choices.count(C.CHOICE_LIST[1])
 
 
+def dump_js_vars(sub: Subsession):
+    prop_A = -1
+    prop_B = -1
+    if sub.num_participants > 0:
+        prop_A = (sub.num_A / sub.num_participants) * 100
+        prop_B = (sub.num_B / sub.num_participants) * 100
+
+    return dict(
+        num_participants=sub.num_participants,
+        prop_A=prop_A,
+        prop_B=prop_B,
+    )
+
+
 # PAGES
 class Introduction(Page):
     # timeout_seconds = 100
@@ -94,19 +108,7 @@ class Results(Page):
 
     @staticmethod
     def js_vars(player: Player):
-        sub: Subsession = player.subsession
-
-        prop_A = -1
-        prop_B = -1
-        if sub.num_participants > 0:
-            prop_A = (sub.num_A / sub.num_participants) * 100
-            prop_B = (sub.num_B / sub.num_participants) * 100
-
-        return dict(
-            num_participants=sub.num_participants,
-            prop_A=prop_A,
-            prop_B=prop_B,
-        )
+        return dump_js_vars(player.subsession)
 
 
 page_sequence = [
