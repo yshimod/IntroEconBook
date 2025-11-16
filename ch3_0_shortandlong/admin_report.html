@@ -1,0 +1,36 @@
+<div class="boxed-section">
+    <div id="highchart"></div>
+</div>
+
+{{ if list_comment }}
+<div class="mt-5 fs-5">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th width="20%">意思決定</th>
+                <th width="80%">理由</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ for el in list_comment }}
+            <tr>
+                <td>{{ el.0 }}</td>
+                <td>{{ el.1 | escape }}</td>
+            </tr>
+            {{ endfor }}
+        </tbody>
+    </table>
+</div>
+{{ endif }}
+
+<div class="mt-5">
+    {{ include_sibling 'instructions.html' }}
+</div>
+
+{{ include_sibling 'chart.html' }}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const js_vars = JSON.parse(`{{ js_vars | json }}`);
+        drawChart("highchart", js_vars);
+    });
+</script>
