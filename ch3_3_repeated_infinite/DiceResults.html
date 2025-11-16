@@ -1,0 +1,9 @@
+{{ block content }}
+<p>
+    サイコロの目は{{ subsession.round_dice }}でしたので，同じ相手との対戦が続きます．
+</p>
+{{ next_button }}
+
+{{ include C.INSTRUCTIONS_TEMPLATE }}
+
+{{ endblock }}
