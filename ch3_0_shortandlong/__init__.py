@@ -117,3 +117,22 @@ page_sequence = [
     ResultsWaitPage,
     Results,
 ]
+
+
+def vars_for_admin_report(subsession: Subsession):
+    list_comment = []
+    if subsession.round_number == 1:
+        list_comment = sorted(
+            [
+                [
+                    p.individual_choice,
+                    p.individual_choice_comment,
+                ]
+                for p in subsession.get_players()
+            ]
+        )
+
+    return dict(
+        js_vars=dump_js_vars(subsession),
+        list_comment=list_comment,
+    )
