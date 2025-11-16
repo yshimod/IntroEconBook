@@ -1,11 +1,11 @@
 {{ block title }}
-実験
+イントロダクション
 {{ endblock }}
 
 
 {{ block content }}
 
-{{ include C.INSTRUCTIONS_TEMPLATE }}
+{{ include_sibling 'instructions.html' }}
 
 {{ next_button }}
 
