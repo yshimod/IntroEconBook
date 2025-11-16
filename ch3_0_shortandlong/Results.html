@@ -1,0 +1,46 @@
+{{ block title }}
+結果
+{{ endblock }}
+
+
+{{ block content }}
+{{ if C.NUM_ROUNDS != subsession.round_number }}
+<p class="my-5">
+    <font color="red">画面を閉じずにお待ちください。</font>
+</p>
+{{ endif }}
+
+<div>
+    <ul>
+        <li>
+            あなた{{ if player.flg_non_input == 1 }}（コンピュータが選択）{{ endif }}は<b>「{{ my_decision }}」</b>を選びました。
+        </li>
+        {{ if my_decision == C.CHOICE_LABEL_1 }}
+        <li><b>2</b>ポイントを獲得します。</li>{{ endif }}
+        {{ if my_decision == C.CHOICE_LABEL_2 }}
+        <li><b>4</b>ポイントを獲得します。</li>{{ endif }}
+    </ul>
+</div>
+
+<h3 class="mt-5">全体の結果</h3>
+
+<div class="boxed-section">
+    <div id="highchart"></div>
+</div>
+
+
+<div class="mt-5">
+    {{ include_sibling 'instructions.html' }}
+</div>
+
+{{ endblock }}
+
+
+{{ block scripts }}
+{{ include_sibling 'chart.html' }}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        drawChart("highchart");
+    });
+</script>
+{{ endblock }}

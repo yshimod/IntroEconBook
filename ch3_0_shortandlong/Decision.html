@@ -1,0 +1,27 @@
+{{ block title }}
+意思決定
+{{ endblock }}
+
+
+{{ block content }}
+<div>
+    <ul>
+        <li>顧客が「仕事を発注する」を選びました。</li>
+        <li>企業が「{{ C.CHOICE_LABEL_1 }}」を選ぶと、顧客に２ポイント、企業に２ポイントです。</li>
+        <li>企業が「{{ C.CHOICE_LABEL_2 }}」を選ぶと、顧客に-1ポイント、企業に4ポイントです。</li>
+        {{ if C.NUM_ROUNDS == subsession.round_number }}
+        <li><span class="fw-bold">ただし、もし「{{ C.CHOICE_LABEL_2 }}」を選択した場合はこの顧客から二度と仕事がもらえないとします。</span></li>
+        {{ endif }}
+    </ul>
+</div>
+
+<div class="my-5">
+    {{ formfield player.individual_choice }}
+    {{ formfield player.individual_choice_comment }}
+</div>
+
+{{ next_button }}
+
+{{ include_sibling 'instructions.html' }}
+
+{{ endblock }}
