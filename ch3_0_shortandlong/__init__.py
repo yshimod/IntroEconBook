@@ -68,13 +68,13 @@ class Introduction(Page):
     pass
 
 
-class Decision_1(Page):
+class Decision(Page):
     timeout_seconds = 180
     form_model = "player"
     form_fields = ["individual_choice_1", "individual_choice_comment_1"]
 
 
-class KeisanWaitPage_1(WaitPage):
+class KeisanWaitPage(WaitPage):
     wait_for_all_groups = True
     after_all_players_arrive = keisans_1
 
@@ -87,7 +87,7 @@ class ResultsWaitPage(WaitPage):
     pass
 
 
-class Results1(Page):
+class Results(Page):
     @staticmethod
     def vars_for_template(player: Player):
         return dict(
@@ -118,7 +118,7 @@ class Results1(Page):
 
 page_sequence = [
     Introduction,
-    Decision_1,
-    KeisanWaitPage_1,
-    Results1,
+    Decision,
+    KeisanWaitPage,
+    Results,
 ]
