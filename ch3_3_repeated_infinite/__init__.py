@@ -8,7 +8,7 @@ class C(BaseConstants):
     NAME_IN_URL = "ch3_3_repeated_infinite"
     PLAYERS_PER_GROUP = None
 
-    NUM_SUPERGAME = 10
+    NUM_SUPERGAME = 3
     NUM_ROUNDS = 100
 
     INSTRUCTIONS_TEMPLATE = "ch3_3_repeated_infinite/instructions.html"

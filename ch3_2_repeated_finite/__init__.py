@@ -9,7 +9,7 @@ class C(BaseConstants):
     PLAYERS_PER_GROUP = None
 
     NUM_SUBGAME = 6
-    NUM_SUPERGAME = 10
+    NUM_SUPERGAME = 3
     NUM_ROUNDS = NUM_SUBGAME * NUM_SUPERGAME
 
     INSTRUCTIONS_TEMPLATE = "ch3_2_repeated_finite/instructions.html"
