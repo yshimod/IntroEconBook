@@ -1,30 +1,40 @@
-<h3>総獲得報酬ランキング</h3>
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>順位</th>
-            <th>報酬</th>
-        </tr>
-    </thead>
-    <tbody>
-        {{ for el in ranking }}
-        <tr>
-            <td>{{ forloop.counter }}</td>
-            <td>{{ el }}</td>
-        </tr>
-        {{ endfor }}
-    </tbody>
-</table>
+{{ if ranking }}
+<div>
+    <h3>総獲得報酬ランキング</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>順位</th>
+                <th>報酬</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ for el in ranking }}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ el }}</td>
+            </tr>
+            {{ endfor }}
+        </tbody>
+    </table>
+</div>
+{{ endif }}
 
-<p>&nbsp;</p>
-<h3>協力率の推移</h3>
-<div id="chart1" style="width: 900px; height: 500px;"></div>
+{{ if coop_rate }}
+<div class="mt-5">
+    <h3>協力率の推移</h3>
+    <div id="chart1" style="width: 900px; height: 500px;"></div>
+</div>
 
-
-{#
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script>
     const coop_rate = JSON.parse("{{ coop_rate | json }}");
+
+    const NUM_SUPERGAME = parseInt("{{ C.NUM_SUPERGAME }}", 10);
+    const seriesDict = {};
+    for (let i = 0; i < NUM_SUPERGAME; i++) {
+        seriesDict[coop_rate.length - NUM_SUPERGAME + i] = { lineDashStyle: [4, 4] };
+    }
 
     google.charts.load('current', { 'packages': ['corechart'] });
     google.charts.setOnLoadCallback(drawChart);
@@ -52,15 +62,11 @@
         const options1 = {
             vAxis: { minValue: 0, maxValue: 1, format: 'percent' },
             lineWidth: 5,
-            series: {
-                [coop_rate.length - 3]: { lineDashStyle: [4, 4] },
-                [coop_rate.length - 2]: { lineDashStyle: [4, 4] },
-                [coop_rate.length - 1]: { lineDashStyle: [4, 4] }
-            },
+            series: seriesDict,
         };
 
         const chart1 = new google.visualization.LineChart(document.getElementById('chart1'));
         chart1.draw(data1, options1);
     }
 </script>
-#}
+{{ endif }}

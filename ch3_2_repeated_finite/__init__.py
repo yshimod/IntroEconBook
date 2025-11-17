@@ -208,34 +208,40 @@ page_sequence = [
 
 def vars_for_admin_report(subsession: Subsession):
     ranking = []
+    alldata = []
+    coop_rate = []
+
     if subsession.round_number == C.NUM_ROUNDS:
         ranking = sorted(
             [int(p.participant.payoff) for p in subsession.get_players()],
             reverse=True,
         )
 
-    alldata = []
-    if subsession.round_number == C.NUM_ROUNDS:
         for p in subsession.get_players():
             player_data = []
             for tr in ["infinite", "finite"]:
                 sequences_list = p.participant.vars["sequences_list"].get(tr, [])
                 if sequences_list:
                     for supergame in sequences_list:
-                        if len(supergame) > 0:
-                            supergame_data = []
-                            for subgame in supergame:
-                                supergame_data.append(int(subgame[0] == "A"))
-                            player_data.extend(supergame_data)
+                        if supergame:
+                            supergame_data = [
+                                int(subgame[0] == "A") for subgame in supergame
+                            ]
+                            player_data.append(supergame_data)
             alldata.append(player_data)
 
-    # coop_rate = [
-    #     np.array([el[idx] for el in alldata]).T.mean(axis=1).tolist()
-    #     for idx in range(len(alldata[0]))
-    # ]
+        coop_rate = []
+        if alldata:
+            for subgames in zip(*alldata):
+                if subgames:
+                    round_rates = []
+                    for subgame in zip(*subgames):
+                        if subgame:
+                            round_rates.append(sum(subgame) / len(subgame))
+                    if round_rates:
+                        coop_rate.append(round_rates)
 
     return dict(
         ranking=ranking,
-        alldata=alldata,
-        # coop_rate=coop_rate,
+        coop_rate=coop_rate,
     )
