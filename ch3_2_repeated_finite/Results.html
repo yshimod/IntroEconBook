@@ -1,31 +1,26 @@
 {{ block title }}
-結果（{{C.NUM_ROUNDS}}回中{{player.round_number}}回目）
+[結果] {{ subsession.idx_super_game }}人目との対戦 — {{ subsession.idx_sub_game }} / {{ C.NUM_SUBGAME }}回目
 {{ endblock }}
+
 {{ block content }}
- {% if player.id_in_group == 1 %}あなたはプレイヤー1でした。{% endif %}
- {% if player.id_in_group == 2 %}あなたはプレイヤー2でした。{% endif %}
-    <p>
-             あなた{{ if player.flg_non_input == 1 }}(コンピュータが選びました){{ endif }}は{{ my_decision }} 、あなたの相手{{ if player.flg_pair_non_input == 1 }}(コンピュータが選びました){{ endif }}は {{ opponent_decision }}を選びました。
-    </p>
+<p>
+    {% if player.id_in_group == 1 %}あなたはプレイヤー1です．{% endif %}
+    {% if player.id_in_group == 2 %}あなたはプレイヤー2です．{% endif %}
+</p>
 
-    <p>
-        その結果、あなたのポイントは {{ player.payoff }}です。
-    </p>
+<p>
+    あなた{{ if player.flg_non_input == 1 }}（コンピュータが意思決定を代行）{{ endif }}は
+    {{ my_decision }}，あなたの相手{{ if player.flg_pair_non_input == 1 }}（コンピュータが意思決定を代行）{{ endif }}は
+    {{ opponent_decision }}を選びました．
+</p>
 
-{% if C.NUM_ROUNDS != subsession.round_number %}{{ next_button }}{% endif %}
+<p>
+    その結果，あなたの報酬は {{ player.payoff }}です．
+</p>
 
-    {{ include C.INSTRUCTIONS_TEMPLATE }}
+{{ next_button }}
 
-
-
-<p>全ての参加者の結果</p>
-{{ include 'ch3_2_repeated_finite/chart.html' }}
-<script>
-drawChart_p1();// グラフ描画
-drawChart_p2();// グラフ描画
-drawChart_pair();// グラフ描画
-</script>
-
+{{ include C.INSTRUCTIONS_TEMPLATE }}
 
 
 {{ endblock }}

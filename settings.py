@@ -59,7 +59,11 @@ SESSION_CONFIGS = [
     dict(
         name="ch3_2_repeated_finite",
         display_name="第3章：繰り返しゲーム（有限）",
-        app_sequence=["b_input_id", "ch3_2_repeated_finite"],
+        app_sequence=[
+            "b_input_id",
+            "ch3_3_repeated_infinite",
+            "ch3_2_repeated_finite",
+        ],
         num_demo_participants=2,
     ),
     dict(

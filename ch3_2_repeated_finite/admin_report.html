@@ -1,0 +1,98 @@
+{{ if list_comment }}
+<div class="mt-5 fs-5">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th width="20%">合計利得</th>
+                <th width="80%">理由</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ for el in list_comment }}
+            <tr>
+                <td>{{ el.0 }}</td>
+                <td>{{ el.1 | escape }}</td>
+            </tr>
+            {{ endfor }}
+        </tbody>
+    </table>
+</div>
+{{ endif }}
+
+{{ if ranking }}
+<div>
+    <h3>総獲得報酬ランキング</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>順位</th>
+                <th>報酬</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ for el in ranking }}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ el }}</td>
+            </tr>
+            {{ endfor }}
+        </tbody>
+    </table>
+</div>
+{{ endif }}
+
+{{ if coop_rate }}
+<div class="mt-5">
+    <h3>協力率の推移</h3>
+    <div id="chart1" style="width: 900px; height: 500px;"></div>
+</div>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script>
+    const coop_rate = JSON.parse("{{ coop_rate | json }}");
+
+    const NUM_SUPERGAME = parseInt("{{ C.NUM_SUPERGAME }}", 10);
+    const seriesDict = {};
+    for (let i = 0; i < NUM_SUPERGAME; i++) {
+        seriesDict[coop_rate.length - NUM_SUPERGAME + i] = { lineDashStyle: [4, 4] };
+    }
+
+    google.charts.load('current', { 'packages': ['corechart'] });
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+        const data1 = new google.visualization.DataTable();
+        data1.addColumn('number', '回次');
+        for (let i = 0; i < coop_rate.length; ++i) {
+            data1.addColumn('number', 'マッチ ' + (i + 1));
+        }
+
+        const maxLength = Math.max(...coop_rate.map(a => a.length));
+        coop_rate.forEach(a => {
+            while (a.length < maxLength) a.push(null);
+        });
+
+        for (let i = 0; i < maxLength; ++i) {
+            const row = [i + 1];
+            for (let j = 0; j < coop_rate.length; ++j) {
+                row.push(coop_rate[j][i]);
+            }
+            data1.addRow(row);
+        }
+
+        const options1 = {
+            vAxis: { minValue: 0, maxValue: 1, format: 'percent' },
+            lineWidth: 5,
+            series: seriesDict,
+        };
+
+        const chart1 = new google.visualization.LineChart(document.getElementById('chart1'));
+        chart1.draw(data1, options1);
+    }
+</script>
+{{ endif }}
+
+
+<div class="mt-5">
+    {{ include_sibling 'instructions.html' }}
+</div>

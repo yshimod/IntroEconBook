@@ -1,225 +1,100 @@
 from otree.api import *
 import random
-import time
 
-doc = """ """
+doc = """ ID末尾は実験者（サイコロ入力）．サイコロ99で終了． """
 
 
 class C(BaseConstants):
     NAME_IN_URL = "ch3_3_repeated_infinite"
-    PLAYERS_PER_GROUP = 2
+    PLAYERS_PER_GROUP = None
 
-    LIST_PROB = []
-    LIST_PROB.append(0)
-    # LIST_MAX = 0
-    # if LIST_MAX <= 80:
-    for i in range(100):
-        # tmp = random.randrange(0, 100, 1)
-        tmp = random.randint(1, 100)
-        # print(tmp)
-        if tmp <= 80:
-            # print("以下")
-            LIST_PROB.append(tmp)
-        else:
-            # print("80より多い")
-            LIST_PROB.append(tmp)
-            NUM_ROUNDS = i + 1
-            break
-
-        # if tmp >= 80:
-        #    print("以上")
-        #    LIST_PROB.append(tmp)
-        #    NUM_ROUNDS = i + 1
-        #    break
-        # else:
-        #    LIST_PROB.append(tmp)
-
-    # print("LIST_PROB",LIST_PROB, NUM_ROUNDS, "回実施")
-
-    # if random.random() > 1:
-    #    NUM_ROUNDS = 2
-    # else:
-    #    NUM_ROUNDS = 5
+    NUM_SUPERGAME = 3
+    NUM_ROUNDS = 100
 
     INSTRUCTIONS_TEMPLATE = "ch3_3_repeated_infinite/instructions.html"
+
     PAYOFF_A = cu(2)
     PAYOFF_B = cu(1)
     PAYOFF_C = cu(3)
     PAYOFF_D = cu(0)
+
     CHOICE_LABEL_1 = "A"
     CHOICE_LABEL_2 = "B"
 
-    choice_list = ["A", "B"]
+    choice_list = [CHOICE_LABEL_1, CHOICE_LABEL_2]
 
 
 class Subsession(BaseSubsession):
-    this_rounds_dice = models.IntegerField(initial=0)
-    num_participants_p1 = models.IntegerField(initial=0)
-    num_A_p1 = models.IntegerField(initial=0)
-    num_B_p1 = models.IntegerField(initial=0)
-
-    num_participants_p2 = models.IntegerField(initial=0)
-    num_A_p2 = models.IntegerField(initial=0)
-    num_B_p2 = models.IntegerField(initial=0)
-
-    err_message = models.StringField()
-
-    pair_num = models.IntegerField(initial=0)
-    pair_num_AA = models.IntegerField(initial=0)
-    pair_num_AB = models.IntegerField(initial=0)
-    pair_num_BA = models.IntegerField(initial=0)
-    pair_num_BB = models.IntegerField(initial=0)
-    pair_err_message = models.StringField()
+    idx_super_game = models.IntegerField()
+    idx_sub_game = models.IntegerField()
+    round_dice = models.IntegerField(initial=0)
+    collapsed = models.BooleanField(initial=False)
+    session_end = models.BooleanField(initial=False)
 
 
 class Group(BaseGroup):
-    start_timestamp = models.IntegerField()
+    pass
 
 
 class Player(BasePlayer):
+    is_experimenter = models.BooleanField(initial=False)
+    round_dice_input = models.IntegerField(choices=list(range(1, 7)) + [99])
+
     flg_non_input = models.IntegerField(initial=0)
     flg_pair_non_input = models.IntegerField(initial=0)
 
-    individual_choice = models.StringField(
-        choices=[["A", "A"], ["B", "B"]],
-        doc="""This player's decision""",
-        widget=widgets.RadioSelect,
-    )
-    # 相手のグループID
-    pair_id = models.IntegerField(initial=0)
-    # 相手の意思決定
+    individual_choice = models.StringField(choices=C.choice_list)
     pair_choice = models.StringField()
 
-    # 相手はどちらを選ぶと思うか
-    think_other_player_choice = models.StringField(
-        widget=widgets.RadioSelectHorizontal,
-        verbose_name="",
-        choices=[
-            ["Aを選ぶと予想する", C.CHOICE_LABEL_1 + "を選ぶと予想する"],
-            ["Bを選ぶと予想する", C.CHOICE_LABEL_2 + "を選ぶと予想する"],
-        ],
-    )
+    payoff_sup = models.CurrencyField()
 
     # 意思決定の理由
-    individual_choice_comment = models.LongStringField(verbose_name="", initial="")
-
-    # 相手の予想のの理由
-    think_other_player_choice_comment = models.LongStringField(
-        verbose_name="", initial=""
-    )
-
-    # 相手が映画１を選んだ際に、あなたは何ポイント獲得しますか？
-    q1 = models.StringField(
-        # widget=widgets.RadioSelectHorizontal,
-        verbose_name="",
-        choices=[
-            ["5", "5"],
-            ["10", "10"],
-            ["2", "2"],
-            ["3", "3"],
-        ],
-    )
-
-    # 相手が映画2を選んだ際に、あなたは何ポイント獲得しますか？
-    q2 = models.StringField(
-        # widget=widgets.RadioSelectHorizontal,
-        verbose_name="",
-        choices=[
-            ["5", "5"],
-            ["10", "10"],
-            ["2", "2"],
-            ["3", "3"],
-        ],
+    individual_choice_comment = models.LongStringField(
+        label="【質問】あなたは，どのような方針で意思決定を行いましたか？",
+        initial="",
     )
 
 
 # FUNCTIONS
-def keisan(player: Player):
-    sub = player.subsession
-
-    if player.id_in_group == 1:
-        if player.individual_choice != "":
-            sub.num_participants_p1 += 1
-            s = player.individual_choice
-            if s == "A":
-                sub.num_A_p1 += 1
-            elif s == "B":
-                sub.num_B_p1 += 1
-            else:
-                sub.err_message = "エラーあり"
-        else:
-            player.flg_non_input = 1
-            player.individual_choice = random.choice(C.choice_list)
-    else:
-        if player.individual_choice != "":
-            sub.num_participants_p2 += 1
-            s = player.individual_choice
-            if s == "A":
-                sub.num_A_p2 += 1
-            elif s == "B":
-                sub.num_B_p2 += 1
-            else:
-                sub.err_message = "エラーあり"
-        else:
-            player.flg_non_input = 1
-            player.individual_choice = random.choice(C.choice_list)
+def group_by_arrival_time_method(subsession: Subsession, waiting_players: list[Player]):
+    players_per_group_gbatm = 2
+    if len(waiting_players) >= players_per_group_gbatm:
+        return random.sample(waiting_players, players_per_group_gbatm)
 
 
-def keisans(subsession: Subsession):
+def creating_session(subsession: Subsession):
+    if subsession.round_number == 1:
+        subsession.idx_super_game = 1
+        subsession.idx_sub_game = 1
+
     for p in subsession.get_players():
-        keisan(p)
-
-
-def set_payoffs(group: Group):
-    for p in group.get_players():
-        set_payoff(p)
-
-    for p in group.get_players():
-        graph_pair(p)
-
-
-def other_player(player: Player):
-    return player.get_others_in_group()[0]
-
-
-def graph_pair(player: Player):
-    sub = player.subsession
-    sub.pair_num += 1
-    # グラフ用集計
-    s = player.individual_choice
-    sp = player.pair_choice
-    if (s == "A") and (sp == "A"):
-        sub.pair_num_AA += 1
-    elif (s == "A") and (sp == "B"):
-        sub.pair_num_AB += 1
-    elif (s == "B") and (sp == "A"):
-        sub.pair_num_BA += 1
-    elif (s == "B") and (sp == "B"):
-        sub.pair_num_BB += 1
-    else:
-        sub.pair_err_message = "エラーあり"
+        if p.participant.vars.get("sequences_list") is None:
+            p.participant.vars["sequences_list"] = {}
+        p.participant.vars["sequences_list"]["infinite"] = [
+            [] for _ in range(C.NUM_SUPERGAME)
+        ]
+        if p.id_in_subsession == subsession.session.num_participants:
+            p.is_experimenter = True
 
 
 def set_payoff(player: Player):
     payoff_matrix_p1 = {
-        ("A", "A"): C.PAYOFF_A,
-        ("A", "B"): C.PAYOFF_D,
-        ("B", "A"): C.PAYOFF_C,
-        ("B", "B"): C.PAYOFF_B,
+        (C.CHOICE_LABEL_1, C.CHOICE_LABEL_1): C.PAYOFF_A,
+        (C.CHOICE_LABEL_1, C.CHOICE_LABEL_2): C.PAYOFF_D,
+        (C.CHOICE_LABEL_2, C.CHOICE_LABEL_1): C.PAYOFF_C,
+        (C.CHOICE_LABEL_2, C.CHOICE_LABEL_2): C.PAYOFF_B,
     }
     payoff_matrix_p2 = {
-        ("A", "A"): C.PAYOFF_A,
-        ("A", "B"): C.PAYOFF_C,
-        ("B", "A"): C.PAYOFF_D,
-        ("B", "B"): C.PAYOFF_B,
+        (C.CHOICE_LABEL_1, C.CHOICE_LABEL_1): C.PAYOFF_A,
+        (C.CHOICE_LABEL_1, C.CHOICE_LABEL_2): C.PAYOFF_C,
+        (C.CHOICE_LABEL_2, C.CHOICE_LABEL_1): C.PAYOFF_D,
+        (C.CHOICE_LABEL_2, C.CHOICE_LABEL_2): C.PAYOFF_B,
     }
-    other = other_player(player)
+    other: Player = player.get_others_in_group()[0]
     player.pair_choice = other.individual_choice
-    player.pair_id = other.id_in_group
     if other.flg_non_input == 1:
         player.flg_pair_non_input = 1
 
-    print(player.individual_choice, other.individual_choice)
     if player.id_in_group == 1:
         player.payoff = payoff_matrix_p1[
             (player.individual_choice, other.individual_choice)
@@ -228,144 +103,209 @@ def set_payoff(player: Player):
         player.payoff = payoff_matrix_p2[
             (other.individual_choice, player.individual_choice)
         ]
-    print(player.id_in_group, player.payoff)
 
 
-# PAGES-----
-class WaitToStart(WaitPage):
+# PAGES
+class EnterWaitPage(WaitPage):
+    group_by_arrival_time = True
+
     @staticmethod
-    def after_all_players_arrive(group: Group):
-        group.start_timestamp = int(time.time())
+    def is_displayed(player: Player):
+        return player.subsession.idx_sub_game == 1
 
 
 class Introduction(Page):
-    # timeout_seconds = 100
-    timeout_seconds = 60
-
     @staticmethod
-    def is_displayed(player):
+    def is_displayed(player: Player):
         return player.round_number == 1
 
 
 class Decision(Page):
-    # timeout_seconds = 120
-    timeout_seconds = 90
     form_model = "player"
-    form_fields = [
-        "individual_choice",
-        "individual_choice_comment",
-        "think_other_player_choice",
-        "think_other_player_choice_comment",
-    ]
+    form_fields = ["individual_choice"]
+
+    # @staticmethod
+    # def get_timeout_seconds(player: Player):
+    #     if player.is_experimenter:
+    #         return 0
+    #     else:
+    #         return 40
 
     @staticmethod
-    def vars_for_template(player: Player):
-        sub = player.subsession
-        sub.this_rounds_dice = C.LIST_PROB[sub.round_number]
-
-
-class Question(Page):
-    form_model = "player"
-    form_fields = ["q1", "q2"]
-
-
-class keisanWaitPage(WaitPage):
-    wait_for_all_groups = True
-    after_all_players_arrive = keisans
+    def before_next_page(player: Player, timeout_happened):
+        if timeout_happened:
+            player.flg_non_input = 1
+            player.individual_choice = random.choice(C.choice_list)
 
 
 class ResultsWaitPage(WaitPage):
-    after_all_players_arrive = set_payoffs
+    @staticmethod
+    def after_all_players_arrive(group: Group):
+        for p in group.get_players():
+            set_payoff(p)
 
 
 class Results(Page):
-    # timeout_seconds = 45
-    timeout_seconds = 60
+    # @staticmethod
+    # def get_timeout_seconds(player: Player):
+    #     if player.is_experimenter:
+    #         return 0
+    #     else:
+    #         return 20
 
     @staticmethod
     def vars_for_template(player: Player):
-        opponent = other_player(player)
+        opponent: Player = player.get_others_in_group()[0]
         return dict(
             opponent=opponent,
-            # same_choice=player.individual_choice == opponent.individual_choice,
-            # my_decision=player.field_display('individual_choice'),
             my_decision=player.individual_choice,
             opponent_decision=opponent.individual_choice,
-            # opponent_decision=opponent.field_display('individual_choice'),
         )
 
-    # グラフ描画用
+
+class RollDice(Page):
+    form_model = "player"
+    form_fields = ["round_dice_input"]
+
     @staticmethod
-    def js_vars(player: Player):
-        print("js_vars")
-        sub = player.subsession
-        print("js_vars", sub.num_A_p1)
-        # 割合に計算
-        if sub.num_A_p1 > 0:
-            prop_num_A_p1 = round((sub.num_A_p1 / sub.num_participants_p1) * 100, 2)
-        else:
-            prop_num_A_p1 = 0
-        if sub.num_B_p1 > 0:
-            prop_num_B_p1 = round((sub.num_B_p1 / sub.num_participants_p1) * 100, 2)
-        else:
-            prop_num_B_p1 = 0
+    def is_displayed(player: Player):
+        return player.is_experimenter
 
-        print(prop_num_A_p1, ";;;;;;;;;;;;;;;;;;;;;")
-        # 割合に計算
-        if sub.num_A_p2 > 0:
-            prop_num_A_p2 = round((sub.num_A_p2 / sub.num_participants_p2) * 100, 2)
-        else:
-            prop_num_A_p2 = 0
-        if sub.num_B_p2 > 0:
-            prop_num_B_p2 = round((sub.num_B_p2 / sub.num_participants_p2) * 100, 2)
-        else:
-            prop_num_B_p2 = 0
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened):
+        if timeout_happened:
+            player.round_dice_input = random.randint(1, 6)
 
-        print("ここから追加")
-        # 割合に計算s
-        if sub.pair_num_AA > 0:
-            prop_pair_num_AA = round((sub.pair_num_AA / sub.pair_num) * 100, 2)
-        else:
-            prop_pair_num_AA = 0
-        if sub.pair_num_AB > 0:
-            prop_pair_num_AB = round((sub.pair_num_AB / sub.pair_num) * 100, 2)
-        else:
-            prop_pair_num_AB = 0
-        if sub.pair_num_BA > 0:
-            prop_pair_num_BA = round((sub.pair_num_BA / sub.pair_num) * 100, 2)
-        else:
-            prop_pair_num_BA = 0
-        if sub.pair_num_BB > 0:
-            prop_pair_num_BB = round((sub.pair_num_BB / sub.pair_num) * 100, 2)
-        else:
-            prop_pair_num_BB = 0
+        ss: Subsession = player.subsession
+        ss.round_dice = player.round_dice_input
 
+        if (player.round_number < C.NUM_ROUNDS) and (ss.round_dice != 99):
+            next_ss: Subsession = ss.in_round(player.round_number + 1)
+
+            if ss.round_dice > 1:
+                # スーパーゲーム継続
+                next_ss.idx_super_game = ss.idx_super_game
+                next_ss.idx_sub_game = ss.idx_sub_game + 1
+            else:
+                # スーパーゲーム終了
+                ss.collapsed = True
+                if ss.idx_super_game < C.NUM_SUPERGAME:
+                    # 次のスーパーゲームへ
+                    next_ss.idx_super_game = ss.idx_super_game + 1
+                    next_ss.idx_sub_game = 1
+                else:
+                    # セッション終了
+                    ss.session_end = True
+        else:
+            # トータルラウンド数に達した場合，セッション終了
+            ss.collapsed = True
+            ss.session_end = True
+
+
+class WaitRollDice(WaitPage):
+    wait_for_all_groups = True
+
+
+class DiceResults(Page):
+    timeout_seconds = 20
+
+    @staticmethod
+    def is_displayed(player: Player):
+        return not player.subsession.collapsed
+
+
+class EndOfSuperGame(Page):
+    @staticmethod
+    def is_displayed(player: Player):
+        if player.subsession.collapsed:
+            start_round = player.round_number - player.subsession.idx_sub_game + 1
+            sequences = [
+                [
+                    p.individual_choice,
+                    p.get_others_in_group()[0].individual_choice,
+                ]
+                for p in player.in_rounds(start_round, player.round_number)
+            ]
+            player.participant.vars["sequences_list"]["infinite"][
+                player.subsession.idx_super_game - 1
+            ] = sequences
+            player.payoff_sup = sum(
+                [p.payoff for p in player.in_rounds(start_round, player.round_number)]
+            )
+            return True
+        else:
+            return False
+
+    form_model = "player"
+
+    @staticmethod
+    def get_form_fields(player: Player):
+        if player.subsession.idx_super_game == C.NUM_SUPERGAME:
+            return ["individual_choice_comment"]
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        sequences = player.participant.vars["sequences_list"]["infinite"][
+            player.subsession.idx_super_game - 1
+        ]
+
+        coop_rate_self = (
+            sum([el[0] == C.CHOICE_LABEL_1 for el in sequences]) / len(sequences)
+            if len(sequences) > 0
+            else -1
+        )
+        coop_rate_other = (
+            sum([el[1] == C.CHOICE_LABEL_1 for el in sequences]) / len(sequences)
+            if len(sequences) > 0
+            else -1
+        )
         return dict(
-            num_participants_p1=sub.num_participants_p1,
-            num_participants_p2=sub.num_participants_p2,
-            num_A_p1=prop_num_A_p1,
-            num_B_p1=prop_num_B_p1,
-            num_A_p2=prop_num_A_p2,
-            num_B_p2=prop_num_B_p2,
-            num_pairs=sub.pair_num,
-            num_AA=prop_pair_num_AA,
-            num_AB=prop_pair_num_AB,
-            num_BA=prop_pair_num_BA,
-            num_BB=prop_pair_num_BB,
+            sequences=sequences,
+            coop_rate_self=coop_rate_self,
+            coop_rate_other=coop_rate_other,
+            payoff_sup=player.payoff_sup,
         )
 
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened):
+        p_final: Player = player.in_round(C.NUM_ROUNDS)
+        p_final.individual_choice_comment = player.field_maybe_none(
+            "individual_choice_comment"
+        )
 
-class PreResults(Page):
-    timeout_seconds = 25
+    @staticmethod
+    def app_after_this_page(player: Player, upcoming_apps):
+        if player.subsession.session_end and len(upcoming_apps) > 0:
+            return upcoming_apps[0]
 
 
 page_sequence = [
-    WaitToStart,
+    EnterWaitPage,
     Introduction,
     Decision,
-    # Question,
-    keisanWaitPage,
     ResultsWaitPage,
-    # PreResults,
     Results,
+    RollDice,
+    WaitRollDice,
+    DiceResults,
+    EndOfSuperGame,
 ]
+
+
+def vars_for_admin_report(subsession: Subsession):
+    list_comment = []
+    if subsession.round_number == C.NUM_ROUNDS:
+        list_comment = sorted(
+            [
+                [
+                    p.participant.payoff,
+                    p.individual_choice_comment,
+                ]
+                for p in subsession.get_players()
+            ],
+            reverse=True,
+        )
+
+    return dict(
+        list_comment=list_comment,
+    )
