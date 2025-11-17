@@ -45,6 +45,12 @@ class Player(BasePlayer):
 
     payoff_sup = models.CurrencyField()
 
+    # 意思決定の理由
+    individual_choice_comment = models.LongStringField(
+        label="【質問】あなたは，どのような方針で意思決定を行いましたか？",
+        initial="",
+    )
+
 
 # FUNCTIONS
 def group_by_arrival_time_method(subsession: Subsession, waiting_players: list[Player]):
@@ -172,6 +178,13 @@ class EndOfSuperGame(Page):
         else:
             return False
 
+    form_model = "player"
+
+    @staticmethod
+    def get_form_fields(player: Player):
+        if player.subsession.idx_super_game == C.NUM_SUPERGAME:
+            return ["individual_choice_comment"]
+
     @staticmethod
     def vars_for_template(player: Player):
         sequences = player.participant.vars["sequences_list"]["finite"][
@@ -195,6 +208,13 @@ class EndOfSuperGame(Page):
             payoff_sup=player.payoff_sup,
         )
 
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened):
+        p_final: Player = player.in_round(C.NUM_ROUNDS)
+        p_final.individual_choice_comment = player.field_maybe_none(
+            "individual_choice_comment"
+        )
+
 
 page_sequence = [
     EnterWaitPage,
@@ -207,11 +227,23 @@ page_sequence = [
 
 
 def vars_for_admin_report(subsession: Subsession):
+    list_comment = []
     ranking = []
     alldata = []
     coop_rate = []
 
     if subsession.round_number == C.NUM_ROUNDS:
+        list_comment = sorted(
+            [
+                [
+                    p.participant.payoff,
+                    p.individual_choice_comment,
+                ]
+                for p in subsession.get_players()
+            ],
+            reverse=True,
+        )
+
         ranking = sorted(
             [int(p.participant.payoff) for p in subsession.get_players()],
             reverse=True,
@@ -242,6 +274,7 @@ def vars_for_admin_report(subsession: Subsession):
                         coop_rate.append(round_rates)
 
     return dict(
+        list_comment=list_comment,
         ranking=ranking,
         coop_rate=coop_rate,
     )

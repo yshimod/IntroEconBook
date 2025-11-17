@@ -1,3 +1,24 @@
+{{ if list_comment }}
+<div class="mt-5 fs-5">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th width="20%">合計利得</th>
+                <th width="80%">理由</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ for el in list_comment }}
+            <tr>
+                <td>{{ el.0 }}</td>
+                <td>{{ el.1 | escape }}</td>
+            </tr>
+            {{ endfor }}
+        </tbody>
+    </table>
+</div>
+{{ endif }}
+
 {{ if ranking }}
 <div>
     <h3>総獲得報酬ランキング</h3>
@@ -70,3 +91,8 @@
     }
 </script>
 {{ endif }}
+
+
+<div class="mt-5">
+    {{ include_sibling 'instructions.html' }}
+</div>

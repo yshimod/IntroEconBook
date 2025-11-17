@@ -4,30 +4,34 @@
 
 {{ block content }}
 
-<p>このマッチはここまでです．</p>
-<p>このマッチでのあなたの報酬の合計は {{ payoff_sup }} でした．</p>
+<div class="mb-5">
+    <p>このマッチはここまでです．</p>
+    <p>このマッチでのあなたの報酬の合計は {{ payoff_sup }} でした．</p>
 
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>回次</th>
-            <th>あなたの選択</th>
-            <th>相手の選択</th>
-        </tr>
-    </thead>
-    <tbody>
-        {{ for el in sequences }}
-        <tr>
-            <td>{{ forloop.counter }}</td>
-            <td>{{ el.0 }}</td>
-            <td>{{ el.1 }}</td>
-        </tr>
-        {{ endfor }}
-    </tbody>
-</table>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>回次</th>
+                <th>あなたの選択</th>
+                <th>相手の選択</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ for el in sequences }}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ el.0 }}</td>
+                <td>{{ el.1 }}</td>
+            </tr>
+            {{ endfor }}
+        </tbody>
+    </table>
 
-<p>あなたが{{ C.CHOICE_LABEL_1 }}を選んだ割合は {{ coop_rate_self | to2 }} でした．</p>
-<p>相手が{{ C.CHOICE_LABEL_1 }}を選んだ割合は {{ coop_rate_other | to2 }} でした．</p>
+    <p>あなたが{{ C.CHOICE_LABEL_1 }}を選んだ割合は {{ coop_rate_self | to2 }} でした．</p>
+    <p>相手が{{ C.CHOICE_LABEL_1 }}を選んだ割合は {{ coop_rate_other | to2 }} でした．</p>
+</div>
+
+{{ formfields }}
 
 {{ next_button }}
 
